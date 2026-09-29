@@ -1,0 +1,171 @@
+{
+  "analysis": "Ablation v2 — 쌍체 비교 및 super-additive 판정",
+  "n_pairs": 90,
+  "query_level": {
+    "n_queries": 30,
+    "n_orderings": 3,
+    "seed": 20260929,
+    "n_bootstrap": 10000,
+    "n_permutation": 100000,
+    "full_mean": 0.7022001310236605,
+    "full_icc1_across_orderings": 0.6942266511406383,
+    "full_within_query_sd_median": 0.07264720430428018,
+    "contrasts": {
+      "no_trust_flow": {
+        "mean_delta": -0.007746309609054719,
+        "n_scores_identical_instances": 10,
+        "n_answers_byte_identical_instances": 1,
+        "n_queries_worse": 17,
+        "n_queries_better": 12,
+        "bootstrap_ci95": [
+          -0.04657695538394071,
+          0.03147005942042704
+        ],
+        "permutation_p": 0.7038629613703863,
+        "wilcoxon_pratt_p": 0.5508323134526298,
+        "per_ordering_mean_delta": [
+          0.035060280133809546,
+          -0.028481469510881274,
+          -0.029817739450092393
+        ],
+        "ci_includes_zero": true
+      },
+      "no_hmmr": {
+        "mean_delta": -0.047610126801303276,
+        "n_scores_identical_instances": 10,
+        "n_answers_byte_identical_instances": 3,
+        "n_queries_worse": 15,
+        "n_queries_better": 14,
+        "bootstrap_ci95": [
+          -0.11918831241380262,
+          0.019544558201420932
+        ],
+        "permutation_p": 0.1896581034189658,
+        "wilcoxon_pratt_p": 0.33366248714890756,
+        "per_ordering_mean_delta": [
+          -0.03767902304667011,
+          -0.06532794819559526,
+          -0.039823409161644445
+        ],
+        "ci_includes_zero": true
+      },
+      "no_mars": {
+        "mean_delta": 0.0,
+        "n_scores_identical_instances": 90,
+        "n_answers_byte_identical_instances": 90,
+        "n_queries_worse": 0,
+        "n_queries_better": 0,
+        "all_identical": true
+      }
+    },
+    "multiplicity": "two confirmatory contrasts (no_trust_flow, no_hmmr); no correction applied; no_mars is structurally zero and not tested"
+  },
+  "aggregated_from_results_json": {
+    "full": {
+      "description": "Full KONI-Prism (DMAR+CMAE+HMMR+MARS)",
+      "per_run_means": [
+        0.6922690272690273,
+        0.7199179524179525,
+        0.6944134133840018
+      ],
+      "mean": 0.7022001310236604,
+      "std": 0.015381498437166243,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": 0.0
+    },
+    "no_trust_flow": {
+      "description": "w/o CMAE→HMMR/MARS trust flow (trust 균등화)",
+      "per_run_means": [
+        0.7273293074028369,
+        0.6914364829070713,
+        0.6645956739339092
+      ],
+      "mean": 0.6944538214146059,
+      "std": 0.03147547363909285,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": -0.007746309609054536
+    },
+    "no_hmmr": {
+      "description": "w/o HMMR (메모리 검색 없음)",
+      "per_run_means": [
+        0.654590004222357,
+        0.6545900042223571,
+        0.6545900042223575
+      ],
+      "mean": 0.6545900042223572,
+      "std": 2.3551386880256624e-16,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": -0.047610126801303165
+    },
+    "no_mars": {
+      "description": "w/o MARS (귀속·인용 없음)",
+      "per_run_means": [
+        0.6922690272690273,
+        0.7199179524179525,
+        0.6944134133840018
+      ],
+      "mean": 0.7022001310236604,
+      "std": 0.015381498437166243,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": 0.0
+    }
+  },
+  "paired_vs_full": {
+    "no_trust_flow": {
+      "mean_delta": -0.007746309609054708,
+      "std_delta": 0.18691092620374147,
+      "n_pairs": 90,
+      "n_identical_to_full": 10,
+      "all_identical": false,
+      "ci95": [
+        -0.04689404519531457,
+        0.031401425977205154
+      ],
+      "wilcoxon_p": 0.6178978840352359,
+      "significant_at_0.05": false,
+      "ci_includes_zero": true
+    },
+    "no_hmmr": {
+      "mean_delta": -0.04761012680130329,
+      "std_delta": 0.218350510428476,
+      "n_pairs": 90,
+      "n_identical_to_full": 10,
+      "all_identical": false,
+      "ci95": [
+        -0.09334275581872746,
+        -0.0018774977838791201
+      ],
+      "wilcoxon_p": 0.05353391546289819,
+      "significant_at_0.05": false,
+      "ci_includes_zero": false
+    },
+    "no_mars": {
+      "mean_delta": 0.0,
+      "std_delta": 0.0,
+      "n_pairs": 90,
+      "n_identical_to_full": 90,
+      "all_identical": true
+    }
+  },
+  "super_additive": {
+    "claim_in_paper": "trust flow 제거가 34.5pp 저하로, 개별 컴포넌트 두 개를 제거한 것의 합보다 크다 (super-additive)",
+    "measured_trust_flow_drop_pp": -0.7746309609054708,
+    "measured_component_drops_pp": {
+      "no_hmmr": -4.761012680130329,
+      "no_mars": -0.0
+    },
+    "sum_of_components_pp": -4.761012680130329,
+    "trust_flow_exceeds_sum": false,
+    "reproduced": false,
+    "verdict": "재현되지 않음. trust flow 제거 효과가 0 과 통계적으로 구분되지 않는다 (p=0.618, 95% CI [-0.04689404519531457, 0.031401425977205154] 가 0 을 포함)."
+  },
+  "structural_note": "no_mars 가 full 과 전 쌍에서 동일하면, MARS 가 답변 본문에 영향을 줄 수 없다는 구조(answer_final = answer_raw + citations_text)가 실측으로 확인된 것이다."
+}

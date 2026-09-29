@@ -1,0 +1,274 @@
+name,value,artifact,json_path,artifact_sha256,used_for
+lat.dmar_ms,7.75,latency/results/results_a100_1.json,stage_latency_ms/dmar_route/mean,bffbd74e88db0943,sec5.1 stage table
+lat.dmar_p95_ms,8.36,latency/results/results_a100_1.json,stage_latency_ms/dmar_route/p95,bffbd74e88db0943,sec5.1
+lat.cmae_ms,34.02,latency/results/results_a100_1.json,stage_latency_ms/cmae_encode/mean,bffbd74e88db0943,sec5.1
+lat.cmae_p95_ms,37.12,latency/results/results_a100_1.json,stage_latency_ms/cmae_encode/p95,bffbd74e88db0943,sec5.1
+lat.hmmr_ms,31.49,latency/results/results_a100_1.json,stage_latency_ms/hmmr_retrieve/mean,bffbd74e88db0943,sec5.1
+lat.hmmr_p95_ms,33.8,latency/results/results_a100_1.json,stage_latency_ms/hmmr_retrieve/p95,bffbd74e88db0943,sec5.1
+lat.mars_ms,38.3,latency/results/results_a100_1.json,stage_latency_ms/mars_score/mean,bffbd74e88db0943,sec5.1
+lat.mars_p95_ms,39.85,latency/results/results_a100_1.json,stage_latency_ms/mars_score/p95,bffbd74e88db0943,sec5.1
+lat.specialist_ms,1778.75,latency/results/results_a100_1.json,stage_latency_ms/specialist_infer/mean,bffbd74e88db0943,sec5.1
+lat.generate_ms,6350.05,latency/results/results_a100_1.json,stage_latency_ms/llm_generate/mean,bffbd74e88db0943,sec5.1
+lat.total_ms,8240.41,latency/results/results_a100_1.json,stage_latency_ms/total/mean,bffbd74e88db0943,sec5.1 denominator
+lat.total_p95_ms,9086.16,latency/results/results_a100_1.json,stage_latency_ms/total/p95,bffbd74e88db0943,sec5.1
+lat.total_std_ms,1399.98,latency/results/results_a100_1.json,stage_latency_ms/total/std,bffbd74e88db0943,sec5.1
+lat.n_queries,30,latency/results/results_a100_1.json,reps,bffbd74e88db0943,sec4.1
+lat.warmup_excluded,5,latency/results/results_a100_1.json,warmup_excluded,bffbd74e88db0943,sec4.1
+cold.encoder_load_ms,8728.4,latency/results/results_a100_1.json,cold_start_encoder/load_plus_first_infer_ms,bffbd74e88db0943,sec5.2
+cold.encoder_warm_ms,27.99,latency/results/results_a100_1.json,cold_start_encoder/warm_infer_ms/mean,bffbd74e88db0943,sec5.2
+cold.encoder_ratio,311.9,latency/results/results_a100_1.json,cold_start_encoder/cold_warm_ratio,bffbd74e88db0943,sec5.2 headline ratio
+cold.encoder_warm_p50_ms,27.8,latency/results/results_a100_1.json,cold_start_encoder/warm_infer_ms/p50,bffbd74e88db0943,sec5.2 ratio denominator
+rerun_a.cold.encoder_load_ms,99443.2,latency/results_rerun_20260928/results_a100_1.json,cold_start_encoder/load_plus_first_infer_ms,235f23ce82564d4f,sec5.2 page-cache dependence
+rerun_a.cold.encoder_warm_p50_ms,26.86,latency/results_rerun_20260928/results_a100_1.json,cold_start_encoder/warm_infer_ms/p50,235f23ce82564d4f,sec5.2
+rerun_b.cold.encoder_load_ms,16970.0,latency/results_rerun_20260928_b/results_a100_1.json,cold_start_encoder/load_plus_first_infer_ms,eaba26693c6296a5,sec5.2 page-cache dependence
+rerun_b.cold.encoder_warm_p50_ms,26.56,latency/results_rerun_20260928_b/results_a100_1.json,cold_start_encoder/warm_infer_ms/p50,eaba26693c6296a5,sec5.2
+rerun_a.lat.total_ms,7063.18,latency/results_rerun_20260928/results_a100_1.json,stage_latency_ms/total/mean,235f23ce82564d4f,sec5.1 re-run consistency
+rerun_b.lat.total_ms,7091.07,latency/results_rerun_20260928_b/results_a100_1.json,stage_latency_ms/total/mean,eaba26693c6296a5,sec5.1 re-run consistency
+dmar.distinct.a100.shipped_qbar,0.873,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/shipped_q/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a100.corrected_qbar,0.873,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/corrected_q/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a100.shipped_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/shipped_v/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a100.corrected_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/corrected_v/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a100.fallback_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/shipped_fallback/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a100.shipped_qbar,0.864,ilp_fix/results/ilp_fix_summary.json,a100_1|repeated/shipped_q/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a100.corrected_qbar,0.864,ilp_fix/results/ilp_fix_summary.json,a100_1|repeated/corrected_q/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a100.shipped_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a100_1|repeated/shipped_v/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a100.corrected_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a100_1|repeated/corrected_v/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a100.fallback_rate,1.0,ilp_fix/results/ilp_fix_summary.json,a100_1|repeated/shipped_fallback/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a6000.shipped_qbar,0.873,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/shipped_q/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a6000.corrected_qbar,0.873,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/corrected_q/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a6000.shipped_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/shipped_v/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a6000.corrected_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/corrected_v/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.a6000.fallback_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/shipped_fallback/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a6000.shipped_qbar,0.864,ilp_fix/results/ilp_fix_summary.json,a6000_1|repeated/shipped_q/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a6000.corrected_qbar,0.864,ilp_fix/results/ilp_fix_summary.json,a6000_1|repeated/corrected_q/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a6000.shipped_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|repeated/shipped_v/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a6000.corrected_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|repeated/corrected_v/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.a6000.fallback_rate,1.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|repeated/shipped_fallback/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.4090.shipped_qbar,0.862,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/shipped_q/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.4090.corrected_qbar,0.862,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/corrected_q/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.4090.shipped_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/shipped_v/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.4090.corrected_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/corrected_v/mean,200a4afc68ca3a5c,Table 2
+dmar.distinct.4090.fallback_rate,0.0,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/shipped_fallback/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.4090.shipped_qbar,0.864,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|repeated/shipped_q/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.4090.corrected_qbar,0.848,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|repeated/corrected_q/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.4090.shipped_violation_rate,0.329,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|repeated/shipped_v/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.4090.corrected_violation_rate,0.0,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|repeated/corrected_v/mean,200a4afc68ca3a5c,Table 2
+dmar.repeated.4090.fallback_rate,1.0,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|repeated/shipped_fallback/mean,200a4afc68ca3a5c,Table 2
+dmar.alpha.a100,0.85,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/alpha/mean,200a4afc68ca3a5c,Table 1 configuration
+dmar.alpha.a6000,0.51,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/alpha/mean,200a4afc68ca3a5c,Table 1 configuration
+dmar.alpha.4090,0.255,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/alpha/mean,200a4afc68ca3a5c,Table 1 configuration
+dmar.vmax.a100,80.0,ilp_fix/results/ilp_fix_summary.json,a100_1|distinct/v_max/mean,200a4afc68ca3a5c,Table 1 configuration
+dmar.vmax.a6000,48.0,ilp_fix/results/ilp_fix_summary.json,a6000_1|distinct/v_max/mean,200a4afc68ca3a5c,Table 1 configuration
+dmar.vmax.4090,24.0,ilp_fix/results/ilp_fix_summary.json,rtx4090_simulated|distinct/v_max/mean,200a4afc68ca3a5c,Table 1 configuration
+dmar.solve_ms_k1,4.9,latency/results/dmar_remeasure.json,by_k/0/mean,77e0986191309e83,sec5.3 solver cost
+dmar.solve_ms_k5,6.22,latency/results/dmar_remeasure.json,by_k/4/mean,77e0986191309e83,sec5.3 solver cost
+dmar.solve_reps,200,latency/results/dmar_remeasure.json,reps_per_k,77e0986191309e83,sec5.3
+dmar.solve_ms_k3,5.71,latency/results/dmar_remeasure.json,by_k/2/mean,77e0986191309e83,sec5.3 solver cost
+ext.snli.f1,0.795,external_eval/results/results.json,results/snli/primary_contradiction_vs_entailment/at_production_tau/f1,9ba1902ddcf781c8,sec6.1 Table 3
+ext.snli.precision,0.936,external_eval/results/results.json,results/snli/primary_contradiction_vs_entailment/at_production_tau/precision,9ba1902ddcf781c8,sec6.1 Table 3
+ext.snli.recall,0.691,external_eval/results/results.json,results/snli/primary_contradiction_vs_entailment/at_production_tau/recall,9ba1902ddcf781c8,sec6.1 Table 3
+ext.mnli.f1,0.637,external_eval/results/results.json,results/mnli/primary_contradiction_vs_entailment/at_production_tau/f1,9ba1902ddcf781c8,sec6.1 Table 3
+ext.mnli.precision,0.885,external_eval/results/results.json,results/mnli/primary_contradiction_vs_entailment/at_production_tau/precision,9ba1902ddcf781c8,sec6.1 Table 3
+ext.mnli.recall,0.498,external_eval/results/results.json,results/mnli/primary_contradiction_vs_entailment/at_production_tau/recall,9ba1902ddcf781c8,sec6.1 Table 3
+ext.vitaminc.f1,0.503,external_eval/results/results.json,results/vitaminc/primary_contradiction_vs_entailment/at_production_tau/f1,9ba1902ddcf781c8,sec6.1 Table 3
+ext.vitaminc.precision,0.628,external_eval/results/results.json,results/vitaminc/primary_contradiction_vs_entailment/at_production_tau/precision,9ba1902ddcf781c8,sec6.1 Table 3
+ext.vitaminc.recall,0.419,external_eval/results/results.json,results/vitaminc/primary_contradiction_vs_entailment/at_production_tau/recall,9ba1902ddcf781c8,sec6.1 Table 3
+ext.snli.neutral_f1,0.682,external_eval/results/results.json,results/snli/with_neutral_as_clean/at_production_tau/f1,9ba1902ddcf781c8,sec6.1 neutral-as-clean
+ext.mnli.neutral_f1,0.521,external_eval/results/results.json,results/mnli/with_neutral_as_clean/at_production_tau/f1,9ba1902ddcf781c8,sec6.1 neutral-as-clean
+ext.vitaminc.neutral_f1,0.387,external_eval/results/results.json,results/vitaminc/with_neutral_as_clean/at_production_tau/f1,9ba1902ddcf781c8,sec6.1 neutral-as-clean
+ext.n_per_class,1000,external_eval/results/results.json,n_per_class,9ba1902ddcf781c8,sec6.1
+ext.path_agreement,1.0,external_eval/results/results.json,results/snli/cmae_path_verification/agreement_rate,9ba1902ddcf781c8,sec6.1 path check
+ext.snli.best_tau,0.71,external_eval/results/results.json,results/snli/primary_contradiction_vs_entailment/best_threshold/tau,9ba1902ddcf781c8,sec6.1 threshold transfer
+ext.snli.best_f1,0.832,external_eval/results/results.json,results/snli/primary_contradiction_vs_entailment/best_threshold/f1,9ba1902ddcf781c8,sec6.1 threshold transfer
+ext.mnli.best_tau,0.8,external_eval/results/results.json,results/mnli/primary_contradiction_vs_entailment/best_threshold/tau,9ba1902ddcf781c8,sec6.1 threshold transfer
+ext.mnli.best_f1,0.783,external_eval/results/results.json,results/mnli/primary_contradiction_vs_entailment/best_threshold/f1,9ba1902ddcf781c8,sec6.1 threshold transfer
+ext.vitaminc.best_tau,0.82,external_eval/results/results.json,results/vitaminc/primary_contradiction_vs_entailment/best_threshold/tau,9ba1902ddcf781c8,sec6.1 threshold transfer
+ext.vitaminc.best_f1,0.675,external_eval/results/results.json,results/vitaminc/primary_contradiction_vs_entailment/best_threshold/f1,9ba1902ddcf781c8,sec6.1 threshold transfer
+cmae.type.numerical,0.217,synconflict_v2/results/results.json,results/v2/by_type/numerical/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.temporal,0.2,synconflict_v2/results/results.json,results/v2/by_type/temporal/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.terminological,0.283,synconflict_v2/results/results.json,results/v2/by_type/terminological/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.paraphrastic,0.133,synconflict_v2/results/results.json,results/v2/by_type/paraphrastic/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.domain_mismatch,0.7,synconflict_v2/results/results.json,results/v2/by_type/domain_mismatch/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.complementary,0.22,synconflict_v2/results/results.json,results/v2/by_type/complementary/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.paraphrase,0.26,synconflict_v2/results/results.json,results/v2/by_type/paraphrase/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.type.unrelated_consistent,1.0,synconflict_v2/results/results.json,results/v2/by_type/unrelated_consistent/detected_rate,2c2eece41cd438bb,sec6.1 by conflict type
+cmae.register.same_recall,0.145,synconflict_v2/results/results.json,results/v2/by_register/same/recall,2c2eece41cd438bb,sec6.1 register confound
+cmae.register.same_precision,0.312,synconflict_v2/results/results.json,results/v2/by_register/same/precision,2c2eece41cd438bb,sec6.1 register confound
+cmae.register.same_n,451,synconflict_v2/results/results.json,results/v2/by_register/same/n,2c2eece41cd438bb,sec6.1 register confound
+cmae.register.cross_recall,0.892,synconflict_v2/results/results.json,results/v2/by_register/cross/recall,2c2eece41cd438bb,sec6.1 register confound
+cmae.register.cross_precision,0.443,synconflict_v2/results/results.json,results/v2/by_register/cross/precision,2c2eece41cd438bb,sec6.1 register confound
+cmae.register.cross_n,149,synconflict_v2/results/results.json,results/v2/by_register/cross/n,2c2eece41cd438bb,sec6.1 register confound
+cmae.v1_auc,0.968,synconflict_v2/results/results.json,results/v1/roc_auc,2c2eece41cd438bb,sec6.1 / L2
+cmae.v1_n,100,synconflict_v2/results/results.json,results/v1/n,2c2eece41cd438bb,sec6.1 / L2
+cmae.v2_overlap,0.997,synconflict_v2/results/results.json,results/v2/separability_overlap,2c2eece41cd438bb,sec6.1
+cmae.v1_overlap,0.44,synconflict_v2/results/results.json,results/v1/separability_overlap,2c2eece41cd438bb,sec6.1 / L2
+hmmr.text.flat_mrr,0.997,hmmr_v2/results/analysis.json,by_target_modality/text/flat_rag,53329583b28392bb,sec6.2
+hmmr.text.full_mrr,0.992,hmmr_v2/results/analysis.json,by_target_modality/text/hmmr@default,53329583b28392bb,sec6.2
+hmmr.document.flat_mrr,0.997,hmmr_v2/results/analysis.json,by_target_modality/document/flat_rag,53329583b28392bb,sec6.2
+hmmr.document.full_mrr,0.997,hmmr_v2/results/analysis.json,by_target_modality/document/hmmr@default,53329583b28392bb,sec6.2
+hmmr.image.flat_mrr,0.892,hmmr_v2/results/analysis.json,by_target_modality/image/flat_rag,53329583b28392bb,sec6.2
+hmmr.image.full_mrr,0.887,hmmr_v2/results/analysis.json,by_target_modality/image/hmmr@default,53329583b28392bb,sec6.2
+hmmr.coverage_missed,0.0089,hmmr_v2/results/analysis.json,coverage/hmmr@default/target_not_returned,53329583b28392bb,sec6.2 coverage
+hmmr.flat_returned,50.0,hmmr_v2/results/analysis.json,coverage/flat_rag/mean_n_returned,53329583b28392bb,sec6.2
+hmmr.hmmr_returned,10.0,hmmr_v2/results/analysis.json,coverage/hmmr@default/mean_n_returned,53329583b28392bb,sec6.2
+cfg.cmae_tau_conflict,0.65,synconflict_v2/results/results.json,settings/cmae_tau_conflict,2c2eece41cd438bb,Table 1
+cfg.cmae_gamma,0.6,synconflict_v2/results/results.json,settings/cmae_gamma,2c2eece41cd438bb,Table 1
+cfg.cmae_tau_t,0.5,synconflict_v2/results/results.json,settings/cmae_tau_t,2c2eece41cd438bb,Table 1
+cfg.cmae_theta_dom,0.6,synconflict_v2/results/results.json,settings/cmae_theta_dom,2c2eece41cd438bb,Table 1
+cfg.hmmr_lambda1,0.5,synconflict_v2/results/results.json,settings/hmmr_lambda1,2c2eece41cd438bb,Table 1
+cfg.hmmr_lambda2,0.3,synconflict_v2/results/results.json,settings/hmmr_lambda2,2c2eece41cd438bb,Table 1
+cfg.hmmr_lambda3,0.2,synconflict_v2/results/results.json,settings/hmmr_lambda3,2c2eece41cd438bb,Table 1
+cfg.hmmr_delta,0.3,synconflict_v2/results/results.json,settings/hmmr_delta,2c2eece41cd438bb,Table 1
+cfg.hmmr_omega_s,0.5,synconflict_v2/results/results.json,settings/hmmr_omega_s,2c2eece41cd438bb,Table 1
+cfg.hmmr_omega_e,0.35,synconflict_v2/results/results.json,settings/hmmr_omega_e,2c2eece41cd438bb,Table 1
+cfg.hmmr_omega_l,0.15,synconflict_v2/results/results.json,settings/hmmr_omega_l,2c2eece41cd438bb,Table 1
+cfg.hmmr_theta_imp,0.6,synconflict_v2/results/results.json,settings/hmmr_theta_imp,2c2eece41cd438bb,Table 1
+cfg.mars_theta_cite,0.1,synconflict_v2/results/results.json,settings/mars_theta_cite,2c2eece41cd438bb,Table 1
+cfg.mars_theta_sent,0.7,synconflict_v2/results/results.json,settings/mars_theta_sent,2c2eece41cd438bb,Table 1
+cfg.dmar_alpha_ref,0.85,synconflict_v2/results/results.json,settings/dmar_alpha_ref,2c2eece41cd438bb,Table 1
+cfg.dmar_beta,0.1,synconflict_v2/results/results.json,settings/dmar_beta,2c2eece41cd438bb,Table 1
+cfg.dmar_vram_reserve_gb,2.0,synconflict_v2/results/results.json,settings/dmar_vram_reserve_gb,2c2eece41cd438bb,Table 1
+cfg.dmar_qmin_default,0.7,synconflict_v2/results/results.json,settings/dmar_qmin_default,2c2eece41cd438bb,Table 1
+reg.vram.vlm,14.0,config_snapshot/results/registry_snapshot.json,model_registry/vlm_7b/vram_gb,268c2491cc1f76a3,sec3.3 / sec5.2 model footprints
+reg.vram.stt,3.0,config_snapshot/results/registry_snapshot.json,model_registry/stt_large/vram_gb,268c2491cc1f76a3,sec3.3 / sec5.2 model footprints
+reg.vram.doc,4.0,config_snapshot/results/registry_snapshot.json,model_registry/doc_processor/vram_gb,268c2491cc1f76a3,sec3.3 / sec5.2 model footprints
+reg.vram.llm,14.0,config_snapshot/results/registry_snapshot.json,model_registry/llm_7b/vram_gb,268c2491cc1f76a3,sec3.3 / sec5.2 model footprints
+reg.vram.specialist_sum,35.0,config_snapshot/results/registry_snapshot.json,specialist_vram_gb_sum,268c2491cc1f76a3,sec3.3 / sec5.2 pooled footprint
+reg.qmin.text,0.7,config_snapshot/results/registry_snapshot.json,q_min/text,268c2491cc1f76a3,Table 1 quality floor
+reg.qmin.image,0.75,config_snapshot/results/registry_snapshot.json,q_min/image,268c2491cc1f76a3,Table 1 quality floor
+reg.qmin.audio,0.75,config_snapshot/results/registry_snapshot.json,q_min/audio,268c2491cc1f76a3,Table 1 quality floor
+reg.qmin.video,0.65,config_snapshot/results/registry_snapshot.json,q_min/video,268c2491cc1f76a3,Table 1 quality floor
+reg.qmin.document,0.7,config_snapshot/results/registry_snapshot.json,q_min/document,268c2491cc1f76a3,Table 1 quality floor
+reg.qmin.min,0.65,config_snapshot/results/registry_snapshot.json,q_min_range/0,268c2491cc1f76a3,Table 1
+reg.qmin.max,0.75,config_snapshot/results/registry_snapshot.json,q_min_range/1,268c2491cc1f76a3,Table 1
+audit.modality_chi2_p,0.947,hmmr_v2/results/dataset_audit.json,run_0.json/A_contingency/p,3cd4b601e840c998,sec7 L2
+audit.modalmatch_target,1.237,hmmr_v2/results/dataset_audit.json,run_0.json/B_mean_modalmatch_target,3cd4b601e840c998,sec7 L2
+audit.modalmatch_distractor,1.2374,hmmr_v2/results/dataset_audit.json,run_0.json/B_mean_modalmatch_distractors,3cd4b601e840c998,sec7 L2
+dom.theta_dom,0.6,sensitivity/results/theta_dom_reachability.json,theta_dom,547f314389d12e8e,sec7 L1
+dom.gap_required_k3,0.549,sensitivity/results/theta_dom_reachability.json,theory_min_trust_gap/3/min_trust_gap_required,547f314389d12e8e,sec7 L1
+dom.max_trust_k3,0.378,sensitivity/results/theta_dom_reachability.json,empirical_max_trust/3/max_trust_max,547f314389d12e8e,sec7 L1
+dom.pct_exceeding_k3,0.0,sensitivity/results/theta_dom_reachability.json,empirical_max_trust/3/pct_exceeding_theta_dom,547f314389d12e8e,sec7 L1
+dom.max_trust_k2,0.5,sensitivity/results/theta_dom_reachability.json,empirical_max_trust/2/max_trust_max,547f314389d12e8e,sec7 L1
+cmae.v1_f1,0.889,synconflict_v2/results/results.json,results/v1/at_production_tau/f1,2c2eece41cd438bb,sec6.1
+cmae.v2_f1,0.341,synconflict_v2/results/results.json,results/v2/at_production_tau/f1,2c2eece41cd438bb,sec6.1 headline
+cmae.v2_auc,0.316,synconflict_v2/results/results.json,results/v2/roc_auc,2c2eece41cd438bb,sec6.1
+cmae.v2_n,600,synconflict_v2/results/results.json,results/v2/n,2c2eece41cd438bb,sec6.1
+hmmr.flat_mrr,0.977,hmmr_v2/results/analysis.json,configs/flat_rag/rr/mean,53329583b28392bb,sec6.2
+hmmr.nodelta_mrr,0.976,hmmr_v2/results/analysis.json,configs/hmmr_nodelta@default/rr/mean,53329583b28392bb,sec6.2
+hmmr.full_mrr,0.973,hmmr_v2/results/analysis.json,configs/hmmr@default/rr/mean,53329583b28392bb,sec6.2
+hmmr.n_probes,450,hmmr_v2/results/analysis.json,configs/flat_rag/rr/n,53329583b28392bb,sec6.2
+hmmr.t.n_targets,157,hmmr_v2/results/analysis.json,target_level/n_targets,53329583b28392bb,sec5.5
+hmmr.t.n_targets_all_seeds,136,hmmr_v2/results/analysis.json,target_level/n_targets_all_seeds,53329583b28392bb,sec5.5
+hmmr.t.n_probes,450,hmmr_v2/results/analysis.json,target_level/n_probes,53329583b28392bb,sec5.5
+hmmr.t.mrr_flat,0.977,hmmr_v2/results/analysis.json,target_level/mrr/flat_rag,53329583b28392bb,sec5.5
+hmmr.t.mrr_nodelta,0.976,hmmr_v2/results/analysis.json,target_level/mrr/hmmr_nodelta@default,53329583b28392bb,sec5.5
+hmmr.t.mrr_full,0.973,hmmr_v2/results/analysis.json,target_level/mrr/hmmr@default,53329583b28392bb,sec5.5
+hmmr.t.icc_flat,0.88,hmmr_v2/results/analysis.json,target_level/icc1_flat_rr,53329583b28392bb,sec5.5
+hmmr.t.icc_full_minus_flat,0.47,hmmr_v2/results/analysis.json,target_level/icc1_full_minus_flat_rr,53329583b28392bb,sec5.5
+hmmr.t.full_vs_flat,-0.0041,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - flat_rag/mean_delta,53329583b28392bb,sec5.5
+hmmr.t.full_vs_flat_ci_lo,-0.0115,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - flat_rag/bootstrap_ci95/0,53329583b28392bb,sec5.5
+hmmr.t.full_vs_flat_ci_hi,0.0,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - flat_rag/bootstrap_ci95/1,53329583b28392bb,sec5.5
+hmmr.t.full_vs_flat_p,0.251,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - flat_rag/permutation_p,53329583b28392bb,sec5.5
+hmmr.t.full_vs_flat_nonzero,3,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - flat_rag/n_targets_nonzero,53329583b28392bb,sec5.5
+hmmr.t.nodelta_vs_flat,-0.001,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr_nodelta@default - flat_rag/mean_delta,53329583b28392bb,sec5.5
+hmmr.t.nodelta_vs_flat_p,0.501,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr_nodelta@default - flat_rag/permutation_p,53329583b28392bb,sec5.5
+hmmr.t.bonus,-0.0032,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - hmmr_nodelta@default/mean_delta,53329583b28392bb,sec5.5
+hmmr.t.bonus_nonzero,1,hmmr_v2/results/analysis.json,target_level/contrasts/hmmr@default - hmmr_nodelta@default/n_targets_nonzero,53329583b28392bb,sec5.5
+hmmr.delta_vs_flat,-0.0032,hmmr_v2/results/analysis.json,paired/hmmr@default - flat_rag/rr/delta,53329583b28392bb,sec6.2
+hmmr.delta_vs_flat_p,0.027,hmmr_v2/results/analysis.json,paired/hmmr@default - flat_rag/rr/wilcoxon_p,53329583b28392bb,sec6.2
+hmmr.delta_vs_nodelta,-0.0022,hmmr_v2/results/analysis.json,paired/hmmr@default - hmmr_nodelta@default/rr/delta,53329583b28392bb,sec6.2 modality bonus
+hmmr.delta_vs_nodelta_p,0.157,hmmr_v2/results/analysis.json,paired/hmmr@default - hmmr_nodelta@default/rr/wilcoxon_p,53329583b28392bb,sec6.2 modality bonus
+hmmr.nodelta_vs_flat,-0.001,hmmr_v2/results/analysis.json,paired/hmmr_nodelta@default - flat_rag/rr/delta,53329583b28392bb,sec6.2
+mars.shipped_theta_citations,0,mars_attribution/results/results.json,summary/theta_0.70/queries_with_any_citation,c156bc2f4f0ca940,sec6.3 zero citations
+mars.n_queries,90,mars_attribution/results/results.json,summary/theta_0.70/n_queries,c156bc2f4f0ca940,sec6.3
+mars.corrected_precision_rel,0.993,mars_attribution/results/results.json,summary/theta_0.10/precision_relevance/mean,c156bc2f4f0ca940,sec6.3
+mars.random_precision,0.423,mars_attribution/results/results.json,summary/theta_0.10/random_precision_baseline/mean,c156bc2f4f0ca940,sec6.3
+mars.control_within_precision_rel,0.357,mars_attribution/results/results.json,summary/control_shuffle_within/precision_relevance/mean,c156bc2f4f0ca940,sec6.3 control
+mars.corrected_recall_unit,0.927,mars_attribution/results/results.json,summary/theta_0.10/recall_unit/mean,c156bc2f4f0ca940,sec6.3
+mars.cited_at_0.15,70,mars_attribution/results/results.json,summary/theta_0.15/queries_with_any_citation,c156bc2f4f0ca940,sec6.3 threshold sweep
+mars.cited_at_0.20,5,mars_attribution/results/results.json,summary/theta_0.20/queries_with_any_citation,c156bc2f4f0ca940,sec6.3 threshold sweep
+mars.cited_at_0.25,0,mars_attribution/results/results.json,summary/theta_0.25/queries_with_any_citation,c156bc2f4f0ca940,sec6.3 threshold sweep
+mars.cited_at_0.30,0,mars_attribution/results/results.json,summary/theta_0.30/queries_with_any_citation,c156bc2f4f0ca940,sec6.3 threshold sweep
+mars.recall_at_015,0.531,mars_attribution/results/results.json,summary/theta_0.15/recall_unit/mean,c156bc2f4f0ca940,sec6.3 threshold sweep
+mars.recall_at_020,0.01,mars_attribution/results/results.json,summary/theta_0.20/recall_unit/mean,c156bc2f4f0ca940,sec6.3 threshold sweep
+mars.grade_high_at_shipped,90,mars_attribution/results/results.json,summary/theta_0.70/grade_distribution/High,c156bc2f4f0ca940,sec6.3 / L1
+abl.full_faithfulness,0.7022,ablation_v2/results/analysis.json,aggregated_from_results_json/full/mean,fef11b2347a96873,sec6.4 / Table 3
+abl.trustflow_delta,-0.0077,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/mean_delta,fef11b2347a96873,sec6.4 headline
+abl.trustflow_p,0.618,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/wilcoxon_p,fef11b2347a96873,sec6.4
+abl.trustflow_ci_lo,-0.0469,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/ci95/0,fef11b2347a96873,sec6.4
+abl.trustflow_ci_hi,0.0314,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/ci95/1,fef11b2347a96873,sec6.4
+abl.nohmmr_delta,-0.0476,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/mean_delta,fef11b2347a96873,sec6.4
+abl.nohmmr_p,0.054,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/wilcoxon_p,fef11b2347a96873,sec6.4
+abl.nohmmr_ci_lo,-0.0933,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/ci95/0,fef11b2347a96873,sec6.4
+abl.nohmmr_ci_hi,-0.0019,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/ci95/1,fef11b2347a96873,sec6.4
+abl.nomars_delta,0.0,ablation_v2/results/analysis.json,paired_vs_full/no_mars/mean_delta,fef11b2347a96873,sec6.4 structural zero
+abl.nomars_identical,90,ablation_v2/results/analysis.json,paired_vs_full/no_mars/n_identical_to_full,fef11b2347a96873,sec6.4 structural zero
+abl.trustflow_identical,10,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/n_identical_to_full,fef11b2347a96873,sec6.4
+abl.notrust_mean,0.6945,ablation_v2/results/analysis.json,aggregated_from_results_json/no_trust_flow/mean,fef11b2347a96873,sec6.4
+abl.full_std,0.0154,ablation_v2/results/analysis.json,aggregated_from_results_json/full/std,fef11b2347a96873,sec6.4
+abl.full_run_min,0.6923,ablation_v2/results/analysis.json,aggregated_from_results_json/full/per_run_means/0,fef11b2347a96873,sec6.4 run-to-run spread
+abl.full_run_max,0.7199,ablation_v2/results/analysis.json,aggregated_from_results_json/full/per_run_means/1,fef11b2347a96873,sec6.4 run-to-run spread
+abl.n_pairs,90,ablation_v2/results/analysis.json,n_pairs,fef11b2347a96873,sec6.4
+abl.q.n_queries,30,ablation_v2/results/analysis.json,query_level/n_queries,fef11b2347a96873,sec4.3 / sec5.7 unit of analysis
+abl.q.n_orderings,3,ablation_v2/results/analysis.json,query_level/n_orderings,fef11b2347a96873,sec4.4
+abl.q.n_bootstrap,10000,ablation_v2/results/analysis.json,query_level/n_bootstrap,fef11b2347a96873,sec4.3
+abl.q.n_permutation,100000,ablation_v2/results/analysis.json,query_level/n_permutation,fef11b2347a96873,sec4.3
+abl.q.full_icc,0.69,ablation_v2/results/analysis.json,query_level/full_icc1_across_orderings,fef11b2347a96873,sec4.4 / sec5.7 ordering variance
+abl.q.full_sd_median,0.073,ablation_v2/results/analysis.json,query_level/full_within_query_sd_median,fef11b2347a96873,sec5.7
+abl.q.trustflow_delta,-0.0077,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/mean_delta,fef11b2347a96873,sec5.7 / Table 3
+abl.q.trustflow_ci_lo,-0.0466,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/bootstrap_ci95/0,fef11b2347a96873,sec5.7 / Table 3
+abl.q.trustflow_ci_hi,0.0315,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/bootstrap_ci95/1,fef11b2347a96873,sec5.7 / Table 3
+abl.q.trustflow_perm_p,0.704,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/permutation_p,fef11b2347a96873,sec5.7 / Table 3
+abl.q.trustflow_scores_identical,10,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_scores_identical_instances,fef11b2347a96873,sec5.7
+abl.q.trustflow_answers_identical,1,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_answers_byte_identical_instances,fef11b2347a96873,sec5.7
+abl.q.trustflow_worse,17,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_queries_worse,fef11b2347a96873,sec5.7
+abl.q.trustflow_better,12,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_queries_better,fef11b2347a96873,sec5.7
+abl.q.nohmmr_delta,-0.0476,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/mean_delta,fef11b2347a96873,sec5.7
+abl.q.nohmmr_ci_lo,-0.1192,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/bootstrap_ci95/0,fef11b2347a96873,sec5.7
+abl.q.nohmmr_ci_hi,0.0195,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/bootstrap_ci95/1,fef11b2347a96873,sec5.7
+abl.q.nohmmr_perm_p,0.19,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/permutation_p,fef11b2347a96873,sec5.7
+mars.q.n_queries,30,mars_attribution/results/query_level.json,n_queries,932f046ce3931e95,sec5.6
+mars.q.n_orderings,3,mars_attribution/results/query_level.json,n_orderings,932f046ce3931e95,sec5.6
+mars.q.cited_all_010,30,mars_attribution/results/query_level.json,cited_by_theta/0.10/queries_cited_all_orderings,932f046ce3931e95,sec5.6 sweep
+mars.q.cited_all_015,21,mars_attribution/results/query_level.json,cited_by_theta/0.15/queries_cited_all_orderings,932f046ce3931e95,sec5.6 sweep
+mars.q.cited_any_015,26,mars_attribution/results/query_level.json,cited_by_theta/0.15/queries_cited_any_ordering,932f046ce3931e95,sec5.6 sweep
+mars.q.cited_all_020,1,mars_attribution/results/query_level.json,cited_by_theta/0.20/queries_cited_all_orderings,932f046ce3931e95,sec5.6 sweep
+mars.q.cited_any_020,3,mars_attribution/results/query_level.json,cited_by_theta/0.20/queries_cited_any_ordering,932f046ce3931e95,sec5.6 sweep
+mars.q.cited_any_070,0,mars_attribution/results/query_level.json,cited_by_theta/0.70/queries_cited_any_ordering,932f046ce3931e95,sec5.6 shipped
+mars.q.high_all,30,mars_attribution/results/query_level.json,shipped_grade_high_all_orderings,932f046ce3931e95,sec5.6 shipped
+mars.q.precision,0.993,mars_attribution/results/query_level.json,at_theta_0.10/precision_relevance/mean,932f046ce3931e95,sec5.6
+mars.q.precision_ci_lo,0.981,mars_attribution/results/query_level.json,at_theta_0.10/precision_relevance/bootstrap_ci95/0,932f046ce3931e95,sec5.6
+mars.q.precision_ci_hi,1.0,mars_attribution/results/query_level.json,at_theta_0.10/precision_relevance/bootstrap_ci95/1,932f046ce3931e95,sec5.6
+mars.q.recall,0.928,mars_attribution/results/query_level.json,at_theta_0.10/recall_unit/mean,932f046ce3931e95,sec5.6
+mars.q.recall_ci_lo,0.891,mars_attribution/results/query_level.json,at_theta_0.10/recall_unit/bootstrap_ci95/0,932f046ce3931e95,sec5.6
+mars.q.recall_ci_hi,0.961,mars_attribution/results/query_level.json,at_theta_0.10/recall_unit/bootstrap_ci95/1,932f046ce3931e95,sec5.6
+mars.q.recall_015,0.536,mars_attribution/results/query_level.json,recall_unit_by_theta/0.15/mean,932f046ce3931e95,sec5.6 sweep
+mars.q.recall_020,0.01,mars_attribution/results/query_level.json,recall_unit_by_theta/0.20/mean,932f046ce3931e95,sec5.6 sweep
+mars.q.random,0.423,mars_attribution/results/query_level.json,at_theta_0.10/random_precision_baseline/mean,932f046ce3931e95,sec5.6
+mars.q.shuffle,0.357,mars_attribution/results/query_level.json,control_shuffle_within/precision_relevance/mean,932f046ce3931e95,sec5.6
+mars.q.shuffle_ci_lo,0.304,mars_attribution/results/query_level.json,control_shuffle_within/precision_relevance/bootstrap_ci95/0,932f046ce3931e95,sec5.6
+mars.q.shuffle_ci_hi,0.411,mars_attribution/results/query_level.json,control_shuffle_within/precision_relevance/bootstrap_ci95/1,932f046ce3931e95,sec5.6
+metric.copy,0.971,ablation_v2/results/metric_validation.json,conditions/copy/faithfulness_mean,07945f1be05291c1,sec4.2 control
+metric.unrelated,0.048,ablation_v2/results/metric_validation.json,conditions/unrelated/faithfulness_mean,07945f1be05291c1,sec4.2 control
+metric.negated,0.436,ablation_v2/results/metric_validation.json,conditions/negated/faithfulness_mean,07945f1be05291c1,sec4.2 control
+metric.n_instances,15,ablation_v2/results/metric_validation.json,n_instances,07945f1be05291c1,sec4.2
+metric.rejected_copy,0.385,ablation_v2/results/metric_validation.json,history/mDeBERTa-base + chunk premise/copy,07945f1be05291c1,sec4.2 rejected configuration
+metric.rejected_unrelated,0.314,ablation_v2/results/metric_validation.json,history/mDeBERTa-base + chunk premise/unrelated,07945f1be05291c1,sec4.2 rejected configuration
+metric.separation,0.924,ablation_v2/results/metric_validation.json,separation_copy_minus_unrelated,07945f1be05291c1,sec4.2
+hmmr.promote.text_rate,0.963,hmmr_v2/results/memory_state_seed0.json,(derived; see DERIVED in this script),64f958c70e33e77e,sec6.2 / L1
+hmmr.promote.text_doc_rate,0.0,hmmr_v2/results/memory_state_seed0.json,(derived; see DERIVED in this script),64f958c70e33e77e,sec6.2 / L1
+hmmr.promote.text_image_rate,0.0,hmmr_v2/results/memory_state_seed0.json,(derived; see DERIVED in this script),64f958c70e33e77e,sec6.2 / L1
+hmmr.promote.text_imp,0.691,hmmr_v2/results/memory_state_seed0.json,(derived; see DERIVED in this script),64f958c70e33e77e,sec6.2 / L1
+hmmr.promote.text_doc_imp,0.45,hmmr_v2/results/memory_state_seed0.json,(derived; see DERIVED in this script),64f958c70e33e77e,sec6.2 / L1
+hmmr.promote.text_image_imp,0.445,hmmr_v2/results/memory_state_seed0.json,(derived; see DERIVED in this script),64f958c70e33e77e,sec6.2 / L1
+lat.analytic_sum_ms,111.55,latency/results/results_a100_1.json,(derived; see DERIVED in this script),bffbd74e88db0943,sec5.1 four analytical stages
+lat.analytic_share,0.0135,latency/results/results_a100_1.json,(derived; see DERIVED in this script),bffbd74e88db0943,sec5.1 share of end-to-end
+lat.gen_over_slowest_stage,166.0,latency/results/results_a100_1.json,(derived; see DERIVED in this script),bffbd74e88db0943,sec5.1 generation vs analytical stages
+lat.gen_over_fastest_stage,819.0,latency/results/results_a100_1.json,(derived; see DERIVED in this script),bffbd74e88db0943,sec5.1 generation vs analytical stages
+cold.encoder_ratio_p50,314.0,latency/results/results_a100_1.json,(derived; see DERIVED in this script),bffbd74e88db0943,sec5.2 / L3 original conditions
+rerun_a.cold.encoder_ratio_p50,3702.0,latency/results_rerun_20260928/results_a100_1.json,(derived; see DERIVED in this script),235f23ce82564d4f,sec5.2 / L3 page cache empty
+rerun_b.cold.encoder_ratio_p50,638.9,latency/results_rerun_20260928_b/results_a100_1.json,(derived; see DERIVED in this script),eaba26693c6296a5,sec5.2 / L3 page cache warm
+rerun_a.lat.analytic_sum_ms,104.98,latency/results_rerun_20260928/results_a100_1.json,(derived; see DERIVED in this script),235f23ce82564d4f,sec5.1 re-run consistency
+rerun_a.lat.analytic_share,0.0149,latency/results_rerun_20260928/results_a100_1.json,(derived; see DERIVED in this script),235f23ce82564d4f,sec5.1 re-run consistency
+rerun_b.lat.analytic_sum_ms,103.99,latency/results_rerun_20260928_b/results_a100_1.json,(derived; see DERIVED in this script),eaba26693c6296a5,sec5.1 re-run consistency
+rerun_b.lat.analytic_share,0.0147,latency/results_rerun_20260928_b/results_a100_1.json,(derived; see DERIVED in this script),eaba26693c6296a5,sec5.1 re-run consistency

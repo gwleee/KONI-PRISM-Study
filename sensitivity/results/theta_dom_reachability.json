@@ -1,0 +1,51 @@
+{
+  "analysis": "θ_dom 도달 가능성",
+  "tau_T": 0.5,
+  "theta_dom": 0.6,
+  "theory_min_trust_gap": {
+    "2": {
+      "min_trust_gap_required": 0.2027325540540821,
+      "reachable_given_trust_in_0_1": true,
+      "max_softmax_lower_bound": 0.5
+    },
+    "3": {
+      "min_trust_gap_required": 0.5493061443340548,
+      "reachable_given_trust_in_0_1": true,
+      "max_softmax_lower_bound": 0.3333333333333333
+    },
+    "4": {
+      "min_trust_gap_required": 0.752038698388137,
+      "reachable_given_trust_in_0_1": true,
+      "max_softmax_lower_bound": 0.25
+    },
+    "5": {
+      "min_trust_gap_required": 0.8958797346140275,
+      "reachable_given_trust_in_0_1": true,
+      "max_softmax_lower_bound": 0.2
+    }
+  },
+  "empirical_max_trust": {
+    "2": {
+      "n": 200,
+      "max_trust_mean": 0.5000000103935599,
+      "max_trust_max": 0.5000000596046448,
+      "max_trust_p99": 0.5000000447034836,
+      "pct_exceeding_theta_dom": 0.0
+    },
+    "3": {
+      "n": 200,
+      "max_trust_mean": 0.3545316431777479,
+      "max_trust_max": 0.3782123010324472,
+      "max_trust_p99": 0.37594393751656185,
+      "pct_exceeding_theta_dom": 0.0
+    },
+    "4": {
+      "n": 200,
+      "max_trust_mean": 0.2552432897266897,
+      "max_trust_max": 0.2712981279553242,
+      "max_trust_p99": 0.26921072785157374,
+      "pct_exceeding_theta_dom": 0.0
+    }
+  },
+  "conclusion": "T̃=softmax(Trust/τ_T) 는 합이 1인 분포이므로 max(T̃) ≥ 1/k 이고, Trust∈[0,1] 범위에서 상한도 제한된다. k=3, τ_T=0.5 에서 max(T̃)>0.60 을 만족하려면 1위-2위 Trust 격차가 0.549 이상이어야 하는데, Trust = γ·Align + (1-γ)·q̂ 는 두 항 모두 [0,1] 이고 실측 산포가 작아 실제로는 도달하지 못한다. 즉 Trust-Dominant 분기는 k≥3 에서 사실상 발화하지 않는다."
+}

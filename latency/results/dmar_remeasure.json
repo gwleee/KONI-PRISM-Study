@@ -1,0 +1,122 @@
+{
+  "experiment": "DMAR ILP solve time 재측정 (본문 정합 확인)",
+  "provenance": {
+    "timestamp_utc": "2026-09-10T06:59:35.899356+00:00",
+    "git_sha": "17d7dda229e1ed0c374bdc01827bff8913a646fa",
+    "git_branch": "(redacted)",
+    "git_dirty": "(redacted)",
+    "hostname": "(redacted)",
+    "python": "3.11.16",
+    "platform": "(redacted)",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.173.02"
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.173.02"
+      }
+    ],
+    "hardware_profile_env": "a100_1"
+  },
+  "alpha": 0.85,
+  "v_max_gb": 80,
+  "n_model_candidates": 5,
+  "reps_per_k": 200,
+  "warmup_excluded": 30,
+  "by_k": [
+    {
+      "k": 1,
+      "modalities": "text",
+      "n": 200,
+      "mean": 4.904569901991636,
+      "std": 0.43444438610672964,
+      "min": 3.9631323888897896,
+      "p50": 4.898283863440156,
+      "p95": 5.6203501764684916,
+      "max": 5.955562926828861
+    },
+    {
+      "k": 2,
+      "modalities": "text+image",
+      "n": 200,
+      "mean": 5.3467864682897925,
+      "std": 0.39463009899137685,
+      "min": 4.202248994261026,
+      "p50": 5.357446847483516,
+      "p95": 5.964111629873514,
+      "max": 6.648317910730839
+    },
+    {
+      "k": 3,
+      "modalities": "text+image+audio",
+      "n": 200,
+      "mean": 5.705107266549021,
+      "std": 0.4438068263399997,
+      "min": 4.556501284241676,
+      "p50": 5.71282091550529,
+      "p95": 6.390103115700185,
+      "max": 7.269607856869698
+    },
+    {
+      "k": 4,
+      "modalities": "text+image+audio+document",
+      "n": 200,
+      "mean": 5.985738793388009,
+      "std": 0.3467951312100197,
+      "min": 5.0985426642000675,
+      "p50": 5.992202088236809,
+      "p95": 6.624179473146796,
+      "max": 7.164492271840572
+    },
+    {
+      "k": 5,
+      "modalities": "text+image+audio+document+video",
+      "n": 200,
+      "mean": 6.224275850690901,
+      "std": 0.5386146024027172,
+      "min": 5.095698405057192,
+      "p50": 6.181760923936963,
+      "p95": 7.015995075926185,
+      "max": 9.061826393008232
+    }
+  ],
+  "verdict": {
+    "paper_text_value_ms": {
+      "mean": 8.36,
+      "std": 0.3,
+      "location": "KONI-Prism.tex §4.2 and Results (DMAR)"
+    },
+    "expc_stored_k3_ms": {
+      "mean": 8.355033333333333,
+      "std": 0.30178600357541924,
+      "n": 30
+    },
+    "remeasured_k3_ms": {
+      "mean": 5.705107266549021,
+      "std": 0.4438068263399997,
+      "n": 200
+    },
+    "remeasured_k1_to_k5_ms": {
+      "n": 1000,
+      "mean": 5.6332952999999995,
+      "std": 0.6388823019490004,
+      "min": 3.9631,
+      "p50": 5.66095,
+      "p95": 6.584845,
+      "max": 9.0618
+    },
+    "delta_vs_paper_k3": -2.6548927334509784,
+    "delta_vs_expc_k3": -2.649926066784312,
+    "k_dependence": {
+      "min_k_mean": 4.904569901991636,
+      "max_k_mean": 6.224275850690901,
+      "spread_ms": 1.3197059486992657
+    }
+  }
+}

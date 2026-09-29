@@ -1,0 +1,489 @@
+{
+  "experiment": "MARS attribution 실측 (tab:mars 대체)",
+  "provenance": {
+    "timestamp_utc": "2026-09-14T01:14:12.041279+00:00",
+    "git_sha": "58b0ad73059f52aa1746790f4ea08d614509f21a",
+    "git_branch": "(redacted)",
+    "git_dirty": "(redacted)",
+    "hostname": "(redacted)",
+    "python": "3.11.16",
+    "platform": "(redacted)",
+    "gpus": [],
+    "hardware_profile_env": "a100_1"
+  },
+  "settings": {
+    "hardware_profile": "a100_1",
+    "vram_gb": 80,
+    "alpha": 0.85,
+    "dmar_alpha_ref": 0.85,
+    "dmar_beta": 0.1,
+    "dmar_vram_reserve_gb": 2.0,
+    "dmar_qmin_default": 0.7,
+    "cmae_tau_conflict": 0.65,
+    "cmae_gamma": 0.6,
+    "cmae_tau_t": 0.5,
+    "cmae_theta_dom": 0.6,
+    "hmmr_lambda1": 0.5,
+    "hmmr_lambda2": 0.3,
+    "hmmr_lambda3": 0.2,
+    "hmmr_delta": 0.3,
+    "hmmr_omega_s": 0.5,
+    "hmmr_omega_e": 0.35,
+    "hmmr_omega_l": 0.15,
+    "hmmr_theta_imp": 0.6,
+    "mars_theta_cite": 0.1,
+    "mars_theta_sent": 0.7
+  },
+  "definition": {
+    "support": "max_{s' in sentences(s)} P_entail(s'->u) >= 0.5",
+    "precision": "|{s in Cited : supports(s)}| / |Cited|",
+    "recall_unit": "|{u supported and covered by a cited source}| / |{u supported}|",
+    "recall_source": "|{s supporting and cited}| / |{s supporting}|",
+    "nli_model": "joeddav/xlm-roberta-large-xnli"
+  },
+  "structural_note": "Eq.(21) 의 max_p G(p,n) >= θ_sent 는 G = cos·T̃·φ 이고 T̃ 가 softmax 출력(합=1)이므로 k>=2 에서 상한이 1.0×0.5×1.2=0.60 < 0.70 이다. 운영값 θ_sent=0.70 에서는 인용이 구조적으로 발생할 수 없다.",
+  "n_queries": 30,
+  "runs": 3,
+  "summary": {
+    "theta_0.10": {
+      "precision": {
+        "mean": 0.8240740740740742,
+        "std": 0.25029459685124705,
+        "n": 90
+      },
+      "recall_unit": {
+        "mean": 0.9269434996963086,
+        "std": 0.11456602433429033,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.5292134831460674,
+        "std": 0.19978335644669856,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": 0.9925925925925926,
+        "std": 0.04941045135965658,
+        "n": 90
+      },
+      "recall_relevance": {
+        "mean": 0.9740740740740741,
+        "std": 0.08977399529738485,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 2.1777777777777776,
+      "queries_with_any_citation": 90,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.15": {
+      "precision": {
+        "mean": 0.9,
+        "std": 0.23467523041027558,
+        "n": 70
+      },
+      "recall_unit": {
+        "mean": 0.5307553754478651,
+        "std": 0.4151659014800433,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.33352059925093636,
+        "std": 0.282502060218894,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": 1.0,
+        "std": 0.0,
+        "n": 70
+      },
+      "recall_relevance": {
+        "mean": 0.5611111111111112,
+        "std": 0.3890270844163529,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 1.1777777777777778,
+      "queries_with_any_citation": 70,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.20": {
+      "precision": {
+        "mean": 1.0,
+        "std": 0.0,
+        "n": 5
+      },
+      "recall_unit": {
+        "mean": 0.009840721076676133,
+        "std": 0.04893613840568264,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.016292134831460674,
+        "std": 0.07181703429346611,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": 1.0,
+        "std": 0.0,
+        "n": 5
+      },
+      "recall_relevance": {
+        "mean": 0.027777777777777776,
+        "std": 0.11517234548078617,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.05555555555555555,
+      "queries_with_any_citation": 5,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.25": {
+      "precision": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_unit": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.0,
+      "queries_with_any_citation": 0,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.30": {
+      "precision": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_unit": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.0,
+      "queries_with_any_citation": 0,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.40": {
+      "precision": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_unit": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.0,
+      "queries_with_any_citation": 0,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.50": {
+      "precision": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_unit": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.0,
+      "queries_with_any_citation": 0,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.60": {
+      "precision": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_unit": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.0,
+      "queries_with_any_citation": 0,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "theta_0.70": {
+      "precision": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_unit": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": 0.0,
+        "std": 0.0,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 0.0,
+      "queries_with_any_citation": 0,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 90,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "control_shuffle_across": {
+      "precision": {
+        "mean": 0.6277777777777777,
+        "std": 0.3919046611367669,
+        "n": 90
+      },
+      "recall_unit": {
+        "mean": 0.7327146144453837,
+        "std": 0.34675051194350265,
+        "n": 78
+      },
+      "recall_source": {
+        "mean": 0.4014957264957264,
+        "std": 0.17671415471855242,
+        "n": 78
+      },
+      "precision_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "recall_relevance": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "random_precision_baseline": {
+        "mean": null,
+        "std": 0.0,
+        "n": 0
+      },
+      "n_cited_mean": 2.1777777777777776,
+      "queries_with_any_citation": 90,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 0,
+        "Medium": 0,
+        "Low": 0
+      }
+    },
+    "control_shuffle_within": {
+      "precision": {
+        "mean": 0.6888888888888889,
+        "std": 0.3344550414951509,
+        "n": 90
+      },
+      "recall_unit": {
+        "mean": 0.5127225770484197,
+        "std": 0.3344857760894632,
+        "n": 89
+      },
+      "recall_source": {
+        "mean": 0.39550561797752815,
+        "std": 0.2063965127751834,
+        "n": 89
+      },
+      "precision_relevance": {
+        "mean": 0.3574074074074074,
+        "std": 0.2865711790177789,
+        "n": 90
+      },
+      "recall_relevance": {
+        "mean": 0.34814814814814815,
+        "std": 0.27893641009499265,
+        "n": 90
+      },
+      "random_precision_baseline": {
+        "mean": 0.42333333333333334,
+        "std": 0.04253220854887438,
+        "n": 90
+      },
+      "n_cited_mean": 2.1777777777777776,
+      "queries_with_any_citation": 90,
+      "n_queries": 90,
+      "grade_distribution": {
+        "High": 0,
+        "Medium": 0,
+        "Low": 0
+      }
+    }
+  }
+}

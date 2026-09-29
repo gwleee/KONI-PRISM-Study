@@ -1,0 +1,43 @@
+{
+  "check": "faithfulness metric validity (control conditions)",
+  "nli_model": "joeddav/xlm-roberta-large-xnli",
+  "premise_granularity": "sentence",
+  "n_instances": 15,
+  "conditions": {
+    "copy": {
+      "faithfulness_mean": 0.9714590964590964,
+      "contradicted_rate_mean": 0.3403479853479853,
+      "n": 15
+    },
+    "unrelated": {
+      "faithfulness_mean": 0.04774725274725274,
+      "contradicted_rate_mean": 0.19385225885225885,
+      "n": 15
+    },
+    "negated": {
+      "faithfulness_mean": 0.4357203907203907,
+      "contradicted_rate_mean": 0.739053724053724,
+      "n": 15
+    }
+  },
+  "separation_copy_minus_unrelated": 0.9237118437118437,
+  "pass_criteria": {
+    "copy>=0.85": true,
+    "unrelated<=0.15": true,
+    "separation>=0.70": true
+  },
+  "passed": true,
+  "history": {
+    "mDeBERTa-base + chunk premise": {
+      "copy": 0.385,
+      "unrelated": 0.314,
+      "separation": 0.071
+    },
+    "mDeBERTa-base + sentence premise": {
+      "copy": 0.642,
+      "unrelated": 0.209,
+      "separation": 0.433
+    },
+    "xlm-roberta-large + sentence premise": "채택"
+  }
+}

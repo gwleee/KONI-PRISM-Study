@@ -1,0 +1,79 @@
+{
+  "timestamp_utc": "2026-09-28T05:11:28.935115+00:00",
+  "git_sha": "bb2240be6db6ec1128d0766ad1adc6025e9044fd",
+  "git_branch": "(redacted)",
+  "git_dirty": "(redacted)",
+  "hostname": "(redacted)",
+  "python": "3.11.16",
+  "platform": "(redacted)",
+  "gpus": [
+    {
+      "index": 0,
+      "name": "NVIDIA A100 80GB PCIe",
+      "vram_total_mib": 81920,
+      "driver": "580.178.04"
+    }
+  ],
+  "hardware_profile_env": "a100_1",
+  "runs": 3,
+  "reps": 80,
+  "profiles": [
+    "a6000_1",
+    "rtx4090_simulated",
+    "a100_1"
+  ],
+  "distinct_combos": [
+    [
+      "text"
+    ],
+    [
+      "text",
+      "document"
+    ],
+    [
+      "text",
+      "image"
+    ],
+    [
+      "text",
+      "document",
+      "image"
+    ],
+    [
+      "image"
+    ],
+    [
+      "document"
+    ]
+  ],
+  "repeated_combos": [
+    [
+      "text",
+      "text"
+    ],
+    [
+      "text",
+      "text",
+      "text"
+    ],
+    [
+      "text",
+      "text",
+      "document"
+    ],
+    [
+      "text",
+      "text",
+      "image"
+    ],
+    [
+      "document",
+      "document"
+    ],
+    [
+      "text",
+      "image",
+      "image"
+    ]
+  ]
+}

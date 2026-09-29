@@ -1,0 +1,142 @@
+{
+  "experiment": "deployed routing registry and configuration snapshot",
+  "provenance": {
+    "timestamp_utc": "2026-09-28T23:38:19.117267+00:00",
+    "git_sha": "010fea6a37d406a7cb616264a87841ba63e940cd",
+    "git_branch": "(redacted)",
+    "git_dirty": "(redacted)",
+    "hostname": "(redacted)",
+    "python": "3.11.16",
+    "platform": "(redacted)",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.178.04"
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.178.04"
+      }
+    ],
+    "hardware_profile_env": "a100_1"
+  },
+  "settings": {
+    "hardware_profile": "a100_1",
+    "vram_gb": 80,
+    "alpha": 0.85,
+    "dmar_alpha_ref": 0.85,
+    "dmar_beta": 0.1,
+    "dmar_vram_reserve_gb": 2.0,
+    "dmar_qmin_default": 0.7,
+    "cmae_tau_conflict": 0.65,
+    "cmae_gamma": 0.6,
+    "cmae_tau_t": 0.5,
+    "cmae_theta_dom": 0.6,
+    "hmmr_lambda1": 0.5,
+    "hmmr_lambda2": 0.3,
+    "hmmr_lambda3": 0.2,
+    "hmmr_delta": 0.3,
+    "hmmr_omega_s": 0.5,
+    "hmmr_omega_e": 0.35,
+    "hmmr_omega_l": 0.15,
+    "hmmr_theta_imp": 0.6,
+    "mars_theta_cite": 0.1,
+    "mars_theta_sent": 0.7
+  },
+  "model_registry": {
+    "vlm_7b": {
+      "vram_gb": 14.0,
+      "supported_modalities": [
+        "image",
+        "video",
+        "text"
+      ],
+      "cost_hat": 0.7,
+      "cost_scale": {
+        "image": 0.7,
+        "video": 0.9,
+        "text": 0.5
+      },
+      "q_hat_init": {
+        "image": 0.9,
+        "video": 0.85,
+        "text": 0.75
+      }
+    },
+    "stt_large": {
+      "vram_gb": 3.0,
+      "supported_modalities": [
+        "audio"
+      ],
+      "cost_hat": 0.4,
+      "cost_scale": {
+        "audio": 0.4
+      },
+      "q_hat_init": {
+        "audio": 0.92
+      }
+    },
+    "doc_processor": {
+      "vram_gb": 4.0,
+      "supported_modalities": [
+        "document"
+      ],
+      "cost_hat": 0.5,
+      "cost_scale": {
+        "document": 0.5
+      },
+      "q_hat_init": {
+        "document": 0.88
+      }
+    },
+    "llm_7b": {
+      "vram_gb": 14.0,
+      "supported_modalities": [
+        "text"
+      ],
+      "cost_hat": 0.3,
+      "cost_scale": {
+        "text": 0.3
+      },
+      "q_hat_init": {
+        "text": 0.85
+      }
+    },
+    "ffmpeg": {
+      "vram_gb": 0.0,
+      "supported_modalities": [
+        "video"
+      ],
+      "cost_hat": 0.15,
+      "cost_scale": {
+        "video": 0.2
+      },
+      "q_hat_init": {
+        "video": 0.6
+      }
+    }
+  },
+  "q_min": {
+    "text": 0.7,
+    "image": 0.75,
+    "audio": 0.75,
+    "video": 0.65,
+    "document": 0.7
+  },
+  "q_min_range": [
+    0.65,
+    0.75
+  ],
+  "rel_base": {
+    "text": 1.0,
+    "image": 0.8,
+    "audio": 0.7,
+    "video": 0.7,
+    "document": 0.9
+  },
+  "specialist_vram_gb_sum": 35.0
+}

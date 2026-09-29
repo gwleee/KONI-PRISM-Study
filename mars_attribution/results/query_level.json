@@ -1,0 +1,117 @@
+{
+  "analysis": "attribution, query-level aggregation (30 queries x 3 orderings)",
+  "n_queries": 30,
+  "n_orderings": 3,
+  "seed": 20260929,
+  "n_bootstrap": 10000,
+  "cited_by_theta": {
+    "0.10": {
+      "queries_cited_all_orderings": 30,
+      "queries_cited_any_ordering": 30,
+      "n_queries": 30
+    },
+    "0.15": {
+      "queries_cited_all_orderings": 21,
+      "queries_cited_any_ordering": 26,
+      "n_queries": 30
+    },
+    "0.20": {
+      "queries_cited_all_orderings": 1,
+      "queries_cited_any_ordering": 3,
+      "n_queries": 30
+    },
+    "0.25": {
+      "queries_cited_all_orderings": 0,
+      "queries_cited_any_ordering": 0,
+      "n_queries": 30
+    },
+    "0.30": {
+      "queries_cited_all_orderings": 0,
+      "queries_cited_any_ordering": 0,
+      "n_queries": 30
+    },
+    "0.40": {
+      "queries_cited_all_orderings": 0,
+      "queries_cited_any_ordering": 0,
+      "n_queries": 30
+    },
+    "0.50": {
+      "queries_cited_all_orderings": 0,
+      "queries_cited_any_ordering": 0,
+      "n_queries": 30
+    },
+    "0.60": {
+      "queries_cited_all_orderings": 0,
+      "queries_cited_any_ordering": 0,
+      "n_queries": 30
+    },
+    "0.70": {
+      "queries_cited_all_orderings": 0,
+      "queries_cited_any_ordering": 0,
+      "n_queries": 30
+    }
+  },
+  "shipped_grade_high_all_orderings": 30,
+  "at_theta_0.10": {
+    "precision_relevance": {
+      "n_queries": 30,
+      "mean": 0.9925925925925926,
+      "bootstrap_ci95": [
+        0.9814814814814815,
+        1.0
+      ]
+    },
+    "recall_unit": {
+      "n_queries": 30,
+      "mean": 0.927755238588572,
+      "bootstrap_ci95": [
+        0.8911565001356667,
+        0.9607305295013628
+      ]
+    },
+    "random_precision_baseline": {
+      "n_queries": 30,
+      "mean": 0.42333333333333345,
+      "bootstrap_ci95": [
+        0.4100000000000001,
+        0.4400000000000001
+      ]
+    }
+  },
+  "recall_unit_by_theta": {
+    "0.10": {
+      "n_queries": 30,
+      "mean": 0.927755238588572,
+      "bootstrap_ci95": [
+        0.8911565001356667,
+        0.9607305295013628
+      ]
+    },
+    "0.15": {
+      "n_queries": 30,
+      "mean": 0.5359692046095555,
+      "bootstrap_ci95": [
+        0.4096790967722985,
+        0.6616285363028785
+      ]
+    },
+    "0.20": {
+      "n_queries": 30,
+      "mean": 0.009731379731379731,
+      "bootstrap_ci95": [
+        0.0,
+        0.02168498168498168
+      ]
+    }
+  },
+  "control_shuffle_within": {
+    "precision_relevance": {
+      "n_queries": 30,
+      "mean": 0.3574074074074074,
+      "bootstrap_ci95": [
+        0.3037037037037037,
+        0.4111111111111111
+      ]
+    }
+  }
+}

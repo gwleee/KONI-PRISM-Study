@@ -1,0 +1,17 @@
+# 실험 전용 compose 오버레이 — 제품 docker-compose.yml 은 수정하지 않는다.
+#
+# 왜 필요한가:
+#   장시간 실험에서 Qdrant 가 파일 디스크립터를 소진하고 죽었다.
+#     ERROR actix_server::accept: Too many open files (os error 24)
+#     ERROR collection::update_handler: Failed to flush: ... RocksDB flush_cf error
+#   RocksDB 세그먼트가 누적되면서 기본 nofile 한계(1024)를 넘긴 것이다.
+#   더 나쁜 점은 실패가 조용하다는 것이다 — HMMRRetriever.retrieve() 는 tier 별
+#   예외를 삼키고 빈 결과를 돌려주므로, 검색이 전부 실패해도 실험은 정상처럼
+#   진행되고 "메모리를 안 쓴 구성"과 구분되지 않는 값이 나온다(실제로 그렇게
+#   측정됐다). 한계를 올리고, 하네스 쪽에도 별도 게이트를 둔다.
+services:
+  qdrant:
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536

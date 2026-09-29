@@ -1,0 +1,293 @@
+{
+  "experiment": "Ablation v2 — 실제 파이프라인 호출 기반 재측정",
+  "provenance": {
+    "timestamp_utc": "2026-09-10T12:33:16.725307+00:00",
+    "git_sha": "3f42ab58bf2218d87513c61bbacbcff30feab856",
+    "git_branch": "(redacted)",
+    "git_dirty": "(redacted)",
+    "hostname": "(redacted)",
+    "python": "3.11.16",
+    "platform": "(redacted)",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.173.02"
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.173.02"
+      }
+    ],
+    "hardware_profile_env": "a100_1"
+  },
+  "settings": {
+    "hardware_profile": "a100_1",
+    "vram_gb": 80,
+    "alpha": 0.85,
+    "dmar_alpha_ref": 0.85,
+    "dmar_beta": 0.1,
+    "dmar_vram_reserve_gb": 2.0,
+    "dmar_qmin_default": 0.7,
+    "cmae_tau_conflict": 0.65,
+    "cmae_gamma": 0.6,
+    "cmae_tau_t": 0.5,
+    "cmae_theta_dom": 0.6,
+    "hmmr_lambda1": 0.5,
+    "hmmr_lambda2": 0.3,
+    "hmmr_lambda3": 0.2,
+    "hmmr_delta": 0.3,
+    "hmmr_omega_s": 0.5,
+    "hmmr_omega_e": 0.35,
+    "hmmr_omega_l": 0.15,
+    "hmmr_theta_imp": 0.6,
+    "mars_theta_cite": 0.1,
+    "mars_theta_sent": 0.7
+  },
+  "faithfulness_definition": {
+    "name": "faithfulness (fact-unit source support)",
+    "formula": "faithfulness(A,S) = |{u in U(A) : max_{s in S} P_entail(s -> u) >= theta_ent}| / |U(A)|",
+    "fact_unit_splitter": "동일 규칙: gateway/algorithms/mars.py::MARSScorer._split_into_passages",
+    "nli_model": "joeddav/xlm-roberta-large-xnli",
+    "theta_ent": 0.5,
+    "premise": "출처 청크를 문장 단위로 분해한 s (청크 전체가 아님 — 위 주석 참조)",
+    "premise_granularity": "sentence",
+    "hypothesis": "답변의 사실 단위 u",
+    "requires_gold_answer": false,
+    "validation": {
+      "control_copy": "출처를 그대로 답변 → 0.957",
+      "control_unrelated": "무관 문서를 답변 → 0.053",
+      "separation": 0.904,
+      "script": "paper_experiments/ablation_v2/validate_metric.py"
+    },
+    "limitations": [
+      "단일 전제-가설 쌍으로만 평가하므로 여러 문장에 걸친 조합적 함의를 놓칠 수 있다",
+      "수치·단위 추론에 약하다",
+      "절대 수준이 아니라 구성 간 비교에 사용해야 한다"
+    ]
+  },
+  "evalset": {
+    "path": "${KONI_ROOT}/paper_experiments/ablation_v2/data/evalset.jsonl",
+    "n": 30
+  },
+  "runs": 3,
+  "decoding": {
+    "temperature": 0.0,
+    "mode": "greedy (do_sample=False)",
+    "max_new_tokens": 512,
+    "note": "greedy 이므로 동일 프롬프트는 동일 답변을 낸다. full 과 no_mars 는 프롬프트가 같으므로 답변 본문이 일치해야 하며, 이는 MARS 가 사후 단계라는 구조적 사실의 검증이기도 하다."
+  },
+  "run_variance_source": "run 마다 질의 순서를 섞어 HMMR 메모리 축적 상태를 다르게 했다. 디코딩 난수는 제거돼 있으므로 run 간 변동은 메모리 상태에서만 온다.",
+  "memory_isolation": "project_id 를 run×config 단위로 분리한다. HMMR retrieve 는 project_id 로만 필터링하므로 (conversation_id 미사용) 구성별 분리에는 project_id 가 필요하다.",
+  "configs": {
+    "full": "Full KONI-Prism (DMAR+CMAE+HMMR+MARS)",
+    "no_trust_flow": "w/o CMAE→HMMR/MARS trust flow (trust 균등화)",
+    "no_hmmr": "w/o HMMR (메모리 검색 없음)",
+    "no_mars": "w/o MARS (귀속·인용 없음)"
+  },
+  "aggregated": {
+    "full": {
+      "description": "Full KONI-Prism (DMAR+CMAE+HMMR+MARS)",
+      "per_run_means": [
+        0.6922690272690273,
+        0.7199179524179525,
+        0.6944134133840018
+      ],
+      "mean": 0.7022001310236604,
+      "std": 0.015381498437166243,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": 0.0
+    },
+    "no_trust_flow": {
+      "description": "w/o CMAE→HMMR/MARS trust flow (trust 균등화)",
+      "per_run_means": [
+        0.7273293074028369,
+        0.6914364829070713,
+        0.6645956739339092
+      ],
+      "mean": 0.6944538214146059,
+      "std": 0.03147547363909285,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": -0.007746309609054536
+    },
+    "no_hmmr": {
+      "description": "w/o HMMR (메모리 검색 없음)",
+      "per_run_means": [
+        0.654590004222357,
+        0.6545900042223571,
+        0.6545900042223575
+      ],
+      "mean": 0.6545900042223572,
+      "std": 2.3551386880256624e-16,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": -0.047610126801303165
+    },
+    "no_mars": {
+      "description": "w/o MARS (귀속·인용 없음)",
+      "per_run_means": [
+        0.6922690272690273,
+        0.7199179524179525,
+        0.6944134133840018
+      ],
+      "mean": 0.7022001310236604,
+      "std": 0.015381498437166243,
+      "n_runs": 3,
+      "n_per_run": 30,
+      "total_failures": 0,
+      "delta_vs_full": 0.0
+    }
+  },
+  "per_run": {
+    "full": [
+      {
+        "run": 0,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.6922690272690273
+      },
+      {
+        "run": 1,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.7199179524179525
+      },
+      {
+        "run": 2,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.6944134133840018
+      }
+    ],
+    "no_trust_flow": [
+      {
+        "run": 0,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.7273293074028369
+      },
+      {
+        "run": 1,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.6914364829070713
+      },
+      {
+        "run": 2,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.6645956739339092
+      }
+    ],
+    "no_hmmr": [
+      {
+        "run": 0,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 0,
+        "mean": 0.654590004222357
+      },
+      {
+        "run": 1,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 0,
+        "mean": 0.6545900042223571
+      },
+      {
+        "run": 2,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 0,
+        "mean": 0.6545900042223575
+      }
+    ],
+    "no_mars": [
+      {
+        "run": 0,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.6922690272690273
+      },
+      {
+        "run": 1,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.7199179524179525
+      },
+      {
+        "run": 2,
+        "n": 30,
+        "failures": 0,
+        "queries_with_memory": 29,
+        "mean": 0.6944134133840018
+      }
+    ]
+  },
+  "diagnostics": {
+    "full": {
+      "n_units_mean": 11.455555555555556,
+      "contradicted_rate_mean": 0.42575298340004225,
+      "answer_chars_mean": 582.1555555555556,
+      "n_memory_retrieved_mean": 5.311111111111111,
+      "mars_reliability_mean": 0.9898468472158525,
+      "strategy_distribution": {
+        "trust_dominant": 0.0,
+        "explicit_conflict": 0.9,
+        "abstain": 0.1
+      }
+    },
+    "no_trust_flow": {
+      "n_units_mean": 10.655555555555555,
+      "contradicted_rate_mean": 0.38379721857663035,
+      "answer_chars_mean": 553.9888888888889,
+      "n_memory_retrieved_mean": 5.355555555555555,
+      "mars_reliability_mean": 0.9999999956952201,
+      "strategy_distribution": {
+        "trust_dominant": 0.0,
+        "explicit_conflict": 0.9,
+        "abstain": 0.1
+      }
+    },
+    "no_hmmr": {
+      "n_units_mean": 8.833333333333334,
+      "contradicted_rate_mean": 0.3504812943048237,
+      "answer_chars_mean": 481.1333333333333,
+      "n_memory_retrieved_mean": 0.0,
+      "mars_reliability_mean": 0.9897752100334452,
+      "strategy_distribution": {
+        "trust_dominant": 0.0,
+        "explicit_conflict": 0.9,
+        "abstain": 0.1
+      }
+    },
+    "no_mars": {
+      "n_units_mean": 11.455555555555556,
+      "contradicted_rate_mean": 0.42575298340004225,
+      "answer_chars_mean": 582.1555555555556,
+      "n_memory_retrieved_mean": 5.311111111111111,
+      "mars_reliability_mean": null,
+      "strategy_distribution": {
+        "trust_dominant": 0.0,
+        "explicit_conflict": 0.9,
+        "abstain": 0.1
+      }
+    }
+  }
+}

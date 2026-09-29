@@ -1,0 +1,77 @@
+[
+  {
+    "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+    "after_turn": 10,
+    "summary": "X축은 에포크 또는 인덱스를, Y축은 점수 또는 밀리초를 의미합니다. 이 그래프는 토큰 수와 응답 품질 간의 관계를 분석하기 위해 사용됩니다."
+  },
+  {
+    "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+    "after_turn": 10,
+    "summary": "Authors address the challenge of managing large, complex datasets in image processing by proposing a method that adjusts input image resolution to a pyramid structure using the same model variant (BBB), slightly improving APb performance while significantly dropping APm."
+  },
+  {
+    "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+    "after_turn": 10,
+    "summary": "죄송합니다, 제공된 식이 잘 이해되지 않습니다. 식을 다시 확인하거나, 변수와 식의 의미를 명확히 설명해주시면 도와드리겠습니다."
+  },
+  {
+    "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+    "after_turn": 10,
+    "summary": "데이터셋 조명 과정은 대규모 데이터셋에서 더 작은 조명된 데이터셋을 생성하여 데이터 쌍의 수를 줄입니다. 이 과정은 레이블의 범위를 유지하면서 데이터셋의 크기를 줄여 컴퓨팅 리소스를 효율적으로 사용할 수 있게 합니다."
+  },
+  {
+    "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+    "after_turn": 10,
+    "summary": "여의도역 인근에 위치한 유명 커피숍은 엔제리너스, 카페베네, 스타벅스, 파스쿠찌 등 네 곳이 있습니다. 이 커피숍들은 여의도 '국제금융로 2길' 250m 구간에 밀집해 있으며, 프랜차이즈 커피숍으로 알려져 있습니다."
+  },
+  {
+    "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+    "after_turn": 10,
+    "summary": "《车辆19》在上映一周后撤下屏幕，主要是因为当时上映的外国电影数量过多，导致观众选择范围变广，每部电影的观众数量减少，最终《车辆19》未能吸引足够的观众，因此提前结束了上映。"
+  },
+  {
+    "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+    "after_turn": 10,
+    "summary": "研究人员使用了详尽性、多样性和赋能性三个标准来评估全球意义构建活动。"
+  },
+  {
+    "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+    "after_turn": 10,
+    "summary": "연구에서는autoencoder 네트워크의 깊이가 증가할수록 더 abstraction된 특징을 추출할 수 있지만, 과적합의 위험도 증가한다는 가설을 제시했습니다."
+  },
+  {
+    "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+    "after_turn": 10,
+    "summary": "면세점에서 랑콤 UV 엑스퍼트 SPF50 선크림의 가격은 기존 62달러에서 2달러 하락하여 60달러로 변경되었습니다."
+  },
+  {
+    "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+    "after_turn": 10,
+    "summary": "가톨리코스라는 칭호는 4세기에 아르메니아 사도 교회의 아르메니아 가톨리코스에 의해 처음 사용되었다."
+  },
+  {
+    "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+    "after_turn": 10,
+    "summary": "研究人员使用了四种消融方法来分析其推理时算法：禁用检索、使用硬约束、始终检索顶部一个文档以及移除ISSUP分数。这些方法的主要区别在于它们如何处理检索和评分机制。\n\nBMW 3系列在MARS Attribution Reliability Grades图中的KONI-Prism v4性能用蓝色虚线表示，显示随时间性能有所提升，并高于基线的红色虚线性能。\n\n论文《Building Performant Multimodal Large Language Models》的第一作者是Brandon McKinzie和Zhe Gan。"
+  },
+  {
+    "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+    "after_turn": 10,
+    "summary": "The main contributions of the survey paper on multimodal foundation models are:\n\n1. Offering a comprehensive overview of modern multimodal foundation models, including established models and emerging topics inspired by large language models.\n2. Discussing the role of Cross-Entropy loss in preserving discriminative features in the Koopcon model.\n3. Detailing the initializations used for the branches in the model, with pre-trained ViTs for branches and scratch initialization for interactions and merging.\n4. Highlighting the F1 score of 0.72 for the text domain in the discussed model.\n5. Explaining the criticism faced by Pope Clement II after his election, due to his previous role as a bishop and the involvement of secular rulers in the election process."
+  },
+  {
+    "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+    "after_turn": 10,
+    "summary": "RAG的主要优势在于其成本效益和性能，与传统的LLMs相比，RAG方法通过集成外部数据库的知识，能够超越原生LLMs的性能。"
+  },
+  {
+    "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+    "after_turn": 10,
+    "summary": "KONI-Prism v4的点线特征如下：该点线为蓝色虚线，从图的左侧平稳上升至右侧，y轴附近较高，整体呈现平缓上升的趋势。"
+  },
+  {
+    "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+    "after_turn": 10,
+    "summary": "반복적 프롬프트 엔지니어링 방법을 CoVE65B와 비교하여 LLM 생성의 사실성을 개선하는 방법을 연구했습니다."
+  }
+]

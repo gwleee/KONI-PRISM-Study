@@ -1,0 +1,10 @@
+{
+  "dataset": "AblationEval-Grounded + distractors (MARS attribution)",
+  "n_instances": 60,
+  "chunks_per_query": 5,
+  "n_relevant_per_query": 2,
+  "n_distractor_per_query": 3,
+  "seed": 42,
+  "base": "${KONI_ROOT}/paper_experiments/ablation_v2/data/evalset.jsonl",
+  "rationale": "관련 청크만 주면 전부 인용해도 정밀도 1.0 이라 귀속 능력이 측정되지 않는다. 방해 청크를 섞어 선택 과제를 만든다."
+}

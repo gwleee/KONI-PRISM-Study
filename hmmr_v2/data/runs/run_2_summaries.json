@@ -1,0 +1,77 @@
+[
+  {
+    "conversation_id": "e2704e50-8a4b-52fc-96d0-a52d85ec9553",
+    "after_turn": 10,
+    "summary": "법원은 청실아파트 재건축 사업에서 107동을 14~18층, 112동을 15층 초과로 건설하지 못하게 하는 결정을 내렸습니다. 이는 일조권 침해를 이유로 단국대 부속중·고와 단국공업고가 신청한 가처분에 따른 결과입니다."
+  },
+  {
+    "conversation_id": "f9cdf7a7-c414-5ae5-8d74-2c21f669a31a",
+    "after_turn": 10,
+    "summary": "研究假设随着自动编码器架构深度的增加，网络能够捕获更抽象的特征，但过拟合的风险也会增加。"
+  },
+  {
+    "conversation_id": "b96f2b15-a0aa-5234-8f8e-31b0ab1e605c",
+    "after_turn": 10,
+    "summary": "Parameter-Inverted Image Pyramid Networks (PIIP) aim to address the high computational cost of processing multiple image resolutions with a single large-scale model, by inverting the parameterization process and reducing the need for redundant computations."
+  },
+  {
+    "conversation_id": "de7baf9d-c5be-5f25-b96f-78b7ee3cadcf",
+    "after_turn": 10,
+    "summary": "使用大量图像令牌嵌入在Vision-Language Connector中的挑战包括计算复杂度增加，尤其是在处理多张图像输入时。这可能导致性能下降和计算资源消耗增加。"
+  },
+  {
+    "conversation_id": "9358e091-32cd-5a65-afda-93d459667874",
+    "after_turn": 10,
+    "summary": "이 논문은 생성형 모델을 학습시키기 위해 강화학습(RL) 방법을 제안합니다. 검증 가능한 문제에 대한 보상은 사전에 정의된 기준이나 규칙에 따라 직접 결정됩니다."
+  },
+  {
+    "conversation_id": "f079cac1-3286-5a16-beec-ef3ad37732d9",
+    "after_turn": 10,
+    "summary": "ChatGPT (OpenAI, 2022) and GPT-4 (OpenAI, 2023a) are recent general-purpose language models that excel in various tasks. These models differ from earlier versions by showing improved understanding, context awareness, and the ability to interact more naturally and use external tools."
+  },
+  {
+    "conversation_id": "fb58d686-08fa-5ca6-8f59-f87c457d7181",
+    "after_turn": 10,
+    "summary": "PIIP-TSB和PIIP-SBL在目标检测性能上分别比ViTDet-B和ViTDet-L提高了2.8%和2.6%。"
+  },
+  {
+    "conversation_id": "07c60523-1895-5a2f-8be3-8cf975cd130b",
+    "after_turn": 10,
+    "summary": "쿠니스가 연기한 매소드에서는 검은 가죽 비스 kutie와 검은 바지를 입고, 5인치짜리 힐을 신어야 했습니다."
+  },
+  {
+    "conversation_id": "32ca18d1-363b-55f5-9baf-2566b3d6b27c",
+    "after_turn": 10,
+    "summary": "이 그래프에서 KONI-Prism v4와 Baseline의 성능 차이는 다음과 같습니다:\n\n1. **시작 점**: KONI-Prism v4가 빠르게 시작하고 Baseline보다 높은 수준을 유지합니다.\n2. **상승 경향**: KONI-Prism v4는 더 빠르게 상승하며, 대부분의 시점에서 Baseline보다 높은 성능을 보입니다.\n3. **결론**: KONI-Prism v4가 Baseline보다 우수한 성능을 보이는 것으로 나타납니다."
+  },
+  {
+    "conversation_id": "9bb32490-3d58-528c-bb21-4ec1d942b10d",
+    "after_turn": 10,
+    "summary": "논문에서 논의된 주요 접근법은 Retrieval-Augmented Generation(RAG)을 사용하여 외부 지식 소스에서 관련 정보를 검색하는 것입니다. 이를 통해 대형 언어 모델은 개인적 또는Previously unseen 문서 컬렉션을 포함하여 질문에 답할 수 있습니다."
+  },
+  {
+    "conversation_id": "901d9b56-7b35-593b-a48c-7f0986251b85",
+    "after_turn": 10,
+    "summary": "KONI-Prism v4 선은 파란색으로, \"KONI-Prism v4\" 모델의 추론 라이턴시를 나타내며, 이 선이 더 낮은 위치에 있는 것은 해당 모델이 더 빠른 추론 라이턴시를 가진다는 것을 의미합니다."
+  },
+  {
+    "conversation_id": "b837c4a4-2977-5ef1-a7fd-36c2af69f8c2",
+    "after_turn": 10,
+    "summary": "The Kimi k1.5 technical report focuses on the training practices of their latest multi-modal LLM, detailing RL training techniques, multi-modal data recipes, and infrastructure optimizations for scaling reinforcement learning."
+  },
+  {
+    "conversation_id": "8663d449-0c48-5f7c-b468-a3f680242163",
+    "after_turn": 10,
+    "summary": "백건우의 앨범 '슈만'에는 슈만의 작품들이 수록되어 있으며, 주요 작품으로는 아베크 변주곡, 숲속의 정경, 어린이의 정경, 유령 변주곡, 새벽의 노래, 밤의 소곡 등이 포함되어 있습니다. 이 앨범은 '오이제비우스'와 '플로레스탄'이라는 두 개의 CD로 구성되어 슈만의 서로 다른 면을 담고 있습니다."
+  },
+  {
+    "conversation_id": "312cbbe0-cf52-50a6-ab8a-a58c71a4ff40",
+    "after_turn": 10,
+    "summary": "Section 4.2 of the paper discusses key transitions from Closed-Set to Open-Set Models, including Object Detection and Grounding, and Image Segmentation and Referring, highlighting how these models adapt to handle unknown or novel data."
+  },
+  {
+    "conversation_id": "48e27a47-86f5-5fbf-991f-d8be2efb1af1",
+    "after_turn": 10,
+    "summary": "베페 베이비페어는 8월 20일부터 23일까지 4일간 열립니다."
+  }
+]

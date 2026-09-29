@@ -1,0 +1,308 @@
+{
+  "experiment": "Exp C — end-to-end latency + cold-start",
+  "hardware_profile": "a100_1",
+  "reps": 30,
+  "warmup_excluded": 5,
+  "provenance": {
+    "timestamp_utc": "2026-09-28T07:14:30.274008+00:00",
+    "git_sha": "643301d253264ffff24a0db6262a9cbdcd6bd793",
+    "git_branch": "(redacted)",
+    "git_dirty": "(redacted)",
+    "hostname": "(redacted)",
+    "python": "3.11.16",
+    "platform": "(redacted)",
+    "gpus": [
+      {
+        "index": 0,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.178.04"
+      },
+      {
+        "index": 1,
+        "name": "NVIDIA A100 80GB PCIe",
+        "vram_total_mib": 81920,
+        "driver": "580.178.04"
+      }
+    ],
+    "hardware_profile_env": "a100_1"
+  },
+  "settings": {
+    "hardware_profile": "a100_1",
+    "vram_gb": 80,
+    "alpha": 0.85,
+    "dmar_alpha_ref": 0.85,
+    "dmar_beta": 0.1,
+    "dmar_vram_reserve_gb": 2.0,
+    "dmar_qmin_default": 0.7,
+    "cmae_tau_conflict": 0.65,
+    "cmae_gamma": 0.6,
+    "cmae_tau_t": 0.5,
+    "cmae_theta_dom": 0.6,
+    "hmmr_lambda1": 0.5,
+    "hmmr_lambda2": 0.3,
+    "hmmr_lambda3": 0.2,
+    "hmmr_delta": 0.3,
+    "hmmr_omega_s": 0.5,
+    "hmmr_omega_e": 0.35,
+    "hmmr_omega_l": 0.15,
+    "hmmr_theta_imp": 0.6,
+    "mars_theta_cite": 0.1,
+    "mars_theta_sent": 0.7
+  },
+  "service_availability": {
+    "llm": {
+      "available": true,
+      "url": "http://localhost:8004",
+      "status": 200,
+      "body": "{\"status\":\"ok\",\"model\":\"Qwen/Qwen2.5-7B-Instruct\",\"quantization\":\"bf16\",\"model_loaded\":true,\"cuda\":true,\"vram_used_gb\":15.28,\"vram_total_gb\":85.1}"
+    },
+    "vlm": {
+      "available": false,
+      "url": "http://vlm:8001",
+      "error": "ConnectError: [Errno -3] Temporary failure in name resolution"
+    },
+    "stt": {
+      "available": true,
+      "url": "http://localhost:8002",
+      "status": 200,
+      "body": "{\"status\":\"ok\",\"model\":\"openai/whisper-large-v3\",\"model_loaded\":true,\"cuda\":true,\"vram_used_gb\":3.09}"
+    },
+    "doc": {
+      "available": false,
+      "url": "http://doc:8003",
+      "error": "ConnectError: [Errno -3] Temporary failure in name resolution"
+    },
+    "ffmpeg": {
+      "available": false,
+      "url": "http://ffmpeg:8007",
+      "error": "ConnectError: [Errno -3] Temporary failure in name resolution"
+    },
+    "qdrant": {
+      "available": true,
+      "status": 200
+    }
+  },
+  "qdrant_collection": {
+    "status": "ready",
+    "url": "http://localhost:6333",
+    "attempts": 1,
+    "points": 494
+  },
+  "memory_seeding": {
+    "requested": 80,
+    "stored": 80,
+    "elapsed_s": 19.076950569999553,
+    "errors": []
+  },
+  "stage_latency_ms": {
+    "dmar_route": {
+      "status": "measured",
+      "n": 30,
+      "mean": 7.724966666666668,
+      "std": 0.8491174925132293,
+      "min": 6.737,
+      "p50": 7.6,
+      "p95": 9.4748,
+      "max": 10.555,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 7.724966666666668,
+        "std": 0.8491174925132293,
+        "min": 6.737,
+        "p50": 7.6,
+        "p95": 9.4748,
+        "max": 10.555
+      }
+    },
+    "specialist_infer": {
+      "status": "measured",
+      "n": 30,
+      "mean": 1643.9608666666668,
+      "std": 6.4012053969024505,
+      "min": 1625.161,
+      "p50": 1643.391,
+      "p95": 1654.5908,
+      "max": 1660.406,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 1643.9608666666668,
+        "std": 6.4012053969024505,
+        "min": 1625.161,
+        "p50": 1643.391,
+        "p95": 1654.5908,
+        "max": 1660.406
+      }
+    },
+    "cmae_encode": {
+      "status": "measured",
+      "n": 30,
+      "mean": 31.72356666666667,
+      "std": 1.5182158695115728,
+      "min": 29.623,
+      "p50": 31.358,
+      "p95": 34.716,
+      "max": 35.748,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 31.72356666666667,
+        "std": 1.5182158695115728,
+        "min": 29.623,
+        "p50": 31.358,
+        "p95": 34.716,
+        "max": 35.748
+      }
+    },
+    "hmmr_retrieve": {
+      "status": "measured",
+      "n": 30,
+      "mean": 29.23323333333333,
+      "std": 1.6125182636406672,
+      "min": 26.493,
+      "p50": 28.935000000000002,
+      "p95": 31.7073,
+      "max": 32.516,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 29.23323333333333,
+        "std": 1.6125182636406672,
+        "min": 26.493,
+        "p50": 28.935000000000002,
+        "p95": 31.7073,
+        "max": 32.516
+      }
+    },
+    "llm_generate": {
+      "status": "measured",
+      "n": 30,
+      "mean": 5314.202866666667,
+      "std": 1623.4989143941175,
+      "min": 2414.666,
+      "p50": 6482.215,
+      "p95": 6609.8652,
+      "max": 6642.749,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 5314.202866666667,
+        "std": 1623.4989143941175,
+        "min": 2414.666,
+        "p50": 6482.215,
+        "p95": 6609.8652,
+        "max": 6642.749
+      }
+    },
+    "mars_score": {
+      "status": "measured",
+      "n": 30,
+      "mean": 36.297466666666665,
+      "std": 6.666959084161614,
+      "min": 31.05,
+      "p50": 35.679500000000004,
+      "p95": 38.7069,
+      "max": 70.061,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 36.297466666666665,
+        "std": 6.666959084161614,
+        "min": 31.05,
+        "p50": 35.679500000000004,
+        "p95": 38.7069,
+        "max": 70.061
+      }
+    },
+    "total": {
+      "status": "measured",
+      "n": 30,
+      "mean": 7063.184366666667,
+      "std": 1625.834290842142,
+      "min": 4159.32,
+      "p50": 8237.965,
+      "p95": 8359.79855,
+      "max": 8398.163,
+      "outliers_excluded": {
+        "n": 0,
+        "values_ms": [],
+        "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류"
+      },
+      "all_samples_summary": {
+        "n": 30,
+        "mean": 7063.184366666667,
+        "std": 1625.834290842142,
+        "min": 4159.32,
+        "p50": 8237.965,
+        "p95": 8359.79855,
+        "max": 8398.163
+      }
+    }
+  },
+  "cold_start_encoder": {
+    "status": "measured",
+    "component": "bge_m3_encoder",
+    "load_plus_first_infer_ms": 99443.24185000005,
+    "warm_infer_ms": {
+      "n": 10,
+      "mean": 136.7113550999875,
+      "std": 346.0435533128682,
+      "min": 26.094739999734884,
+      "p50": 26.86214350001137,
+      "p95": 631.3072916499539,
+      "max": 1121.556273999886
+    },
+    "cold_warm_ratio": 727.3956269197214,
+    "vram_before_mib": {
+      "0": 18731,
+      "1": 0
+    },
+    "vram_after_mib": {
+      "0": 20356,
+      "1": 4
+    },
+    "vram_delta_mib": {
+      "0": 1625,
+      "1": 4
+    }
+  },
+  "cold_start_containers": {
+    "llm": {
+      "status": "measured",
+      "service": "llm",
+      "restart_to_healthy_s": 8.006717274000039
+    },
+    "stt": {
+      "status": "measured",
+      "service": "stt",
+      "restart_to_healthy_s": 6.00525005999998
+    }
+  },
+  "stage_error_counts": {}
+}

@@ -1,0 +1,2148 @@
+[
+  {
+    "project_id": "hmmrv2-8584711f-s0-p0",
+    "stored": [
+      {
+        "tier": "S",
+        "turn_key": "seg0046_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6929108979999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0127_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4029616234399827
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0016_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.8
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0050_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6934965
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0118_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.464942546008294
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0017_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6894579
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0061_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.70419276
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0071_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4488938985587861
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0021_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71085926
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0054_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.68964267
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0061_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.70419276
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0006_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.67699577
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0047_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.695883384
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0097_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4497281110082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0020_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.690523535
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0027_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.702168229
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0076_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4727248910082939
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0059_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.682074026
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0045_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.658972735
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0047_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.695883384
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0109_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4791036585587861
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0019_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.709505266
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0020_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.690523535
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0029_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71096254
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0022_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.59514981
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0032_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.715176366
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0135_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4541320885447804
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0059_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.682074026
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0096_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.44095626755878614
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0068_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.41112381145780175
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0006_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.67699577
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0114_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.421511436008294
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0014_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7059754540000001
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0094_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4166341150082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0050_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6934965
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0106_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.423577531008294
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0115_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4350116480082939
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0045_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.658972735
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0113_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4556520385587861
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0039_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.704019139
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0032_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.715176366
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0003_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.64880935
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0108_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4395765535587861
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0029_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71096254
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0012_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6943407500000001
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0021_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71085926
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0132_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4565467234399828
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0012_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6943407500000001
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0016_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.8
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0082_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4364308420082939
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0058_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.684156878
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0087_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4660943560082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0135_1",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.3949836834399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0121_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.44661660565977046
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0014_0",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7059754540000001
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0054_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.68964267
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0017_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6894579
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0019_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.709505266
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0101_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.43526925245780174
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0086_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4376213269073096
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0039_0",
+        "conversation_id": "e4f02e4e-7e88-5157-b28f-898d05de81b5",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.704019139
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0125_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.43011666500829393
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0088_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4290631720082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0128_2",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4603653334399827
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0046_0",
+        "conversation_id": "96292bf9-6475-5fc4-b673-ae640f4c4063",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6929108979999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0127_1",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.36636573143998274
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0003_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.64880935
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0074_0",
+        "conversation_id": "c3d4c051-65c0-51f9-bff9-f4f561d47517",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4130610660082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0058_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.684156878
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0027_0",
+        "conversation_id": "c6a404b5-9ce4-5d45-91be-654d671b32dd",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.702168229
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0133_1",
+        "conversation_id": "12295131-6b40-5f8e-97cc-478b52e00868",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.47153772543998274
+      }
+    ],
+    "write_s": 10.415287813986652
+  },
+  {
+    "project_id": "hmmrv2-8584711f-s0-p1",
+    "stored": [
+      {
+        "tier": "S",
+        "turn_key": "seg0081_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.44359045600829394
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0044_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.69613048
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0015_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.702934998
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0062_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7103422420000001
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0131_1",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4455745874399828
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0044_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.69613048
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0119_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.45385720200829394
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0034_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.8
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0102_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4544510769073096
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0104_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4396544621092783
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0130_2",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4320780714399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0089_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.44868400600829395
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0075_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4506924529073095
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0067_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4699390220082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0038_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.556825539
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0049_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.64323664
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0123_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.44778062800829393
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0004_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.702797056
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0053_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.709327751
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0002_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.73135987
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0004_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.702797056
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0069_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.44278247500829393
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0028_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.69565091
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0116_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4427636414578018
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0095_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.46996428855878614
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0028_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.69565091
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0099_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.46480708500829393
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0036_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.690407494
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0048_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71198364
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0060_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6755898899999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0009_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.699476262
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0005_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6610895
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0133_2",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4231744054399827
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0053_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.709327751
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0023_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7031902839999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0136_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4235740254399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0126_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4569477220082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0136_2",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4385798334399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0008_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.691866545
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0057_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.660134982
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0030_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7019255099999999
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0048_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71198364
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0005_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6610895
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0060_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6755898899999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0023_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7031902839999999
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0040_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.70316285
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0008_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.691866545
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0026_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.69007104
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0062_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7103422420000001
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0043_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.686036711
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0013_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.690401795
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0015_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.702934998
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0083_0",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4668394971092783
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0130_1",
+        "conversation_id": "91dea412-b0a7-5d75-a12a-68a21d65f46b",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4638954934399827
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0013_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.690401795
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0026_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.69007104
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0049_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.64323664
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0057_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.660134982
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0065_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71923152
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0131_2",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4164096334399828
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0043_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.686036711
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0073_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4716779110082939
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0002_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.73135987
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0030_0",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7019255099999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0129_2",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4447191014399827
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0040_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.70316285
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0129_1",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4535107244399827
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0134_1",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4260985784399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0036_0",
+        "conversation_id": "fd1d5dc7-ca07-5afa-9a2c-bfca7e3a1e1d",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.690407494
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0065_0",
+        "conversation_id": "998741f0-cc9f-5d8a-8b4d-b48fa7e87f71",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.71923152
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0132_1",
+        "conversation_id": "17bdc758-dfbb-51e2-8a4c-1a46589c8ad6",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4400628434399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0034_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.8
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0009_0",
+        "conversation_id": "cd1b7dab-800e-5c6a-889a-b5cae2559441",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.699476262
+      }
+    ],
+    "write_s": 8.01743136299774
+  },
+  {
+    "project_id": "hmmrv2-8584711f-s0-p2",
+    "stored": [
+      {
+        "tier": "E",
+        "turn_key": "seg0033_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.703262015
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0093_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.42613668221026263
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0133_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4758383944399828
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0056_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.66771374
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0031_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7106824700000001
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0127_2",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4230152658875839
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0041_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.802
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0085_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4641504009073096
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0064_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6823098439999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0084_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.420283836008294
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0063_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.73107639
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0117_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4157558560082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0092_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4330190389073096
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0100_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4436125780082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0056_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.66771374
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0130_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4192724559923816
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0063_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.73107639
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0051_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.696585944
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0135_2",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4176101414399827
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0110_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4439041684578018
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0128_1",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4339955134399828
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0051_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.696585944
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0078_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.46004633945780177
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0134_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4299877934399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0077_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4200099610082939
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0055_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.638405108
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0018_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.62013615
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0025_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7071855499999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0007_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6834285449999999
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0000_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.714084076
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0090_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4091477400082939
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0079_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.3947217212102626
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0120_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4464333640082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0091_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.419262747008294
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0131_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4286736468875839
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0134_2",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4173290834399827
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0042_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.5653444
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0052_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.731574834
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0007_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6834285449999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0111_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4343686722102626
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0129_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4347152554399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0052_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.731574834
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0024_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.632727559
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0136_1",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4322971844399828
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0035_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.65634703
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0018_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.62013615
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0080_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.45265363455878616
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0055_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.638405108
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0070_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.43353861100829394
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0001_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.703406335
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0037_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.703696821
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0041_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.802
+      },
+      {
+        "tier": "E",
+        "turn_key": null,
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0037_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.703696821
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0105_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.43018778400829394
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0001_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.703406335
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0112_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.5529998560082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0122_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4469287849073096
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0000_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.714084076
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0031_0",
+        "conversation_id": "64c16aad-b0b2-589b-97a5-bd8ba0270d02",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7106824700000001
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0011_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7048097
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0025_0",
+        "conversation_id": "be746b14-9287-5b7c-a644-e7c2273723b9",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7071855499999999
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0064_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.6823098439999999
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0132_2",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text",
+          "image"
+        ],
+        "importance": 0.4476203524399828
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0072_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text",
+          "document"
+        ],
+        "importance": 0.4088756560082939
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0033_0",
+        "conversation_id": "683ed0a4-44f6-52ee-93f6-04f17afb0607",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.703262015
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0024_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.632727559
+      },
+      {
+        "tier": "S",
+        "turn_key": "seg0011_0",
+        "conversation_id": "bdf12645-3cb3-5e5c-8ea0-a20922de20bf",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.7048097
+      },
+      {
+        "tier": "E",
+        "turn_key": "seg0035_0",
+        "conversation_id": "f8eb69ff-6226-524f-a8a9-93b67eebbd30",
+        "modalities": [
+          "text"
+        ],
+        "importance": 0.65634703
+      }
+    ],
+    "write_s": 6.645082048024051
+  }
+]

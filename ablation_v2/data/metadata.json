@@ -1,0 +1,11 @@
+{
+  "dataset": "AblationEval-Grounded",
+  "version": "v1",
+  "n_instances": 60,
+  "source_corpus": "experiments/datasets/raw/text (KLUE 한국어 문서)",
+  "n_source_documents": 50,
+  "chunks_per_query": 3,
+  "seed": 42,
+  "builder": "paper_experiments/ablation_v2/build_evalset.py",
+  "note": "gold answer 없음 — faithfulness 정의가 (답변, 출처 청크) 만 요구하므로 '예상 답변'을 생성하지 않는다. MM-OpenBench v1 은 ground_truth 가 전부 플레이스홀더이고 source_ids 가 해소되지 않아 사용하지 않았다."
+}

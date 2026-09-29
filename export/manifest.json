@@ -1,0 +1,23 @@
+{
+  "export_commit": "92f430bf62ae8604aa98e1505ea8be36ae21b839",
+  "n_values": 273,
+  "artifacts": [
+    "ablation_v2/results/analysis.json",
+    "ablation_v2/results/metric_validation.json",
+    "config_snapshot/results/registry_snapshot.json",
+    "external_eval/results/results.json",
+    "hmmr_v2/results/analysis.json",
+    "hmmr_v2/results/dataset_audit.json",
+    "hmmr_v2/results/memory_state_seed0.json",
+    "ilp_fix/results/ilp_fix_summary.json",
+    "latency/results/dmar_remeasure.json",
+    "latency/results/results_a100_1.json",
+    "latency/results_rerun_20260928/results_a100_1.json",
+    "latency/results_rerun_20260928_b/results_a100_1.json",
+    "mars_attribution/results/query_level.json",
+    "mars_attribution/results/results.json",
+    "sensitivity/results/theta_dom_reachability.json",
+    "synconflict_v2/results/results.json"
+  ],
+  "missing": []
+}

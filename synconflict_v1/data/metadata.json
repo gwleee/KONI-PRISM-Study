@@ -1,0 +1,11 @@
+{
+  "dataset": "SynConflict",
+  "version": "v2",
+  "n_instances": 100,
+  "n_conflict": 50,
+  "n_clean": 50,
+  "conflict_type": "report_vs_field_feedback_numerical_contradiction",
+  "design_note": "충돌: 공식 보고서(수치 높음) + 구어체 현장 피드백(수치 낮음, 부정적). 비충돌: 패러프레이즈(cos≥0.85) + 같은시스템다른지표(cos 0.66~0.73). BGE-M3 실측: conflict cos ~0.58~0.65, clean-para ~0.85~0.97, clean-boundary ~0.66~0.73. τ=0.65 근방 최적 F1 설계.",
+  "random_seed": 42,
+  "created_at": "2026-04-13T07:40:55.030053+00:00"
+}
