@@ -1,7 +1,7 @@
 # Audit artifact package
 
 Engineering and Auditing an On-Premise Multimodal RAG System: Performance, Failure Modes, and
-Lessons Learned (Journal of Systems and Software, submitted).
+Lessons Learned (under review).
 
 Archived at https://doi.org/10.5281/zenodo.23029708 · Source: https://github.com/gwleee/KONI-PRISM-Study
 
