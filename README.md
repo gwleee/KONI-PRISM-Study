@@ -119,7 +119,11 @@ Code is released under the MIT License; synthetic benchmark data under CC BY 4.0
   over the source sentences and the support decision at eta = 0.5 (ablation: also the maximum
   contradiction probability; attribution: one value per source). `unit_labels/export_unit_labels.py`
   recomputes them with the shipped scorer and fails unless every per-answer count and rate equals
-  the stored one. Runs discarded as invalid are not shipped.
+  the stored one. Unit-level NLI labels were not captured during the original runs; they were
+  recomputed from the stored generated answers with the released scorer (same model, order and
+  batching). The recomputed labels reproduce every stored per-record and per-query aggregate
+  (0 mismatches across 360 ablation and 90 attribution records). Runs discarded as invalid are
+  not shipped.
 
 ## Versions
 
