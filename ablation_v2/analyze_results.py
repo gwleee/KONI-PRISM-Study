@@ -146,12 +146,27 @@ def main() -> None:
     else:
         super_add["verdict"] = "재현됨."
 
+    # deployed strategy selection: explicit-conflict is chosen even when no conflict pair exists
+    strat: dict[tuple, dict[str, tuple]] = defaultdict(dict)
+    for r in recs:
+        if "conflict_strategy" in r:
+            strat[(r["run"], r["id"])][r["config"]] = (r["conflict_strategy"], r.get("n_conflict_pairs"))
+    base_strat = [v[BASE] for v in strat.values() if BASE in v]
+    strategy_audit = {
+        "n_instances_per_config": len(base_strat),
+        "n_configs": len({c for v in strat.values() for c in v}),
+        "n_empty_P_explicit_conflict": sum(1 for s_, n in base_strat if n == 0 and s_ == "explicit_conflict"),
+        "share_empty_P_explicit_conflict": (sum(1 for s_, n in base_strat if n == 0 and s_ == "explicit_conflict")
+                                            / len(base_strat)) if base_strat else None,
+        "n_pairs_strategy_or_P_differs_across_configs": sum(1 for v in strat.values() if len(set(v.values())) > 1),
+    }
     runs = sorted({k[0] for k in keys})
     queries = sorted({k[1] for k in keys if all((r, k[1]) in by for r in runs)})
     payload = {
         "analysis": "Ablation v2 — 쌍체 비교 및 super-additive 판정",
         "n_pairs": len(keys),
         "query_level": query_level(by, ans, queries, runs),
+        "strategy_audit": strategy_audit,
         "aggregated_from_results_json": d["aggregated"],
         "paired_vs_full": paired,
         "super_additive": super_add,

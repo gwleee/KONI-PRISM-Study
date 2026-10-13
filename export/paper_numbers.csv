@@ -192,41 +192,46 @@ mars.cited_at_0.30,0,mars_attribution/results/results.json,summary/theta_0.30/qu
 mars.recall_at_015,0.531,mars_attribution/results/results.json,summary/theta_0.15/recall_unit/mean,c156bc2f4f0ca940,sec6.3 threshold sweep
 mars.recall_at_020,0.01,mars_attribution/results/results.json,summary/theta_0.20/recall_unit/mean,c156bc2f4f0ca940,sec6.3 threshold sweep
 mars.grade_high_at_shipped,90,mars_attribution/results/results.json,summary/theta_0.70/grade_distribution/High,c156bc2f4f0ca940,sec6.3 / L1
-abl.full_faithfulness,0.7022,ablation_v2/results/analysis.json,aggregated_from_results_json/full/mean,fef11b2347a96873,sec6.4 / Table 3
-abl.trustflow_delta,-0.0077,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/mean_delta,fef11b2347a96873,sec6.4 headline
-abl.trustflow_p,0.618,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/wilcoxon_p,fef11b2347a96873,sec6.4
-abl.trustflow_ci_lo,-0.0469,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/ci95/0,fef11b2347a96873,sec6.4
-abl.trustflow_ci_hi,0.0314,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/ci95/1,fef11b2347a96873,sec6.4
-abl.nohmmr_delta,-0.0476,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/mean_delta,fef11b2347a96873,sec6.4
-abl.nohmmr_p,0.054,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/wilcoxon_p,fef11b2347a96873,sec6.4
-abl.nohmmr_ci_lo,-0.0933,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/ci95/0,fef11b2347a96873,sec6.4
-abl.nohmmr_ci_hi,-0.0019,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/ci95/1,fef11b2347a96873,sec6.4
-abl.nomars_delta,0.0,ablation_v2/results/analysis.json,paired_vs_full/no_mars/mean_delta,fef11b2347a96873,sec6.4 structural zero
-abl.nomars_identical,90,ablation_v2/results/analysis.json,paired_vs_full/no_mars/n_identical_to_full,fef11b2347a96873,sec6.4 structural zero
-abl.trustflow_identical,10,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/n_identical_to_full,fef11b2347a96873,sec6.4
-abl.notrust_mean,0.6945,ablation_v2/results/analysis.json,aggregated_from_results_json/no_trust_flow/mean,fef11b2347a96873,sec6.4
-abl.full_std,0.0154,ablation_v2/results/analysis.json,aggregated_from_results_json/full/std,fef11b2347a96873,sec6.4
-abl.full_run_min,0.6923,ablation_v2/results/analysis.json,aggregated_from_results_json/full/per_run_means/0,fef11b2347a96873,sec6.4 run-to-run spread
-abl.full_run_max,0.7199,ablation_v2/results/analysis.json,aggregated_from_results_json/full/per_run_means/1,fef11b2347a96873,sec6.4 run-to-run spread
-abl.n_pairs,90,ablation_v2/results/analysis.json,n_pairs,fef11b2347a96873,sec6.4
-abl.q.n_queries,30,ablation_v2/results/analysis.json,query_level/n_queries,fef11b2347a96873,sec4.3 / sec5.7 unit of analysis
-abl.q.n_orderings,3,ablation_v2/results/analysis.json,query_level/n_orderings,fef11b2347a96873,sec4.4
-abl.q.n_bootstrap,10000,ablation_v2/results/analysis.json,query_level/n_bootstrap,fef11b2347a96873,sec4.3
-abl.q.n_permutation,100000,ablation_v2/results/analysis.json,query_level/n_permutation,fef11b2347a96873,sec4.3
-abl.q.full_icc,0.69,ablation_v2/results/analysis.json,query_level/full_icc1_across_orderings,fef11b2347a96873,sec4.4 / sec5.7 ordering variance
-abl.q.full_sd_median,0.073,ablation_v2/results/analysis.json,query_level/full_within_query_sd_median,fef11b2347a96873,sec5.7
-abl.q.trustflow_delta,-0.0077,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/mean_delta,fef11b2347a96873,sec5.7 / Table 3
-abl.q.trustflow_ci_lo,-0.0466,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/bootstrap_ci95/0,fef11b2347a96873,sec5.7 / Table 3
-abl.q.trustflow_ci_hi,0.0315,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/bootstrap_ci95/1,fef11b2347a96873,sec5.7 / Table 3
-abl.q.trustflow_perm_p,0.704,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/permutation_p,fef11b2347a96873,sec5.7 / Table 3
-abl.q.trustflow_scores_identical,10,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_scores_identical_instances,fef11b2347a96873,sec5.7
-abl.q.trustflow_answers_identical,1,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_answers_byte_identical_instances,fef11b2347a96873,sec5.7
-abl.q.trustflow_worse,17,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_queries_worse,fef11b2347a96873,sec5.7
-abl.q.trustflow_better,12,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_queries_better,fef11b2347a96873,sec5.7
-abl.q.nohmmr_delta,-0.0476,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/mean_delta,fef11b2347a96873,sec5.7
-abl.q.nohmmr_ci_lo,-0.1192,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/bootstrap_ci95/0,fef11b2347a96873,sec5.7
-abl.q.nohmmr_ci_hi,0.0195,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/bootstrap_ci95/1,fef11b2347a96873,sec5.7
-abl.q.nohmmr_perm_p,0.19,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/permutation_p,fef11b2347a96873,sec5.7
+abl.full_faithfulness,0.7022,ablation_v2/results/analysis.json,aggregated_from_results_json/full/mean,28d796b1cecbdb1b,sec6.4 / Table 3
+abl.trustflow_delta,-0.0077,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/mean_delta,28d796b1cecbdb1b,sec6.4 headline
+abl.trustflow_p,0.618,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/wilcoxon_p,28d796b1cecbdb1b,sec6.4
+abl.trustflow_ci_lo,-0.0469,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/ci95/0,28d796b1cecbdb1b,sec6.4
+abl.trustflow_ci_hi,0.0314,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/ci95/1,28d796b1cecbdb1b,sec6.4
+abl.nohmmr_delta,-0.0476,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/mean_delta,28d796b1cecbdb1b,sec6.4
+abl.nohmmr_p,0.054,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/wilcoxon_p,28d796b1cecbdb1b,sec6.4
+abl.nohmmr_ci_lo,-0.0933,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/ci95/0,28d796b1cecbdb1b,sec6.4
+abl.nohmmr_ci_hi,-0.0019,ablation_v2/results/analysis.json,paired_vs_full/no_hmmr/ci95/1,28d796b1cecbdb1b,sec6.4
+abl.nomars_delta,0.0,ablation_v2/results/analysis.json,paired_vs_full/no_mars/mean_delta,28d796b1cecbdb1b,sec6.4 structural zero
+abl.nomars_identical,90,ablation_v2/results/analysis.json,paired_vs_full/no_mars/n_identical_to_full,28d796b1cecbdb1b,sec6.4 structural zero
+abl.trustflow_identical,10,ablation_v2/results/analysis.json,paired_vs_full/no_trust_flow/n_identical_to_full,28d796b1cecbdb1b,sec6.4
+abl.notrust_mean,0.6945,ablation_v2/results/analysis.json,aggregated_from_results_json/no_trust_flow/mean,28d796b1cecbdb1b,sec6.4
+abl.full_std,0.0154,ablation_v2/results/analysis.json,aggregated_from_results_json/full/std,28d796b1cecbdb1b,sec6.4
+abl.full_run_min,0.6923,ablation_v2/results/analysis.json,aggregated_from_results_json/full/per_run_means/0,28d796b1cecbdb1b,sec6.4 run-to-run spread
+abl.full_run_max,0.7199,ablation_v2/results/analysis.json,aggregated_from_results_json/full/per_run_means/1,28d796b1cecbdb1b,sec6.4 run-to-run spread
+abl.n_pairs,90,ablation_v2/results/analysis.json,n_pairs,28d796b1cecbdb1b,sec6.4
+abl.strat.n_instances,90,ablation_v2/results/analysis.json,strategy_audit/n_instances_per_config,28d796b1cecbdb1b,supp S2 note
+abl.strat.n_configs,4,ablation_v2/results/analysis.json,strategy_audit/n_configs,28d796b1cecbdb1b,supp S2 note
+abl.strat.n_empty_P_explicit,39,ablation_v2/results/analysis.json,strategy_audit/n_empty_P_explicit_conflict,28d796b1cecbdb1b,supp S2 note
+abl.strat.share_empty_P_explicit,0.43,ablation_v2/results/analysis.json,strategy_audit/share_empty_P_explicit_conflict,28d796b1cecbdb1b,supp S2 note
+abl.strat.n_pairs_differ,0,ablation_v2/results/analysis.json,strategy_audit/n_pairs_strategy_or_P_differs_across_configs,28d796b1cecbdb1b,supp S2 note
+abl.q.n_queries,30,ablation_v2/results/analysis.json,query_level/n_queries,28d796b1cecbdb1b,sec4.3 / sec5.7 unit of analysis
+abl.q.n_orderings,3,ablation_v2/results/analysis.json,query_level/n_orderings,28d796b1cecbdb1b,sec4.4
+abl.q.n_bootstrap,10000,ablation_v2/results/analysis.json,query_level/n_bootstrap,28d796b1cecbdb1b,sec4.3
+abl.q.n_permutation,100000,ablation_v2/results/analysis.json,query_level/n_permutation,28d796b1cecbdb1b,sec4.3
+abl.q.full_icc,0.69,ablation_v2/results/analysis.json,query_level/full_icc1_across_orderings,28d796b1cecbdb1b,sec4.4 / sec5.7 ordering variance
+abl.q.full_sd_median,0.073,ablation_v2/results/analysis.json,query_level/full_within_query_sd_median,28d796b1cecbdb1b,sec5.7
+abl.q.trustflow_delta,-0.0077,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/mean_delta,28d796b1cecbdb1b,sec5.7 / Table 3
+abl.q.trustflow_ci_lo,-0.0466,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/bootstrap_ci95/0,28d796b1cecbdb1b,sec5.7 / Table 3
+abl.q.trustflow_ci_hi,0.0315,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/bootstrap_ci95/1,28d796b1cecbdb1b,sec5.7 / Table 3
+abl.q.trustflow_perm_p,0.704,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/permutation_p,28d796b1cecbdb1b,sec5.7 / Table 3
+abl.q.trustflow_scores_identical,10,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_scores_identical_instances,28d796b1cecbdb1b,sec5.7
+abl.q.trustflow_answers_identical,1,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_answers_byte_identical_instances,28d796b1cecbdb1b,sec5.7
+abl.q.trustflow_worse,17,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_queries_worse,28d796b1cecbdb1b,sec5.7
+abl.q.trustflow_better,12,ablation_v2/results/analysis.json,query_level/contrasts/no_trust_flow/n_queries_better,28d796b1cecbdb1b,sec5.7
+abl.q.nohmmr_delta,-0.0476,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/mean_delta,28d796b1cecbdb1b,sec5.7
+abl.q.nohmmr_ci_lo,-0.1192,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/bootstrap_ci95/0,28d796b1cecbdb1b,sec5.7
+abl.q.nohmmr_ci_hi,0.0195,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/bootstrap_ci95/1,28d796b1cecbdb1b,sec5.7
+abl.q.nohmmr_perm_p,0.19,ablation_v2/results/analysis.json,query_level/contrasts/no_hmmr/permutation_p,28d796b1cecbdb1b,sec5.7
 mars.q.n_queries,30,mars_attribution/results/query_level.json,n_queries,932f046ce3931e95,sec5.6
 mars.q.n_orderings,3,mars_attribution/results/query_level.json,n_orderings,932f046ce3931e95,sec5.6
 mars.q.cited_all_010,30,mars_attribution/results/query_level.json,cited_by_theta/0.10/queries_cited_all_orderings,932f046ce3931e95,sec5.6 sweep

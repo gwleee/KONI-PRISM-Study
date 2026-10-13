@@ -241,6 +241,12 @@ SPEC = [
     ("abl.full_run_max", "ablation_v2/results/analysis.json",
      "aggregated_from_results_json/full/per_run_means/1", 4, "sec6.4 run-to-run spread"),
     ("abl.n_pairs", "ablation_v2/results/analysis.json", "n_pairs", 0, "sec6.4"),
+    # ---- deployed strategy selection with an empty conflict set (supplement, Algorithm S2 note) ----
+    ("abl.strat.n_instances", "ablation_v2/results/analysis.json", "strategy_audit/n_instances_per_config", 0, "supp S2 note"),
+    ("abl.strat.n_configs", "ablation_v2/results/analysis.json", "strategy_audit/n_configs", 0, "supp S2 note"),
+    ("abl.strat.n_empty_P_explicit", "ablation_v2/results/analysis.json", "strategy_audit/n_empty_P_explicit_conflict", 0, "supp S2 note"),
+    ("abl.strat.share_empty_P_explicit", "ablation_v2/results/analysis.json", "strategy_audit/share_empty_P_explicit_conflict", 2, "supp S2 note"),
+    ("abl.strat.n_pairs_differ", "ablation_v2/results/analysis.json", "strategy_audit/n_pairs_strategy_or_P_differs_across_configs", 0, "supp S2 note"),
     # ---- query-level analysis (unit = query, n=30; 3 orderings averaged) ----
     ("abl.q.n_queries", "ablation_v2/results/analysis.json", "query_level/n_queries", 0, "sec4.3 / sec5.7 unit of analysis"),
     ("abl.q.n_orderings", "ablation_v2/results/analysis.json", "query_level/n_orderings", 0, "sec4.4"),

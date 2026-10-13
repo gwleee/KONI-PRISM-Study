@@ -60,6 +60,13 @@
     },
     "multiplicity": "two confirmatory contrasts (no_trust_flow, no_hmmr); no correction applied; no_mars is structurally zero and not tested"
   },
+  "strategy_audit": {
+    "n_instances_per_config": 90,
+    "n_configs": 4,
+    "n_empty_P_explicit_conflict": 39,
+    "share_empty_P_explicit_conflict": 0.43333333333333335,
+    "n_pairs_strategy_or_P_differs_across_configs": 0
+  },
   "aggregated_from_results_json": {
     "full": {
       "description": "Full KONI-Prism (DMAR+CMAE+HMMR+MARS)",

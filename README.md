@@ -3,13 +3,18 @@
 Engineering and Auditing an On-Premise Multimodal RAG System: Performance, Failure Modes, and
 Lessons Learned (under review).
 
-Archived at https://doi.org/10.5281/zenodo.23029708 · Source: https://github.com/gwleee/KONI-PRISM-Study
+Version 1.1.0. Archived at https://doi.org/10.5281/zenodo.23029708 (concept DOI, resolves to the
+latest version) · Source: https://github.com/gwleee/KONI-PRISM-Study
 
 This package contains the evaluation scripts, the benchmarks in both their original and rebuilt
 forms, the audits that invalidated the originals, the metric-control validation, the latency
-harness, and the export that fixes every number in the manuscript to a file on disk. It does not
-contain the platform implementation, which is subject to ongoing technology-transfer
-negotiations.
+harness, the generated answers of the ablation and attribution runs with their unit-level NLI
+labels, and the export that fixes every number in the manuscript to a file on disk.
+
+Two items are not included, for different reasons. The platform implementation is withheld
+because it is subject to ongoing technology-transfer negotiations. The corrected routing
+read-back is withheld because it is a modified copy of that platform's solver; its results are
+included in `ilp_fix/results/`.
 
 ## Layout
 
@@ -20,8 +25,9 @@ negotiations.
 | `synconflict_v2/` | Rebuilt conflict set (N=600), generator, evaluation of both v1 and v2, threshold curves |
 | `external_eval/` | Contradiction detection on SNLI, MultiNLI and VitaminC samples (1000 pairs per class) |
 | `hmmr_v2/` | MultiTurnSet v2: segment builder, question/caption generation, assembly, independence audit, retrieval run, analysis |
-| `ablation_v2/` | Grounded evaluation set, component ablation, metric-control validation |
-| `mars_attribution/` | Attribution evaluation set, threshold sweep, random and within-query-shuffle controls |
+| `ablation_v2/` | Grounded evaluation set, component ablation, metric-control validation, generated answers (`results/raw_records.jsonl`) and their unit-level NLI labels (`results/unit_labels.jsonl`) |
+| `mars_attribution/` | Attribution evaluation set, threshold sweep, random and within-query-shuffle controls, generated answers (`results/raw_records.jsonl`) and the unit-by-source NLI support matrices (`results/unit_labels.jsonl`) |
+| `unit_labels/` | Re-derivation of the unit-level NLI labels from the stored answers and source chunks; every per-answer aggregate is checked against the stored value |
 | `sensitivity/` | Parameter sweeps and the reachability analysis of the trust-dominant branch |
 | `latency/` | Latency and cold-start harness, the original run and two re-runs, solver re-measurement, container overlay |
 | `ilp_fix/` | Results of the corrected routing read-back (the solver itself is withheld; see `ilp_fix/README.md`) |
@@ -34,13 +40,13 @@ negotiations.
 | Manuscript | Script | Artifact |
 |---|---|---|
 | §4.2 metric calibration | `ablation_v2/validate_metric.py` | `ablation_v2/results/metric_validation.json` |
-| §5.1, Fig. 2 | `latency/run_latency.py`, `figures/regen_jss_figs.py` | `latency/results/results_a100_1.json`, `latency/results_rerun_20260928*/` |
+| §5.1, Fig. 2 | `latency/run_latency.py`, `figures/regen_figs.py` | `latency/results/results_a100_1.json`, `latency/results_rerun_20260928*/` |
 | §5.2 cold start | `latency/run_latency.py` | same, `cold_start_encoder` block |
 | §5.3, Table 2, Fig. 3 | (solver withheld), `latency/remeasure_dmar.py` | `ilp_fix/results/ilp_fix_summary.json`, `latency/results/dmar_remeasure.json` |
 | §5.4 conflict screening | `synconflict_v2/evaluate_cmae_v2.py`, `external_eval/run_external_eval.py` | `synconflict_v2/results/results.json`, `external_eval/results/results.json` |
 | §5.5 memory retrieval | `hmmr_v2/run_hmmr_v2.py`, `hmmr_v2/analyze.py`, `hmmr_v2/audit_dataset.py` | `hmmr_v2/results/analysis.json`, `memory_state_seed*.json`, `dataset_audit.json` |
-| §5.6 attribution | `mars_attribution/run_mars_eval.py`, `mars_attribution/analyze_query_level.py` | `mars_attribution/results/results.json`, `query_level.json` |
-| §5.7 ablation | `ablation_v2/run_ablation.py`, `ablation_v2/analyze_results.py` | `ablation_v2/results/analysis.json` (`query_level` block: unit = query, n=30) |
+| §5.6 attribution | `mars_attribution/run_mars_eval.py`, `mars_attribution/analyze_query_level.py` | `mars_attribution/results/results.json`, `query_level.json`; answers and unit labels in `raw_records.jsonl`, `unit_labels.jsonl` |
+| §5.7 ablation | `ablation_v2/run_ablation.py`, `ablation_v2/analyze_results.py` | `ablation_v2/results/analysis.json` (`query_level` block: unit = query, n=30); answers and unit labels in `raw_records.jsonl`, `unit_labels.jsonl` |
 | §6 L1 (trust-dominant branch) | `sensitivity/analyze_theta_dom.py` | `sensitivity/results/theta_dom_reachability.json` |
 | Table 1, §3.3, §5.2 (model footprints, quality floors) | `config_snapshot/snapshot_registry.py` | `config_snapshot/results/registry_snapshot.json`, `synconflict_v2/results/results.json` (settings block), `ilp_fix/results/ilp_fix_summary.json` |
 
@@ -75,7 +81,7 @@ The following run on their own:
 - metric-control validation: `ablation_v2/validate_metric.py` (downloads
   `joeddav/xlm-roberta-large-xnli`);
 - analysis: `ablation_v2/analyze_results.py`, `mars_attribution/analyze_query_level.py`, `hmmr_v2/analyze.py`;
-- the export and the figures: `export_paper_numbers.py`, `figures/regen_jss_figs.py`.
+- the export and the figures: `export_paper_numbers.py`, `figures/regen_figs.py`.
 
 The evaluation harnesses import the platform's gateway package at run time (`common/harness.py`,
 `bootstrap_gateway`), so they measure the deployed code rather than a reimplementation. They do
@@ -87,15 +93,15 @@ not run without it: `synconflict_v2/evaluate_cmae_v2.py`, `external_eval/run_ext
 store); `latency/docker-compose.latency.yml` documents the overlay used. Their inputs and raw
 outputs are shipped, so every reported number can be re-derived without re-running them.
 
-The corrected routing read-back behind Table 2 and Fig. 3 is withheld because it is a modified
-copy of the platform's solver; its results are included in `ilp_fix/results/`.
-
 ## Data sources
 
 - SynConflict v1 and v2, the ablation and attribution evaluation sets, and MultiTurnSet v2 turns
   are generated by the scripts in this package with fixed seeds.
 - `external_eval/data/` holds samples of SNLI, MultiNLI and VitaminC, redistributed under the
   licenses of those datasets.
+- The ablation and attribution evaluation sets quote KLUE news and encyclopedia passages, under
+  the KLUE license (CC BY-SA 4.0). The answers in `raw_records.jsonl` were generated from them by
+  the deployed language model (Qwen2.5-7B-Instruct) under the deployed prompts.
 - MultiTurnSet v2 is built from public KLUE reading-comprehension passages, ten arXiv papers, and synthetic chart images. Its segments quote the
   passages and papers under their original licenses; the source documents themselves are not
   included.
@@ -107,5 +113,16 @@ Code is released under the MIT License; synthetic benchmark data under CC BY 4.0
 ## Notes
 
 - Source comments are in Korean; this README and the manuscript describe each script.
-- Generated answer texts (`raw_records`) are omitted for size; the per-query metric tables and
-  all derived results are included.
+- `raw_records.jsonl` holds every generated answer of the reported runs with its per-answer
+  scores. `unit_labels.jsonl` splits each answer into the sentence-level units of the faithfulness
+  metric (punctuation-based segmentation) and gives, per unit, the maximum entailment probability
+  over the source sentences and the support decision at eta = 0.5 (ablation: also the maximum
+  contradiction probability; attribution: one value per source). `unit_labels/export_unit_labels.py`
+  recomputes them with the shipped scorer and fails unless every per-answer count and rate equals
+  the stored one. Runs discarded as invalid are not shipped.
+
+## Versions
+
+- 1.1.0: adds `raw_records.jsonl` and `unit_labels.jsonl` for the ablation and attribution runs,
+  `unit_labels/export_unit_labels.py`, and the export rows that the current manuscript cites.
+- 1.0.0: initial release.
