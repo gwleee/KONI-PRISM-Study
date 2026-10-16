@@ -11,7 +11,7 @@ This check is not a formality. The initial setup (mDeBERTa-base + whole chunk as
 gave copy 0.385 / unrelated 0.314, a **separation of 0.071**. It could not tell grounded answers
 from unrelated ones, and an ablation run in that state would have been entirely meaningless.
 Only after switching to sentence-level premises and to the xlm-roberta-large-xnli model, reaching
-a separation of 0.904, was the metric used for the main measurement.
+a separation of 0.924, was the metric used for the main measurement.
 
 Usage: python validate_metric.py [--n 15]
 """

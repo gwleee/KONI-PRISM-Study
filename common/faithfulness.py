@@ -52,7 +52,7 @@ NLI_MODEL = "joeddav/xlm-roberta-large-xnli"
 # measured in the control check (validate_metric.py):
 #     mDeBERTa-base + chunk premise   : 0.385 − 0.314 = 0.071  (unusable)
 #     mDeBERTa-base + sentence premise: 0.642 − 0.209 = 0.433
-#     xlm-roberta-large + sentence premise: 0.957 − 0.053 = 0.904  ← adopted
+#     xlm-roberta-large + sentence premise: 0.971 − 0.048 = 0.924  ← adopted
 MIN_PREMISE_CHARS = 10
 
 
