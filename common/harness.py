@@ -1,10 +1,10 @@
 """
-공용 실험 하네스.
+Shared experiment harness.
 
-설계 원칙:
-  1. 제품 코드(gateway/) 무변경. sys.path 주입으로 read-only import만 수행.
-  2. BGE-M3 폴백(랜덤 임베딩) 사용 시 즉시 실패 — 조용한 무효 실험 방지.
-  3. 모든 결과에 환경 provenance(git sha, GPU, 파라미터) 동봉.
+Design principles:
+  1. Product code (gateway/) is never modified. Only read-only imports via sys.path injection.
+  2. Fail immediately if the BGE-M3 fallback (random embeddings) is active — prevents silently invalid experiments.
+  3. Every result carries environment provenance (git sha, GPU, parameters).
 """
 from __future__ import annotations
 
@@ -26,13 +26,13 @@ GATEWAY_DIR = REPO_ROOT / "gateway"
 PAPER_EXP_DIR = REPO_ROOT / "paper_experiments"
 
 
-# ── gateway 알고리즘 read-only import ────────────────────────────────────────
+# ── read-only import of gateway algorithms ────────────────────────────────────────
 
 def bootstrap_gateway() -> None:
-    """gateway/ 를 sys.path 에 올려 알고리즘 모듈을 import 가능하게 한다.
+    """Put gateway/ on sys.path so the algorithm modules can be imported.
 
-    gateway 모듈은 `from core.config import ...` 형태의 절대 import를 쓰므로
-    gateway 디렉터리 자체가 sys.path에 있어야 한다. 제품 코드는 건드리지 않는다.
+    Gateway modules use absolute imports of the form `from core.config import ...`,
+    so the gateway directory itself must be on sys.path. Product code is not touched.
     """
     p = str(GATEWAY_DIR)
     if p not in sys.path:
@@ -40,18 +40,18 @@ def bootstrap_gateway() -> None:
 
 
 def set_profile(profile: str) -> None:
-    """하드웨어 프로파일을 환경변수로 고정한다 (get_settings 캐시 전에 호출).
+    """Pin the hardware profile via an environment variable (call before get_settings is cached).
 
-    .env 파일 위치에 따라 프로파일이 달라지는 것을 막기 위해 실험에서는
-    항상 명시적으로 지정한다.
+    To keep the profile from depending on where the .env file is, experiments
+    always set it explicitly.
     """
     os.environ["HARDWARE_PROFILE"] = profile
 
 
-# ── 임베딩 진위 게이트 ────────────────────────────────────────────────────────
+# ── embedding authenticity gate ────────────────────────────────────────────────────────
 
 class FallbackEncoderError(RuntimeError):
-    """BGE-M3 대신 랜덤 폴백 인코더가 활성화됐을 때 발생."""
+    """Raised when the random fallback encoder is active instead of BGE-M3."""
 
 
 _PROBE = [
@@ -62,13 +62,13 @@ _PROBE = [
 
 
 async def assert_real_encoder(embedding_service: Any) -> dict[str, float]:
-    """임베딩 서비스가 진짜 BGE-M3 인지 검증한다.
+    """Verify that the embedding service is the real BGE-M3.
 
-    services.embedding_service 는 로딩 실패 시 _FallbackEncoder(시드 고정 랜덤)
-    로 조용히 대체된다. 그 상태로 실험을 돌리면 전부 무의미한 숫자가 나오므로
-    여기서 강제로 실패시킨다.
+    On load failure, services.embedding_service silently falls back to _FallbackEncoder
+    (seeded random). Running experiments in that state yields meaningless numbers,
+    so we force a failure here.
 
-    판정: 패러프레이즈 쌍 cos > 0.70 AND 무관 쌍 cos < 0.50.
+    Criterion: paraphrase pair cos > 0.70 AND unrelated pair cos < 0.50.
     """
     vecs = await embedding_service.encode(_PROBE)
     v = np.asarray(vecs, dtype=np.float64)
@@ -80,14 +80,14 @@ async def assert_real_encoder(embedding_service: Any) -> dict[str, float]:
     impl = type(getattr(embedding_service, "_model", None)).__name__
     if impl == "_FallbackEncoder":
         raise FallbackEncoderError(
-            "BGE-M3 로딩 실패 → _FallbackEncoder(랜덤 임베딩) 활성화됨. "
-            "실험 결과가 전부 무효가 되므로 중단한다. "
-            "FlagEmbedding 설치와 HF 캐시(BAAI/bge-m3)를 확인할 것."
+            "BGE-M3 failed to load → _FallbackEncoder (random embeddings) is active. "
+            "Aborting because all experiment results would be invalid. "
+            "Check the FlagEmbedding installation and the HF cache (BAAI/bge-m3)."
         )
     if not (para > 0.70 and unrel < 0.50):
         raise FallbackEncoderError(
-            f"임베딩 sanity check 실패: paraphrase_cos={para:.4f} (>0.70 기대), "
-            f"unrelated_cos={unrel:.4f} (<0.50 기대). 인코더={impl}"
+            f"Embedding sanity check failed: paraphrase_cos={para:.4f} (expected >0.70), "
+            f"unrelated_cos={unrel:.4f} (expected <0.50). encoder={impl}"
         )
     return {"paraphrase_cos": para, "unrelated_cos": unrel, "encoder_impl": impl}
 
@@ -140,7 +140,7 @@ def provenance(extra: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def settings_snapshot() -> dict[str, Any]:
-    """실험 시점의 알고리즘 하이퍼파라미터 실값을 기록한다."""
+    """Record the actual algorithm hyperparameter values at experiment time."""
     from core.config import get_settings  # noqa: PLC0415
 
     s = get_settings()
@@ -169,10 +169,10 @@ def settings_snapshot() -> dict[str, Any]:
     }
 
 
-# ── 통계 유틸 ────────────────────────────────────────────────────────────────
+# ── statistics utilities ────────────────────────────────────────────────────────────────
 
 def summarize(samples: list[float]) -> dict[str, float]:
-    """mean ± std + 분위수. 표본이 비면 NaN 대신 None-safe 값을 낸다."""
+    """mean ± std + quantiles. Returns None-safe values instead of NaN for an empty sample."""
     if not samples:
         return {"n": 0}
     a = np.asarray(samples, dtype=np.float64)
@@ -188,7 +188,7 @@ def summarize(samples: list[float]) -> dict[str, float]:
 
 
 def binary_scores(y_true: list[int], y_pred: list[int]) -> dict[str, float]:
-    """이진 분류 지표. sklearn 의존 없이 직접 계산(제로 division 안전)."""
+    """Binary classification metrics. Computed directly without sklearn (zero-division safe)."""
     yt = np.asarray(y_true, dtype=int)
     yp = np.asarray(y_pred, dtype=int)
     tp = int(((yt == 1) & (yp == 1)).sum())
@@ -199,7 +199,7 @@ def binary_scores(y_true: list[int], y_pred: list[int]) -> dict[str, float]:
     rec = tp / (tp + fn) if (tp + fn) else 0.0
     f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
     acc = (tp + tn) / len(yt) if len(yt) else 0.0
-    # Matthews 상관계수 — 클래스 불균형에 강건
+    # Matthews correlation coefficient — robust to class imbalance
     denom = np.sqrt(float((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)))
     mcc = ((tp * tn - fp * fn) / denom) if denom > 0 else 0.0
     return {
@@ -209,7 +209,7 @@ def binary_scores(y_true: list[int], y_pred: list[int]) -> dict[str, float]:
     }
 
 
-# ── 결과 저장 ────────────────────────────────────────────────────────────────
+# ── result saving ────────────────────────────────────────────────────────────────
 
 class _NpEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
@@ -257,7 +257,7 @@ def write_csv(path: Path, rows: list[dict[str, Any]], columns: list[str] | None 
 
 
 class Timer:
-    """구간 wall-clock 계측 (perf_counter 기반)."""
+    """Wall-clock timing of a section (perf_counter based)."""
 
     def __init__(self) -> None:
         self.marks: dict[str, float] = {}

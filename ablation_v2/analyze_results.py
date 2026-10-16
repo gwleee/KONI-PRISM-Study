@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Ablation v2 결과 통계 분석 — 쌍체 비교 + super-additive 재현 여부 판정.
+Statistical analysis of Ablation v2 results — paired comparison + verdict on whether super-additivity reproduces.
 
-구성 간 비교는 **동일 (run, query) 쌍**에 대해 수행한다. greedy 디코딩이라
-같은 입력이면 같은 답변이 나오므로, 쌍체 차이는 구성 효과만 담는다.
+Configs are compared on **identical (run, query) pairs**. With greedy decoding,
+the same input yields the same answer, so paired differences carry only the config effect.
 
-query_level 블록 (원고 보고 경로): 3회 실행은 쿼리 순서만 다르고, 순서가 메모리 축적을
-바꿔 값이 달라진다. 같은 쿼리의 3회는 독립 표본이 아니므로 통계 단위는 쿼리(n=30)로 둔다.
-쿼리별 3회 평균 → 쌍체 차이(ablated − full) → 쿼리 부트스트랩 95% CI(10,000회, 시드 고정,
-백분위) + 부호 뒤집기 순열 검정(100,000회). 순서 변동은 ICC(1)로 따로 보고한다.
-n=90 경로(paired_vs_full)는 비교용으로 보존한다.
+query_level block (the path reported in the manuscript): the 3 runs differ only in query order, and order changes
+memory accumulation and hence values. The 3 runs of a query are not independent samples, so the unit of analysis is the query (n=30).
+Per-query mean over 3 runs → paired difference (ablated − full) → query bootstrap 95% CI (10,000 resamples, fixed seed,
+percentile) + sign-flip permutation test (100,000 permutations). Ordering variance is reported separately as ICC(1).
+The n=90 path (paired_vs_full) is kept for comparison.
 """
 from __future__ import annotations
 
@@ -122,12 +122,12 @@ def main() -> None:
             entry["ci_includes_zero"] = bool(ci[0] <= 0 <= ci[1])
         paired[c] = entry
 
-    # super-additive 판정: |Δ(trust_flow)| 가 개별 컴포넌트 |Δ| 합보다 큰가
+    # super-additive verdict: is |Δ(trust_flow)| larger than the sum of the individual component |Δ|?
     tf = abs(paired["no_trust_flow"]["mean_delta"])
     parts = {c: abs(paired[c]["mean_delta"]) for c in ("no_hmmr", "no_mars")}
     super_add = {
-        "claim_in_paper": ("trust flow 제거가 34.5pp 저하로, 개별 컴포넌트 두 개를 "
-                           "제거한 것의 합보다 크다 (super-additive)"),
+        "claim_in_paper": ("Removing trust flow causes a 34.5pp drop, larger than the sum of "
+                           "removing the two individual components (super-additive)"),
         "measured_trust_flow_drop_pp": paired["no_trust_flow"]["mean_delta"] * 100,
         "measured_component_drops_pp": {k: -v * 100 for k, v in parts.items()},
         "sum_of_components_pp": -sum(parts.values()) * 100,
@@ -138,13 +138,13 @@ def main() -> None:
     }
     if not paired["no_trust_flow"].get("significant_at_0.05", True):
         super_add["verdict"] = (
-            "재현되지 않음. trust flow 제거 효과가 0 과 통계적으로 구분되지 않는다 "
+            "Not reproduced. The effect of removing trust flow is not statistically distinguishable from 0 "
             f"(p={paired['no_trust_flow'].get('wilcoxon_p'):.3f}, "
-            f"95% CI {paired['no_trust_flow'].get('ci95')} 가 0 을 포함).")
+            f"95% CI {paired['no_trust_flow'].get('ci95')} includes 0).")
     elif not super_add["trust_flow_exceeds_sum"]:
-        super_add["verdict"] = "재현되지 않음. trust flow 저하폭이 개별 컴포넌트 합보다 작다."
+        super_add["verdict"] = "Not reproduced. The trust-flow drop is smaller than the sum of the individual components."
     else:
-        super_add["verdict"] = "재현됨."
+        super_add["verdict"] = "Reproduced."
 
     # deployed strategy selection: explicit-conflict is chosen even when no conflict pair exists
     strat: dict[tuple, dict[str, tuple]] = defaultdict(dict)
@@ -163,7 +163,7 @@ def main() -> None:
     runs = sorted({k[0] for k in keys})
     queries = sorted({k[1] for k in keys if all((r, k[1]) in by for r in runs)})
     payload = {
-        "analysis": "Ablation v2 — 쌍체 비교 및 super-additive 판정",
+        "analysis": "Ablation v2 — paired comparison and super-additive verdict",
         "n_pairs": len(keys),
         "query_level": query_level(by, ans, queries, runs),
         "strategy_audit": strategy_audit,
@@ -171,8 +171,8 @@ def main() -> None:
         "paired_vs_full": paired,
         "super_additive": super_add,
         "structural_note": (
-            "no_mars 가 full 과 전 쌍에서 동일하면, MARS 가 답변 본문에 영향을 줄 수 "
-            "없다는 구조(answer_final = answer_raw + citations_text)가 실측으로 확인된 것이다."),
+            "If no_mars equals full on every pair, the structure in which MARS cannot affect the answer body "
+            "(answer_final = answer_raw + citations_text) is confirmed empirically."),
     }
     write_json(Path(args.out), payload)
 
@@ -190,12 +190,12 @@ def main() -> None:
         })
     write_csv(Path(args.out).parent / "analysis_table.csv", rows)
 
-    print(f"쌍체 n={len(keys)}\n")
+    print(f"paired n={len(keys)}\n")
     print(f"{'config':16s} {'mean':>8s} {'std':>7s} {'paired Δ':>10s} {'95% CI':>20s} {'p':>8s}")
     for c in [BASE] + OTHERS:
         a = d["aggregated"][c]; p = paired.get(c, {})
         ci = p.get("ci95")
-        cis = f"[{ci[0]:+.4f},{ci[1]:+.4f}]" if ci else ("동일" if c != BASE else "—")
+        cis = f"[{ci[0]:+.4f},{ci[1]:+.4f}]" if ci else ("identical" if c != BASE else "—")
         ps = f"{p['wilcoxon_p']:.4f}" if p.get("wilcoxon_p") is not None else "—"
         pd = f"{p['mean_delta']:+.4f}" if p else "—"
         print(f"{c:16s} {a['mean']:8.4f} {a['std']:7.4f} {pd:>10s} {cis:>20s} {ps:>8s}")

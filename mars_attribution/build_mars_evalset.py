@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-MARS 평가용 평가셋 — AblationEval-Grounded 에 방해 청크(distractor)를 섞는다.
+Evaluation set for MARS — mixes distractor chunks into AblationEval-Grounded.
 
-왜 필요한가:
-  원본 평가셋은 질의당 관련 청크 3개만 준다. 이 경우 MARS 가 소스를 전부 인용해도
-  정밀도가 1.0 이 되고(모든 소스가 실제로 지지하므로), 무작위 인용 통제 조건도
-  같은 값을 낸다. 즉 지표가 귀속 능력을 전혀 구분하지 못한다(스모크에서 실측 확인).
-  관련 청크와 무관 청크를 섞어야 "어느 것을 인용할지" 가 실제 과제가 된다.
+Why it is needed:
+  The original set gives only 3 relevant chunks per query. Then even if MARS cites every source,
+  precision is 1.0 (every source actually supports the answer), and the random-citation control
+  yields the same value, so the metric cannot distinguish attribution ability (confirmed in a smoke run).
+  Only by mixing relevant and unrelated chunks does "which ones to cite" become a real task.
 
-구성: 질의당 관련 청크 3개 + 다른 문서의 방해 청크 3개 (순서 섞음, 시드 고정)
+Composition: 3 relevant chunks per query + 3 distractor chunks from other documents (shuffled, fixed seed)
 """
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ def main() -> None:
     rng = random.Random(args.seed)
     out = []
     for i, r in enumerate(rows):
-        # 다른 문서에서 방해 청크 수집
+        # collect distractor chunks from other documents
         pool = [(o["doc_id"], c) for o in rows if o["doc_id"] != r["doc_id"]
                 for c in o["source_chunks"]]
         picked = rng.sample(pool, min(args.n_distractors, len(pool)))
@@ -60,11 +60,11 @@ def main() -> None:
         "n_distractor_per_query": out[0]["n_distractor"],
         "seed": args.seed,
         "base": str(SRC),
-        "rationale": ("관련 청크만 주면 전부 인용해도 정밀도 1.0 이라 귀속 능력이 "
-                      "측정되지 않는다. 방해 청크를 섞어 선택 과제를 만든다."),
+        "rationale": ("With only relevant chunks, citing everything gives precision 1.0, so attribution "
+                      "ability is not measured. Mixing in distractor chunks creates a selection task."),
     }, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"[✓] {p}  n={len(out)}  청크/질의={len(out[0]['source_chunks'])} "
-          f"(관련 {out[0]['n_relevant']} + 방해 {out[0]['n_distractor']})")
+    print(f"[✓] {p}  n={len(out)}  chunks/query={len(out[0]['source_chunks'])} "
+          f"(relevant {out[0]['n_relevant']} + distractor {out[0]['n_distractor']})")
 
 
 if __name__ == "__main__":

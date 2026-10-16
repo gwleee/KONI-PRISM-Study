@@ -1,11 +1,11 @@
 """
-CMAE 쌍(pair) 단위 충돌 검출 평가 — Exp D/E/F 공용.
+Pair-level CMAE conflict detection evaluation — shared by Exp D/E/F.
 
-CMAE 실 구현(gateway/algorithms/cmae.py)의 충돌 판정은 Eq.(9):
+The conflict decision in the actual CMAE implementation (gateway/algorithms/cmae.py) is Eq.(9):
     conflict(i,j) = 1[ A(i,j) < τ_conflict ],  A = cos_sim(Enc(r_i), Enc(r_j))
-따라서 k=2 쌍에 대해서는 "코사인 < τ" 와 정확히 동치다.
-이 동치는 verify_against_cmae() 에서 실제 CMAEEvaluator 를 돌려 확인한다
-(수식 재구현이 아니라 제품 코드 경로를 검증한다).
+Hence for a k=2 pair it is exactly equivalent to "cosine < τ".
+This equivalence is checked in verify_against_cmae() by running the actual CMAEEvaluator
+(it verifies the product code path, not a re-implementation of the formula).
 """
 from __future__ import annotations
 
@@ -20,14 +20,14 @@ async def encode_pairs(
     text_a_key: str = "text_a",
     text_b_key: str = "text_b",
 ) -> tuple[np.ndarray, dict]:
-    """인스턴스 쌍을 BGE-M3로 인코딩해 코사인 유사도 배열을 만든다.
+    """Encode instance pairs with BGE-M3 and build an array of cosine similarities.
 
-    반환: (sims shape (N,), encoder_probe dict)
+    Returns: (sims shape (N,), encoder_probe dict)
     """
     from services.embedding_service import get_embedding_service  # noqa: PLC0415
 
     svc = get_embedding_service()
-    probe = await assert_real_encoder(svc)   # 폴백 인코더면 여기서 중단
+    probe = await assert_real_encoder(svc)   # abort here if the fallback encoder is active
 
     texts: list[str] = []
     for r in instances:
@@ -47,7 +47,7 @@ async def encode_pairs(
 
 
 def evaluate_at_threshold(sims: np.ndarray, labels: list[int], tau: float) -> dict:
-    """Eq.(9) 판정: cos < τ 이면 충돌로 예측."""
+    """Eq.(9) decision: predict conflict if cos < τ."""
     pred = (sims < tau).astype(int).tolist()
     out = binary_scores(labels, pred)
     out["tau"] = float(tau)
@@ -61,7 +61,7 @@ def sweep_threshold(
     hi: float = 1.0,
     step: float = 0.005,
 ) -> tuple[list[dict], dict]:
-    """τ 전 구간 스윕. 반환: (곡선, 최적 F1 지점)"""
+    """Sweep over the full τ range. Returns: (curve, best-F1 point)"""
     curve = []
     for tau in np.arange(lo, hi + 1e-9, step):
         curve.append(evaluate_at_threshold(sims, labels, float(tau)))
@@ -70,9 +70,9 @@ def sweep_threshold(
 
 
 def roc_auc(sims: np.ndarray, labels: list[int]) -> float:
-    """충돌 점수 = -cos (낮은 유사도일수록 충돌). Mann-Whitney U 기반 AUC.
+    """Conflict score = -cos (lower similarity means conflict). AUC via Mann-Whitney U.
 
-    임계값 선택과 무관한 '분리 가능성' 자체를 측정한다.
+    Measures 'separability' itself, independent of threshold choice.
     """
     y = np.asarray(labels, dtype=int)
     score = -np.asarray(sims, dtype=np.float64)
@@ -83,7 +83,7 @@ def roc_auc(sims: np.ndarray, labels: list[int]) -> float:
     ranks = np.empty_like(order, dtype=np.float64)
     s_sorted = score[order]
     ranks[order] = np.arange(1, score.size + 1, dtype=np.float64)
-    # 동점 처리: 평균 순위
+    # ties: average rank
     i = 0
     while i < s_sorted.size:
         j = i
@@ -100,7 +100,7 @@ def roc_auc(sims: np.ndarray, labels: list[int]) -> float:
 def similarity_bins(
     sims: np.ndarray, labels: list[int], edges: list[float] | None = None
 ) -> list[dict]:
-    """유사도 구간별 레이블 분포 — 데이터셋이 특정 구간에 몰려 있는지 진단."""
+    """Label distribution per similarity bin — diagnoses whether the dataset is concentrated in certain bins."""
     if edges is None:
         edges = [round(x, 2) for x in np.arange(0.0, 1.0001, 0.1)]
     y = np.asarray(labels, dtype=int)
@@ -117,10 +117,10 @@ def similarity_bins(
 
 
 def separability_index(bins: list[dict]) -> float:
-    """구간 중첩도: 두 레이블이 동시에 존재하는 구간이 담는 표본 비율.
+    """Bin overlap: fraction of samples in bins where both labels are present.
 
-    0에 가까울수록 '유사도만으로 완전 분리 가능'(= v1 같은 인위적 구성),
-    클수록 임계값 하나로는 분리 불가능한 현실적 데이터셋.
+    Near 0 means 'fully separable by similarity alone' (= an artificial construction like v1);
+    larger values mean a realistic dataset that a single threshold cannot separate.
     """
     total = sum(b["n"] for b in bins)
     if total == 0:
@@ -132,14 +132,14 @@ def separability_index(bins: list[dict]) -> float:
 async def verify_against_cmae(
     instances: list[dict], sims: np.ndarray, tau: float, n_check: int = 20
 ) -> dict:
-    """제품 CMAEEvaluator 를 직접 돌려 쌍 판정이 일치하는지 확인한다.
+    """Run the product CMAEEvaluator directly and check that pair decisions match.
 
-    코사인 재구현이 실 코드와 어긋나지 않았음을 보증하기 위한 게이트.
+    A gate guaranteeing that the cosine re-implementation does not diverge from the actual code.
     """
     from algorithms.cmae import CMAEEvaluator, ModalityResponse  # noqa: PLC0415
 
     ev = CMAEEvaluator()
-    ev._tau_conflict = tau  # 평가 대상 임계값으로 고정
+    ev._tau_conflict = tau  # pin to the threshold under evaluation
     n_check = min(n_check, len(instances))
     agree = 0
     details = []

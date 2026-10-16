@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-단위별 NLI 라벨 export — 공개 패키지 v1.1.0 (raw_records 공개)용.
+Per-unit NLI label export — for public package v1.1.0 (raw_records release).
 
-저장된 답변·출처 청크에 채점기(common/faithfulness.py, η=0.5)를 **같은 호출 순서와 배치로**
-다시 적용해, 집계값만 있던 raw_records 를 단위(문장) 수준으로 풀어 쓴다. 새 생성·새 측정은
-없다. 재계산 집계가 저장값과 하나라도 다르면 실패로 끝내고 아무것도 쓰지 않는다.
+Re-applies the scorer (common/faithfulness.py, η=0.5) to the stored answers and source chunks **in the same
+call order and batches**, expanding raw_records, which held only aggregates, to the unit (sentence) level. No new
+generation or measurement. If any recomputed aggregate differs from the stored value, it fails and writes nothing.
 
-  ablation_v2/results/unit_labels.jsonl      레코드(id, config, run)별 단위 목록
+  ablation_v2/results/unit_labels.jsonl      unit list per record (id, config, run)
       unit, ent_max, con_max, supported(ent_max ≥ η), contradicted(con_max ≥ η)
-      검증: faith_n_units / faith_n_supported / faith_contradicted_rate / faith_faithfulness
-  mars_attribution/results/unit_labels.jsonl  레코드(id, run)별 단위 × 출처 지지 행렬
+      verified: faith_n_units / faith_n_supported / faith_contradicted_rate / faith_faithfulness
+  mars_attribution/results/unit_labels.jsonl  unit × source support matrix per record (id, run)
       units, ent_max[unit][source], support[unit][source]
-      검증: per_query_metrics.csv 의 theta_* 행 precision / recall_unit / recall_source / n_supported_units
+      verified: per_query_metrics.csv theta_* rows precision / recall_unit / recall_source / n_supported_units
 
-사용법 (artefact-env 환경, GPU 0):
+Usage (artefact-env environment, GPU 0):
   python unit_labels/export_unit_labels.py
 """
 from __future__ import annotations
@@ -59,7 +59,7 @@ def ablation(scorer: FaithfulnessScorer) -> tuple[list[dict], list[str]]:
             out.append({"id": rec["id"], "config": rec["config"], "run": rec["run"],
                         "undefined": True, "units": []})
             continue
-        pairs = [(s, u) for u in units for s in premises]          # scorer.score() 와 같은 순서
+        pairs = [(s, u) for u in units for s in premises]          # same order as scorer.score()
         probs = scorer._nli(pairs).reshape(len(units), len(premises), 3)
         ent = probs[:, :, ei].max(axis=1)
         con = probs[:, :, ci].max(axis=1)
@@ -83,7 +83,7 @@ def ablation(scorer: FaithfulnessScorer) -> tuple[list[dict], list[str]]:
 
 
 def mars(scorer: FaithfulnessScorer) -> tuple[list[dict], list[str]]:
-    from run_mars_eval import metrics_for  # noqa: PLC0415  (동일 지표 함수)
+    from run_mars_eval import metrics_for  # noqa: PLC0415  (same metric function)
     ei = scorer._label_idx["entailment"]
     stored = {}
     with (PE / "mars_attribution/results/per_query_metrics.csv").open() as f:
@@ -97,7 +97,7 @@ def mars(scorer: FaithfulnessScorer) -> tuple[list[dict], list[str]]:
         units = split_fact_units(rec["answer"])
         prem_per_src = [scorer._premises([c]) for c in rec["source_chunks"]]
         ent = np.zeros((len(units), len(rec["source_chunks"])))
-        for si, prem in enumerate(prem_per_src):                     # run_mars_eval 과 같은 순서
+        for si, prem in enumerate(prem_per_src):                     # same order as run_mars_eval
             if not prem or not units:
                 continue
             P = scorer._nli([(p, u) for u in units for p in prem]).reshape(len(units), len(prem), 3)
@@ -123,7 +123,7 @@ def mars(scorer: FaithfulnessScorer) -> tuple[list[dict], list[str]]:
 
 
 def main() -> None:
-    scorer = FaithfulnessScorer()          # η = 0.5, batch 16, max_length 256 — 측정 때와 동일
+    scorer = FaithfulnessScorer()          # η = 0.5, batch 16, max_length 256 — same as at measurement time
     scorer._ensure()
     a, bad_a = ablation(scorer)
     m, bad_m = mars(scorer)
@@ -132,7 +132,7 @@ def main() -> None:
     for b in (bad_a + bad_m)[:20]:
         print("   ", b)
     if bad_a or bad_m:
-        sys.exit("재계산이 저장값과 다르다 — 아무것도 쓰지 않는다")
+        sys.exit("recomputation differs from stored values — writing nothing")
     for rel, rows in (("ablation_v2/results/unit_labels.jsonl", a),
                       ("mars_attribution/results/unit_labels.jsonl", m)):
         (PE / rel).write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows),

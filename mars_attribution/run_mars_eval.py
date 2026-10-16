@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 """
-MARS attribution 실측 — tab:mars 대체용.
+Empirical MARS attribution measurement — replacement for tab:mars.
 
-MARS 는 답변 본문에 관여하지 않는 attribution 레이어임이 구조적으로 확정됐으므로
-(ablation_v2: no_mars 가 full 과 90/90 쌍 동일), 평가 축은 인용 정확성이다.
+Since MARS is structurally confirmed to be an attribution layer that does not affect the answer text
+(ablation_v2: no_mars identical to full on 90/90 pairs), the evaluation axis is citation correctness.
 
-정의 (지지 판정은 faithfulness 와 동일 NLI 게이트 재사용)
+Definitions (support decision reuses the same NLI gate as faithfulness)
   support(s, u) = 1  iff  max_{s' ∈ sentences(s)} P_entail(s' → u) ≥ 0.5
   supports(s)   = 1  iff  ∃u ∈ U(A) : support(s, u) = 1
 
   citation precision = |{s ∈ Cited : supports(s)}| / |Cited|
   citation recall    = |{u : supported(u) ∧ ∃s ∈ Cited, support(s,u)}| / |{u : supported(u)}|
-                       (사실 단위 기준 — 채택한 정의)
-  source-level recall= |{s : supports(s) ∧ s ∈ Cited}| / |{s : supports(s)}|  (보조)
+                       (fact-unit based — adopted definition)
+  source-level recall= |{s : supports(s) ∧ s ∈ Cited}| / |{s : supports(s)}|  (auxiliary)
 
-θ_sent 스윕
-  운영값 θ_sent=0.70 에서는 인용이 **구조적으로 불가능**하다.
-  Eq.(21) 은 max_p G(p,n) ≥ θ_sent 를 요구하는데 G = cos·T̃_n·φ 이고
-  T̃ 는 softmax 출력(합=1)이라 k개 소스에서 max T̃ ≤ 1/k 부근에 머문다.
-  k=2 에서도 G ≤ 1.0×0.5×1.2 = 0.60 < 0.70 이다.
-  따라서 운영값 결과와 함께 θ_sent 를 낮춘 구간을 스윕해 인용이 발생하는
-  지점과 그때의 정밀도/재현율을 함께 보고한다.
+θ_sent sweep
+  At the shipped value θ_sent=0.70, citation is **structurally impossible**.
+  Eq.(21) requires max_p G(p,n) ≥ θ_sent, where G = cos·T̃_n·φ and
+  T̃ is a softmax output (sum=1), so with k sources max T̃ stays around ≤ 1/k.
+  Even at k=2, G ≤ 1.0×0.5×1.2 = 0.60 < 0.70.
+  So alongside the shipped-value results we sweep lower θ_sent values and report where citations
+  start to occur and the precision/recall there.
 
-통제 조건 (ablation_v2 의 지표 검증 방식 준수)
-  shuffle_within : 같은 질의의 소스 집합에서 같은 개수를 무작위 선택
-  shuffle_across : 다른 질의의 소스 집합을 인용으로 사용 (정밀도 ~0 이어야 함)
+Control conditions (following the metric validation approach of ablation_v2)
+  shuffle_within : randomly pick the same number from the same query's source set
+  shuffle_across : use another query's source set as citations (precision should be ~0)
 """
 from __future__ import annotations
 
@@ -58,7 +58,7 @@ def _check_llm(res: object) -> str:
     text = res if isinstance(res, str) else (
         res.get("text", "") if isinstance(res, dict) else "")
     if not isinstance(text, str) or not text.strip():
-        raise SpecialistCallFailed(f"빈 응답: {res!r:.120}")
+        raise SpecialistCallFailed(f"empty response: {res!r:.120}")
     if text.startswith("[LLM error:"):
         raise SpecialistCallFailed(text[:200])
     return text
@@ -66,7 +66,7 @@ def _check_llm(res: object) -> str:
 
 async def generate_one(inst: dict, project_id: str, conv_id: str,
                        turn_idx: int, total: int) -> dict:
-    """full 구성으로 한 질의를 실행하고 MARS 입력/출력을 모두 보존한다."""
+    """Run one query with the full configuration and keep all MARS inputs/outputs."""
     from algorithms.cmae import ModalityResponse, get_cmae_evaluator  # noqa: PLC0415
     from algorithms.dmar import ModalityInput, get_dmar_solver  # noqa: PLC0415
     from algorithms.hmmr import get_hmmr_retriever  # noqa: PLC0415
@@ -103,7 +103,7 @@ async def generate_one(inst: dict, project_id: str, conv_id: str,
                         embedding=cmae_out.embeddings[i], trust_weight=float(trust[i]))
              for i, r in enumerate(responses)]
 
-    # θ_sent 를 바꿔가며 재채점 — 임베딩·답변 재사용(재생성 없음)
+    # re-score while varying θ_sent — reuses embeddings and answers (no regeneration)
     by_theta = {}
     for th in THETA_SWEEP:
         mars._theta_sent = th
@@ -116,7 +116,7 @@ async def generate_one(inst: dict, project_id: str, conv_id: str,
             "reliability_grade": out.reliability_grade,
             "citations_text_len": len(mars.format_citations(out, nodes)),
         }
-    mars._theta_sent = get_settings().mars_theta_sent  # 원복
+    mars._theta_sent = get_settings().mars_theta_sent  # restore
 
     await get_hmmr_retriever().update_memory(
         query_text=inst["query"], query_modalities=["text"], cmae_trust_weights=trust,
@@ -135,25 +135,25 @@ async def generate_one(inst: dict, project_id: str, conv_id: str,
 
 def metrics_for(cited: list[int], support: np.ndarray,
                 relevance: list[bool] | None = None) -> dict:
-    """support: (n_units, n_sources) 불리언 행렬.
+    """support: (n_units, n_sources) boolean matrix.
 
-    relevance 가 주어지면 NLI 와 독립적인 정답(해당 질의의 문서에서 온 청크인가)에
-    대한 정밀도/재현율도 함께 계산한다. 무작위 인용의 기대 정밀도는
-    n_relevant / n_sources 이므로 이 값이 비교 기준선이 된다.
+    If relevance is given, also compute precision/recall against an NLI-independent ground truth
+    (whether the chunk comes from the query's own document). The expected precision of random
+    citation is n_relevant / n_sources, which serves as the comparison baseline.
     """
     n_units, n_src = support.shape
-    supports_src = support.any(axis=0)               # 소스가 무언가를 지지하는가
-    supported_units = support.any(axis=1)            # 단위가 어떤 소스로든 지지되는가
+    supports_src = support.any(axis=0)               # does the source support anything
+    supported_units = support.any(axis=1)            # is the unit supported by any source
 
     if cited:
         prec = float(supports_src[cited].mean())
-        cov = support[:, cited].any(axis=1)          # 인용된 소스가 지지하는 단위
+        cov = support[:, cited].any(axis=1)          # units supported by cited sources
         rec_unit = (float((cov & supported_units).sum() / supported_units.sum())
                     if supported_units.sum() else float("nan"))
         rec_src = (float(np.isin(np.where(supports_src)[0], cited).mean())
                    if supports_src.sum() else float("nan"))
     else:
-        prec = float("nan")                          # 인용이 없으면 정밀도 미정의
+        prec = float("nan")                          # precision undefined if nothing is cited
         rec_unit = 0.0 if supported_units.sum() else float("nan")
         rec_src = 0.0 if supports_src.sum() else float("nan")
     out = {"precision": prec, "recall_unit": rec_unit, "recall_source": rec_src,
@@ -203,8 +203,8 @@ async def main() -> None:
     scorer = FaithfulnessScorer()
 
     insts = [json.loads(l) for l in Path(args.evalset).read_text(encoding="utf-8").splitlines() if l.strip()][:args.n]
-    print(f"질의 {len(insts)} × {args.runs} runs = {len(insts)*args.runs} 생성\n"
-          f"운영 θ_sent={get_settings().mars_theta_sent}, θ_cite={get_settings().mars_theta_cite}\n")
+    print(f"{len(insts)} queries × {args.runs} runs = {len(insts)*args.runs} generations\n"
+          f"shipped θ_sent={get_settings().mars_theta_sent}, θ_cite={get_settings().mars_theta_cite}\n")
 
     records: list[dict] = []
     for run in range(args.runs):
@@ -222,8 +222,8 @@ async def main() -> None:
             records.append(r)
         print(f"  run {run+1}/{args.runs}: {time.perf_counter()-t0:.0f}s")
 
-    # ── NLI 지지 행렬 계산 (질의당 1회) + 지표 산출
-    print("\n지지 행렬 계산 (NLI)...")
+    # ── compute NLI support matrix (once per query) + metrics
+    print("\nComputing support matrix (NLI)...")
     rng = random.Random(4242)
     ok = [r for r in records if "answer" in r]
     rows: list[dict] = []
@@ -248,7 +248,7 @@ async def main() -> None:
                          "reliability_score": info["reliability_score"],
                          "reliability_grade": info["reliability_grade"]})
 
-        # 통제 조건 — 인용이 실제로 발생하는 최저 θ 기준
+        # control conditions — at the lowest θ where citations actually occur
         working = next((t for t in sorted(r["by_theta"], key=float)
                         if r["by_theta"][t]["n_cited"] > 0), None)
         if working:
@@ -273,7 +273,7 @@ async def main() -> None:
                          "reliability_score": None, "reliability_grade": None})
         if (k + 1) % 20 == 0:
             print(f"  {k+1}/{len(ok)}")
-    print(f"  완료 ({time.perf_counter()-t0:.0f}s)")
+    print(f"  done ({time.perf_counter()-t0:.0f}s)")
 
     for r in records:
         r.pop("_support", None)
@@ -302,7 +302,7 @@ async def main() -> None:
         }
 
     write_json(out / "results.json", {
-        "experiment": "MARS attribution 실측 (tab:mars 대체)",
+        "experiment": "Empirical MARS attribution (replaces tab:mars)",
         "provenance": provenance(),
         "settings": settings_snapshot(),
         "definition": {
@@ -313,17 +313,17 @@ async def main() -> None:
             "nli_model": scorer.definition()["nli_model"],
         },
         "structural_note": (
-            "Eq.(21) 의 max_p G(p,n) >= θ_sent 는 G = cos·T̃·φ 이고 T̃ 가 softmax "
-            "출력(합=1)이므로 k>=2 에서 상한이 1.0×0.5×1.2=0.60 < 0.70 이다. "
-            "운영값 θ_sent=0.70 에서는 인용이 구조적으로 발생할 수 없다."),
+            "In Eq.(21), max_p G(p,n) >= θ_sent with G = cos·T̃·φ, and since T̃ is a softmax "
+            "output (sum=1), the upper bound for k>=2 is 1.0×0.5×1.2=0.60 < 0.70. "
+            "At the shipped value θ_sent=0.70, citations structurally cannot occur."),
         "n_queries": len(insts), "runs": args.runs,
         "summary": summary,
     })
 
     def f3(d):
-        return f"{d['mean']:.3f}±{d['std']:.3f}" if d["mean"] is not None else "정의불가"
+        return f"{d['mean']:.3f}±{d['std']:.3f}" if d["mean"] is not None else "undefined"
     print(f"\n{'condition':24s} {'prec(NLI)':>13s} {'prec(rel)':>13s} "
-          f"{'rec(unit)':>13s} {'n_cited':>8s} {'인용>0':>8s}")
+          f"{'rec(unit)':>13s} {'n_cited':>8s} {'cited>0':>8s}")
     for c in conds:
         s_ = summary[c]
         print(f"{c:24s} {f3(s_['precision']):>13s} {f3(s_['precision_relevance']):>13s} "
@@ -331,7 +331,7 @@ async def main() -> None:
               f"{s_['queries_with_any_citation']:4d}/{s_['n_queries']}")
     rb = summary[conds[0]]["random_precision_baseline"]["mean"]
     if rb is not None:
-        print(f"\n무작위 인용의 기대 정밀도(관련성 기준): {rb:.3f}")
+        print(f"\nExpected precision of random citation (relevance-based): {rb:.3f}")
     print(f"\n[✓] {out/'results.json'}")
 
 

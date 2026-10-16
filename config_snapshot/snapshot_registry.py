@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-배포 코드의 라우팅 레지스트리와 설정값을 그대로 기록한다 (제품 코드는 read-only import).
+Record the deployed code's routing registry and settings verbatim (product code is imported read-only).
 
-원고의 Table 1과 모델 크기 서술(§3.3, §5.2)이 이 파일을 거쳐 export에 들어간다.
-설정 스냅샷(settings_snapshot)에는 없는 값 — 모델별 VRAM, 모달리티별 품질 하한 Q_min,
-품질 추정 초기값, 비용 — 이 레지스트리 상수로만 존재하기 때문이다.
+The manuscript's Table 1 and model-size statements (§3.3, §5.2) reach the export through this file,
+because values absent from the settings snapshot (settings_snapshot) — per-model VRAM, per-modality
+quality floor Q_min, initial quality estimates, cost — exist only as these registry constants.
 
   python config_snapshot/snapshot_registry.py
 """

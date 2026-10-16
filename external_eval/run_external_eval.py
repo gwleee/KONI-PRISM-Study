@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """
-Exp D — 외부 contradiction 데이터셋에서 CMAE 충돌 검출 평가.
+Exp D — CMAE conflict-detection evaluation on external contradiction datasets.
 
-목적: 자체 제작 SynConflict 에서의 성능이 사람이 주석한 외부 일반 데이터셋으로
-일반화되는지 검증한다 (리뷰어 요구: 외부 일반화 증명).
+Purpose: verify that performance on the in-house SynConflict generalizes to external, general
+human-annotated datasets (reviewer request: demonstrate external generalization).
 
-데이터셋 3종 (요구 2종 이상 충족):
+Three datasets (meets the requirement of at least two):
   - SNLI       (stanfordnlp/snli)      contradiction ↔ entailment
-  - MultiNLI   (nyu-mll/multi_nli)     contradiction ↔ entailment (장르 다양)
+  - MultiNLI   (nyu-mll/multi_nli)     contradiction ↔ entailment (diverse genres)
   - VitaminC   (tals/vitaminc)         REFUTES ↔ SUPPORTS
-                                       FEVER 기반 + 위키 개정 대조쌍.
-                                       FEVER 원본은 근거 텍스트가 위키 덤프에
-                                       분리돼 있어 즉시 쌍 구성이 불가능하므로,
-                                       근거가 인라인된 FEVER 파생 데이터셋인
-                                       VitaminC를 사용한다.
+                                       FEVER-based + Wikipedia revision contrast pairs.
+                                       In the original FEVER the evidence text lives
+                                       separately in a Wikipedia dump, so pairs cannot
+                                       be built directly; we use VitaminC, a
+                                       FEVER-derived dataset with inline evidence.
 
-매핑: CMAE 는 두 응답의 쌍에 대해 Eq.(9) conflict = 1[cos < τ] 로 판정한다.
-      NLI 의 (premise, hypothesis) / 사실검증의 (evidence, claim) 을
-      두 모달리티 응답 쌍으로 간주한다.
+Mapping: CMAE decides on a pair of two responses via Eq.(9) conflict = 1[cos < τ].
+      NLI (premise, hypothesis) / fact-verification (evidence, claim) pairs are
+      treated as a pair of two modality responses.
 
-neutral / NOT ENOUGH INFO 는 '모순 아님'이지만 '지지'도 아니어서 기본 평가에서
-제외하고, --include-neutral 로 비충돌에 포함한 변형도 별도 보고한다.
+neutral / NOT ENOUGH INFO is 'not a contradiction' but also not 'support', so it is excluded
+from the primary evaluation; a variant that counts it as non-conflict (--include-neutral) is reported separately.
 """
 from __future__ import annotations
 
@@ -71,7 +71,7 @@ DATASETS = {
 
 
 def build_pairs(name: str, n_per_class: int, seed: int) -> list[dict]:
-    """HF 데이터셋을 CMAE 쌍 형식으로 변환. 클래스 균형 + 시드 고정 샘플링."""
+    """Convert an HF dataset into CMAE pair format. Class-balanced, fixed-seed sampling."""
     from datasets import load_dataset  # noqa: PLC0415
 
     spec = DATASETS[name]
@@ -94,7 +94,7 @@ def build_pairs(name: str, n_per_class: int, seed: int) -> list[dict]:
         elif lab in spec["neutral_labels"]:
             grp = "neutral"
         else:
-            continue                      # SNLI 의 -1 (주석자 불일치) 등
+            continue                      # e.g. SNLI's -1 (annotator disagreement)
         buckets[grp].append({"text_a": ta, "text_b": tb, "raw_label": str(lab)})
 
     rng = random.Random(seed)
@@ -111,7 +111,7 @@ def build_pairs(name: str, n_per_class: int, seed: int) -> list[dict]:
                 "text_b": r["text_b"],
                 "label": label,
                 "group": grp,
-                "conflict_type": grp,       # 공용 평가기 호환
+                "conflict_type": grp,       # compatibility with the shared evaluator
                 "raw_label": r["raw_label"],
             })
     rng.shuffle(out)
@@ -131,7 +131,7 @@ async def evaluate(name: str, rows: list[dict], tau_prod: float) -> dict:
         idx = [rows.index(r) for r in sub]
         return idx
 
-    # 기본 평가: neutral 제외
+    # Primary evaluation: neutral excluded
     primary = [r for r in rows if r["group"] in ("conflict", "clean")]
     sims_all, probe = await encode_pairs(rows)
     sim_by_id = {r["id"]: float(s) for r, s in zip(rows, sims_all)}
@@ -194,10 +194,10 @@ async def main() -> None:
     out = Path(args.out)
     results = {}
     for name in args.datasets:
-        print(f"[..] {name} 로딩/변환")
+        print(f"[..] {name} loading/converting")
         rows = build_pairs(name, args.n_per_class, args.seed)
         write_jsonl(out.parent / "data" / f"{name}_pairs.jsonl", rows)
-        print(f"[..] {name} 인코딩/평가 (n={len(rows)})")
+        print(f"[..] {name} encoding/evaluating (n={len(rows)})")
         r = await evaluate(name, rows, tau_prod)
         curve = r.pop("_curve")
         r.pop("_sims", None)
@@ -207,7 +207,7 @@ async def main() -> None:
         results[name] = r
 
     write_json(out / "results.json", {
-        "experiment": "Exp D — 외부 contradiction 데이터셋 CMAE 평가",
+        "experiment": "Exp D — CMAE evaluation on external contradiction datasets",
         "production_tau_conflict": tau_prod,
         "n_per_class": args.n_per_class,
         "seed": args.seed,

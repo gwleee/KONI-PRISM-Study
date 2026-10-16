@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-인용 평가의 쿼리 단위 집계 (원고 보고 경로).
+Query-level aggregation of the attribution evaluation (the path reported in the manuscript).
 
-평가는 쿼리 30개 × 쿼리 순서 3가지다. 순서만 다른 3회는 독립 표본이 아니므로,
-지표는 쿼리별로 먼저 평균한 뒤(n=30) 쿼리 부트스트랩 95% CI(10,000회, 시드 고정)를 붙이고,
-인용 발생은 "세 순서 모두에서 인용된 쿼리 수 / 하나 이상에서 인용된 쿼리 수"로 센다.
+The evaluation is 30 queries × 3 orderings. The 3 runs differing only in ordering are not independent,
+so each metric is first averaged per query (n=30), then given a query bootstrap 95% CI (10,000, fixed seed);
+citation occurrence is counted as "queries cited in all three orderings / queries cited in at least one".
 
   python mars_attribution/analyze_query_level.py
 """

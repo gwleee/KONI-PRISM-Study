@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-DMAR ILP solve time 재측정 — 본문 반영값(8.36±0.30 ms) 정합 확인.
+DMAR ILP solve time remeasurement — consistency check against the value in the text (8.36±0.30 ms).
 
-Exp C 는 k=3 (text/image/audio) 한 조건만 측정했으나, 본문 §4.2 는
-"k≤5 modalities, n≤8 specialist candidates" 범위 전체에 대해 8.36ms 를
-주장한다. solve time 이 k 에 따라 변하면 그 문장은 부정확해지므로
-k=1..5 전 구간을 측정한다.
+Exp C measured only the k=3 (text/image/audio) condition, but §4.2 of the text
+claims 8.36ms for the whole range "k≤5 modalities, n≤8 specialist candidates".
+If solve time varies with k that sentence is inaccurate, so we measure the
+full range k=1..5.
 
-계측 대상: DMARSolver._solve_ilp() — Exp C 와 동일 경로.
+Measured target: DMARSolver._solve_ilp() — same path as Exp C.
 """
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 from common.harness import bootstrap_gateway, provenance, set_profile, summarize, write_csv, write_json  # noqa: E402
 
-# 레지스트리가 지원하는 모달리티 (dmar.py MODEL_REGISTRY 기준)
+# Modalities supported by the registry (per dmar.py MODEL_REGISTRY)
 ALL_MODALITIES = ["text", "image", "audio", "document", "video"]
 
 
@@ -71,7 +71,7 @@ def main() -> None:
     paper_mean, paper_std = 8.36, 0.30
     expc_mean, expc_std = 8.355033333333333, 0.30178600357541924
 
-    # k≤5 전 구간 통합 (본문 주장 범위)
+    # pooled over the full k≤5 range (the range claimed in the text)
     all_samples = [r["ms"] for r in raw]
     overall = summarize(all_samples)
 
@@ -95,7 +95,7 @@ def main() -> None:
               columns=["k", "modalities", "n", "mean", "std", "min", "p50", "p95", "max"])
     write_csv(out / "dmar_solve_raw.csv", raw, columns=["k", "iter", "ms", "solved"])
     write_json(out / "dmar_remeasure.json", {
-        "experiment": "DMAR ILP solve time 재측정 (본문 정합 확인)",
+        "experiment": "DMAR ILP solve time remeasurement (consistency check against the text)",
         "provenance": provenance(),
         "alpha": alpha, "v_max_gb": v_max,
         "n_model_candidates": len(MODEL_REGISTRY),
@@ -104,15 +104,15 @@ def main() -> None:
         "verdict": verdict,
     })
 
-    print(f"\n── 정합 확인 ──")
-    print(f"  본문 반영값        : {paper_mean:.2f} ± {paper_std:.2f} ms")
-    print(f"  Exp C 저장값 (k=3) : {expc_mean:.3f} ± {expc_std:.3f} ms (n=30)")
-    print(f"  재측정값     (k=3) : {k3['mean']:.3f} ± {k3['std']:.3f} ms (n={k3['n']})")
-    print(f"  Δ(재측정 − 본문)   : {verdict['delta_vs_paper_k3']:+.3f} ms")
-    print(f"  Δ(재측정 − Exp C)  : {verdict['delta_vs_expc_k3']:+.3f} ms")
-    print(f"\n  k=1..5 통합        : {overall['mean']:.3f} ± {overall['std']:.3f} ms "
+    print(f"\n── Consistency check ──")
+    print(f"  value in text      : {paper_mean:.2f} ± {paper_std:.2f} ms")
+    print(f"  Exp C stored (k=3) : {expc_mean:.3f} ± {expc_std:.3f} ms (n=30)")
+    print(f"  remeasured   (k=3) : {k3['mean']:.3f} ± {k3['std']:.3f} ms (n={k3['n']})")
+    print(f"  Δ(remeas − text)   : {verdict['delta_vs_paper_k3']:+.3f} ms")
+    print(f"  Δ(remeas − Exp C)  : {verdict['delta_vs_expc_k3']:+.3f} ms")
+    print(f"\n  k=1..5 pooled      : {overall['mean']:.3f} ± {overall['std']:.3f} ms "
           f"(p95={overall['p95']:.3f})")
-    print(f"  k 의존 편차        : {verdict['k_dependence']['spread_ms']:.3f} ms "
+    print(f"  k-dependence spread: {verdict['k_dependence']['spread_ms']:.3f} ms "
           f"({verdict['k_dependence']['min_k_mean']:.3f} ~ "
           f"{verdict['k_dependence']['max_k_mean']:.3f})")
     print(f"\n[✓] {out/'dmar_remeasure.json'}")

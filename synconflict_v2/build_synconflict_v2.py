@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
 """
-Exp E — SynConflict v2 빌더.
+Exp E — SynConflict v2 builder.
 
-v1(scripts/build_conflict_set.py)의 구조적 결함 두 가지를 해소한다.
+Fixes two structural flaws of v1 (scripts/build_conflict_set.py).
 
-임계 근처 좁은 유사도 구간 편향
-  v1은 docstring에 "τ=0.65 근방 최적 F1 설계"라고 명시돼 있다. 즉 conflict를
-  cos<0.65, clean을 cos≥0.66에 의도적으로 배치했다. 이러면 τ=0.65가 최적인 것은
-  데이터셋 구성의 결과이지 알고리즘의 성질이 아니다(순환 검증).
-  v2는 (a) 레이블별로 유사도 전 구간을 커버하고, (b) **저유사도 비충돌**
-  (unrelated_consistent)과 **고유사도 충돌**(paraphrastic)을 반드시 포함해
-  단일 코사인 임계값으로는 분리 불가능한 영역을 노출한다.
+Narrow similarity band near the threshold
+  The v1 docstring explicitly states "designed for optimal F1 around τ=0.65", i.e. conflicts
+  were deliberately placed at cos<0.65 and clean pairs at cos≥0.66. τ=0.65 being optimal is then
+  a consequence of how the dataset was built, not a property of the algorithm (circular validation).
+  v2 (a) covers the full similarity range for each label and (b) always includes **low-similarity
+  non-conflicts** (unrelated_consistent) and **high-similarity conflicts** (paraphrastic), exposing
+  the region that no single cosine threshold can separate.
 
-충돌 유형 협소
-  v1의 충돌은 사실상 1종(공식 보고서 수치 vs 구어체 불만)이다. 게다가 이는
-  **문체(register) 교란**과 완전히 교락돼 있다 — 낮은 코사인이 '모순' 때문인지
-  '문체 차이' 때문인지 구분 불가능하다.
-  v2는 충돌 5종(numerical / domain_mismatch / paraphrastic / temporal /
-  terminological)으로 확장하고, 각 쌍에 register를 명시해 **동일 문체 내 충돌**을
-  기본값으로 둔다. 문체 교락은 register 필드로 사후 측정 가능하다.
+Narrow conflict taxonomy
+  v1 effectively has one conflict type (official-report figures vs colloquial complaints). It is
+  also fully confounded with **register** — one cannot tell whether a low cosine comes from the
+  'contradiction' or from the 'register difference'.
+  v2 extends to 5 conflict types (numerical / domain_mismatch / paraphrastic / temporal /
+  terminological), records the register of each pair, and makes **same-register conflicts** the
+  default. The register confound can be measured post hoc via the register field.
 
-출력:
-  instances.jsonl  — 인스턴스 (id, text_a, text_b, label, conflict_type, register, domain, lang)
-  metadata.json    — 구성/시드/버전
-  (유사도는 별도 evaluate_cmae_v2.py 에서 실측해 부착한다 — 생성과 측정을 분리)
+Output:
+  instances.jsonl  — instances (id, text_a, text_b, label, conflict_type, register, domain, lang)
+  metadata.json    — configuration/seed/version
+  (similarity is measured and attached separately in evaluate_cmae_v2.py — generation and measurement are decoupled)
 
-사용법:
+Usage:
   python build_synconflict_v2.py --n 600 --seed 42
 """
 from __future__ import annotations
@@ -38,8 +38,8 @@ from pathlib import Path
 
 OUT_DIR = Path(__file__).resolve().parent / "data"
 
-# ── 도메인 정의 ──────────────────────────────────────────────────────────────
-# 각 도메인은 (주체, 지표, 단위, 고값범위, 저값범위) 를 제공한다.
+# ── Domain definitions ──────────────────────────────────────────────────────────────
+# Each domain provides (subject, metric, unit, high-value range, low-value range).
 
 DOMAINS: dict[str, dict] = {
     "system_perf": {
@@ -101,8 +101,8 @@ DOMAINS: dict[str, dict] = {
 PERIODS = ["2024년 상반기", "2024년 4분기", "2025년 1분기", "지난 회계연도", "이번 분기"]
 PERIODS_LATER = ["2025년 상반기", "2025년 3분기", "2026년 1분기", "올해", "다음 분기"]
 
-# 문체(register) 템플릿 — 동일 내용을 다른 문체로 렌더한다.
-# 충돌 여부와 문체를 분리하기 위해 v2는 기본적으로 양쪽 문체를 일치시킨다.
+# Register templates — render the same content in different registers.
+# To decouple conflict from register, v2 matches the register of both sides by default.
 
 
 def _fmt_val(v: float, unit: str) -> str:
@@ -119,7 +119,7 @@ def _sample(rng: random.Random, rng_range: tuple[float, float]) -> float:
 
 
 def _render(register: str, subject: str, metric: str, val: str, period: str) -> str:
-    """동일 명제를 지정된 문체로 렌더."""
+    """Render the same proposition in the given register."""
     if register == "formal":
         return (f"{period} {subject}의 {metric}은(는) {val}로 측정되었다. "
                 f"해당 값은 정기 점검 보고서에 기록되어 있다.")
@@ -134,10 +134,10 @@ def _render(register: str, subject: str, metric: str, val: str, period: str) -> 
 REGISTERS = ["formal", "casual", "technical"]
 
 
-# ── 충돌 유형 5종 ────────────────────────────────────────────────────────────
+# ── 5 conflict types ────────────────────────────────────────────────────────────
 
 def make_numerical(rng: random.Random, reg: str) -> dict:
-    """같은 주체·지표·기간에 대해 모순되는 수치. (v1에서 계승, 문체는 일치시킴)"""
+    """Contradictory values for the same subject, metric and period. (Inherited from v1, with matched register.)"""
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
     subj = rng.choice(d["subjects"])
@@ -149,7 +149,7 @@ def make_numerical(rng: random.Random, reg: str) -> dict:
 
 
 def make_domain_mismatch(rng: random.Random, reg: str) -> dict:
-    """동일 질의에 대해 서로 다른 도메인의 주체를 답한다 — 주제 자체가 어긋남."""
+    """Answers the same query with subjects from different domains — the topic itself diverges."""
     d1, d2 = rng.sample(list(DOMAINS), 2)
     dd1, dd2 = DOMAINS[d1], DOMAINS[d2]
     s1, s2 = rng.choice(dd1["subjects"]), rng.choice(dd2["subjects"])
@@ -175,9 +175,9 @@ NEGATION_PAIRS = [
 
 
 def make_paraphrastic(rng: random.Random, reg: str) -> dict:
-    """표층은 거의 동일하고 서술어만 반대 — 코사인 유사도가 매우 높은 '어려운' 충돌.
+    """Nearly identical surface form with only the predicate reversed — a 'hard' conflict with very high cosine similarity.
 
-    단일 코사인 임계값 기반 검출기가 원리적으로 놓치는 사례. v1에는 전무했다.
+    Cases that a single-cosine-threshold detector misses in principle. v1 had none.
     """
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
@@ -198,7 +198,7 @@ def make_paraphrastic(rng: random.Random, reg: str) -> dict:
 
 
 def make_temporal(rng: random.Random, reg: str) -> dict:
-    """동일 명제를 양립 불가능한 시점에 귀속시킨다 (시간 순서·시점 모순)."""
+    """Attributes the same proposition to incompatible points in time (temporal order/time-point contradiction)."""
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
     subj = rng.choice(d["subjects"])
@@ -218,7 +218,7 @@ def make_temporal(rng: random.Random, reg: str) -> dict:
     return {"text_a": a, "text_b": b, "conflict_type": "temporal", "domain": dom}
 
 
-# (용어, 단위계 A, 환산계수, 단위계 B) — 같은 물리량을 다른 단위로 말하되 값이 불일치
+# (term, unit system A, conversion factor, unit system B) — the same quantity stated in different units with inconsistent values
 TERM_PAIRS = [
     ("응답 지연", "밀리초", 1.0, "초", 1000.0),
     ("저장 용량", "메가바이트", 1.0, "기가바이트", 1024.0),
@@ -234,18 +234,18 @@ SYNONYM_CONFUSIONS = [
 
 
 def make_terminological(rng: random.Random, reg: str) -> dict:
-    """동일 개념을 다른 용어/단위계로 진술하되 환산이 맞지 않아 모순이 되는 경우."""
+    """The same concept stated with a different term/unit system where the conversion does not match, yielding a contradiction."""
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
     subj = rng.choice(d["subjects"])
     period = rng.choice(PERIODS)
 
     if rng.random() < 0.5:
-        # 단위계 불일치 — 환산하면 값이 어긋난다
+        # Unit-system mismatch — values disagree after conversion
         name, ua, _, ub, factor = rng.choice(TERM_PAIRS)
         base = rng.uniform(200, 900)
         va = f"{base:.0f}{ua}"
-        # 올바른 환산은 base/factor. 의도적으로 크게 어긋난 값을 넣는다.
+        # The correct conversion is base/factor. Deliberately insert a value that is far off.
         wrong = (base / factor) * rng.uniform(4.0, 9.0)
         vb = f"{wrong:.2f}{ub}"
         if reg == "technical":
@@ -259,7 +259,7 @@ def make_terminological(rng: random.Random, reg: str) -> dict:
             b = f"{period} {subj}의 {name}은(는) {vb}로 측정되었다."
         sub = "unit_mismatch"
     else:
-        # 유사 용어 혼동 — 서로 다른 지표를 같은 것으로 지칭하며 상반된 결론
+        # Near-synonym confusion — different metrics referred to as the same, with opposite conclusions
         t1, t2 = rng.choice(SYNONYM_CONFUSIONS)
         v1 = rng.uniform(90, 97)
         v2 = rng.uniform(55, 70)
@@ -277,10 +277,10 @@ def make_terminological(rng: random.Random, reg: str) -> dict:
             "domain": dom, "subtype": sub}
 
 
-# ── 비충돌 유형 3종 ──────────────────────────────────────────────────────────
+# ── 3 non-conflict types ──────────────────────────────────────────────────────────
 
 def make_paraphrase(rng: random.Random, reg: str) -> dict:
-    """동일 사실의 재진술 — 유사도 상단."""
+    """Restatement of the same fact — upper similarity range."""
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
     subj = rng.choice(d["subjects"])
@@ -298,7 +298,7 @@ def make_paraphrase(rng: random.Random, reg: str) -> dict:
 
 
 def make_complementary(rng: random.Random, reg: str) -> dict:
-    """같은 주체의 서로 다른, 그러나 양립 가능한 지표 — 유사도 중간."""
+    """Different but compatible metrics of the same subject — mid similarity range."""
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
     subj = rng.choice(d["subjects"])
@@ -322,10 +322,10 @@ UNRELATED_FACTS = [
 
 
 def make_unrelated_consistent(rng: random.Random, reg: str) -> dict:
-    """서로 무관하지만 **모순되지는 않는** 진술 — 유사도 하단.
+    """Unrelated but **non-contradictory** statements — lower similarity range.
 
-    v1의 clean 집합은 전부 cos≥0.66이라 τ=0.65 아래에 비충돌이 존재하지 않았다.
-    그래서 임계값 하나로 완벽 분리가 가능했다. 이 유형이 그 인위적 분리를 깬다.
+    In v1 every clean pair had cos≥0.66, so no non-conflict existed below τ=0.65,
+    which made perfect separation possible with a single threshold. This type breaks that artificial separation.
     """
     dom = rng.choice(list(DOMAINS))
     d = DOMAINS[dom]
@@ -354,14 +354,14 @@ CLEAN_BUILDERS = {
 }
 
 
-# ── 데이터셋 조립 ────────────────────────────────────────────────────────────
+# ── Dataset assembly ────────────────────────────────────────────────────────────
 
 def build(n: int, rng: random.Random, cross_register_ratio: float) -> list[dict]:
-    """충돌:비충돌 = 1:1, 각 유형 균등 배분.
+    """conflict:non-conflict = 1:1, with types allocated evenly.
 
-    cross_register_ratio: 양쪽 문체를 일부러 다르게 만들 비율.
-      문체 교락(register confound)을 사후 측정하기 위한 소수 그룹이며,
-      기본값은 낮게 둔다(v1은 사실상 1.0이었다).
+    cross_register_ratio: fraction of pairs whose two sides deliberately use different registers.
+      A minority group for measuring the register confound post hoc;
+      the default is kept low (v1 was effectively 1.0).
     """
     n_conf = n // 2
     n_clean = n - n_conf
@@ -382,8 +382,8 @@ def build(n: int, rng: random.Random, cross_register_ratio: float) -> list[dict]
                     ra, rb = rng.sample(REGISTERS, 2)
                     reg_field = f"{ra}|{rb}"
                     rec = builders[t](rng, ra)
-                    # text_b 만 다른 문체로 재생성하기 어려우므로,
-                    # cross 케이스는 b를 rb 문체로 다시 만든 쌍에서 가져온다.
+                    # Since regenerating only text_b in another register is hard,
+                    # cross cases take b from a pair rebuilt in register rb.
                     rec_b = builders[t](rng, rb)
                     rec["text_b"] = rec_b["text_b"]
                 else:
@@ -407,7 +407,7 @@ def build(n: int, rng: random.Random, cross_register_ratio: float) -> list[dict]
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="SynConflict v2 빌더 (Exp E)")
+    ap = argparse.ArgumentParser(description="SynConflict v2 builder (Exp E)")
     ap.add_argument("--n", type=int, default=600)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--cross-register-ratio", type=float, default=0.25)
@@ -444,19 +444,19 @@ def main() -> None:
         "created_at": datetime.now(timezone.utc).isoformat(),
         "design_notes": {
             "similarity_coverage": (
-                "레이블별로 유사도 전 구간을 커버한다. 고유사도 충돌"
-                "(paraphrastic)과 저유사도 비충돌(unrelated_consistent)을 모두"
-                " 포함해 단일 코사인 임계값으로 분리 불가능한 영역을 노출한다."
-                " v1처럼 특정 τ가 최적이 되도록 설계하지 않는다."
+                "Covers the full similarity range for each label. Includes both"
+                " high-similarity conflicts (paraphrastic) and low-similarity non-conflicts"
+                " (unrelated_consistent), exposing the region no single cosine threshold can separate."
+                " Unlike v1, it is not designed so that a particular τ is optimal."
             ),
             "conflict_taxonomy": (
-                "충돌 5종으로 확장 (기존 numerical/domain_mismatch + 신규"
+                "Extended to 5 conflict types (existing numerical/domain_mismatch + new"
                 " paraphrastic/temporal/terminological)."
             ),
             "register_deconfounding": (
-                "v1은 충돌=공식문체 vs 비충돌=구어체로 문체와 레이블이 교락돼"
-                " 있었다. v2는 기본적으로 양쪽 문체를 일치시키고, cross_register"
-                " 소수 그룹으로 문체 효과를 사후 분리 측정한다."
+                "In v1, register and label were confounded (conflict = formal register vs"
+                " non-conflict = colloquial). v2 matches the register of both sides by default and"
+                " measures the register effect separately post hoc with a minority cross_register group."
             ),
         },
     }

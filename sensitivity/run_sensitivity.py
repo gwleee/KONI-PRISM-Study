@@ -1,35 +1,35 @@
 #!/usr/bin/env python3
 """
-Exp F — 하이퍼파라미터 민감도 스윕.
+Exp F — hyperparameter sensitivity sweep.
 
-스윕 대상 (실 코드 기본값은 core/config.py 기준):
-  τ_conflict = 0.65   CMAE Eq.(9)  충돌 임계
-  γ          = 0.6    CMAE Eq.(11) 정렬 vs 품질추정 가중  [0.4, 0.8]
-  τ_T        = 0.5    CMAE Eq.(12) softmax 온도           [0.3, 0.7]
-  θ_dom      = 0.60   CMAE 전략 결정 (Trust-Dominant 임계)
-  λ₁,λ₂,λ₃   = 0.5/0.3/0.2  HMMR Eq.(13) 중요도 가중
-  ω_S,ω_E,ω_L= 0.50/0.35/0.15 HMMR Eq.(15) 계층 토큰 예산
-  δ          = 0.3    HMMR Eq.(15) ModalMatch 가중
-  θ_imp      = 0.60   HMMR Eq.(16) 에피소딕 승격 임계 ★실 코드값 확인 결과
+Swept parameters (actual code defaults per core/config.py):
+  τ_conflict = 0.65   CMAE Eq.(9)  conflict threshold
+  γ          = 0.6    CMAE Eq.(11) alignment vs quality-estimate weight  [0.4, 0.8]
+  τ_T        = 0.5    CMAE Eq.(12) softmax temperature    [0.3, 0.7]
+  θ_dom      = 0.60   CMAE strategy decision (Trust-Dominant threshold)
+  λ₁,λ₂,λ₃   = 0.5/0.3/0.2  HMMR Eq.(13) importance weights
+  ω_S,ω_E,ω_L= 0.50/0.35/0.15 HMMR Eq.(15) tier token budget
+  δ          = 0.3    HMMR Eq.(15) ModalMatch weight
+  θ_imp      = 0.60   HMMR Eq.(16) episodic promotion threshold ★verified actual code value
 
-★ θ_imp: 논문/스펙에 명시가 없어 확인 요청된 항목.
-  실제 코드값은 core/config.py 의 `hmmr_theta_imp: float = 0.60` 이며
-  hmmr.py:88 에서 self._theta_imp 로 읽어 Eq.(16) 승격 판정에 사용된다.
+★ θ_imp: not stated in the paper/spec, so verification was requested.
+  The actual code value is `hmmr_theta_imp: float = 0.60` in core/config.py,
+  read at hmmr.py:88 as self._theta_imp and used for the Eq.(16) promotion decision.
 
-측정 지표:
-  - 충돌 검출 F1 / MCC / ROC-AUC  (SynConflict v2 + 외부 데이터셋)
-  - CMAE 충돌 해결 전략 분포 (trust_dominant / explicit_conflict / abstain)
-  - trust weight 집중도 (max T̃, 엔트로피)
-  - HMMR 검색 순위 변화 (Spearman ρ vs 기본 설정), 계층별 선택 분포
-  - MARS 인용 개수 / 신뢰도 등급 분포
+Metrics:
+  - conflict detection F1 / MCC / ROC-AUC  (SynConflict v2 + external datasets)
+  - CMAE conflict-resolution strategy distribution (trust_dominant / explicit_conflict / abstain)
+  - trust weight concentration (max T̃, entropy)
+  - HMMR retrieval rank change (Spearman ρ vs default settings), per-tier selection distribution
+  - MARS citation count / reliability grade distribution
 
-주의 — faithfulness 를 스윕 지표로 쓰지 않는 이유:
-  현행 저장소에서 논문 Table 6 의 faithfulness 는 실측이 아니라
-  scripts/run_real_experiments.py:run_ablation_experiment() 가
-  하드코딩된 구간(SRC_QUALITY/MEM_DELTA/TRUST_BOOST ...)에서 rng.uniform 으로
-  추출해 가중합한 합성값이다(알고리즘 호출 0회). 그 정의를 그대로 스윕하면
-  파라미터와 무관한 곡선이 나오므로, 여기서는 실제로 계산 가능한
-  대체 지표(MARS 신뢰도 점수·인용 정밀도, CMAE 검출 성능)를 사용한다.
+Note — why faithfulness is not used as a sweep metric:
+  In the current repository, the faithfulness in paper Table 6 is not measured; it is
+  a synthetic value that scripts/run_real_experiments.py:run_ablation_experiment()
+  draws with rng.uniform from hard-coded ranges (SRC_QUALITY/MEM_DELTA/TRUST_BOOST ...)
+  and combines as a weighted sum (zero algorithm calls). Sweeping that definition as is
+  yields curves unrelated to the parameters, so here we use actually computable
+  substitute metrics (MARS reliability score / citation precision, CMAE detection performance).
 """
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def load_jsonl(p: Path) -> list[dict]:
 
 
 def spearman(a: list[float], b: list[float]) -> float:
-    """순위 상관 (동점 평균 순위)."""
+    """Rank correlation (ties get average rank)."""
     def rank(x: list[float]) -> np.ndarray:
         arr = np.asarray(x, dtype=float)
         order = np.argsort(arr, kind="mergesort")
@@ -85,17 +85,17 @@ def entropy(p: np.ndarray) -> float:
     return float(-(p * np.log(p)).sum())
 
 
-# ── CMAE 측 스윕 ─────────────────────────────────────────────────────────────
+# ── CMAE-side sweep ─────────────────────────────────────────────────────────────
 
 async def sweep_cmae(rows: list[dict], sims: np.ndarray, out_dir: Path) -> dict:
-    """τ_conflict / γ / τ_T / θ_dom 스윕."""
+    """Sweep τ_conflict / γ / τ_T / θ_dom."""
     from algorithms.cmae import CMAEEvaluator, ModalityResponse  # noqa: PLC0415
     from common.cmae_eval import evaluate_at_threshold, roc_auc  # noqa: PLC0415
 
     labels = [int(r["label"]) for r in rows]
     curves: dict[str, list[dict]] = {}
 
-    # ── τ_conflict: 검출 성능에 직접 영향 (Eq.9) ──
+    # ── τ_conflict: directly affects detection performance (Eq.9) ──
     tau_rows = []
     for tau in np.round(np.arange(0.30, 0.951, 0.025), 4):
         m = evaluate_at_threshold(sims, labels, float(tau))
@@ -105,8 +105,8 @@ async def sweep_cmae(rows: list[dict], sims: np.ndarray, out_dir: Path) -> dict:
                          "roc_auc": roc_auc(sims, labels)})
     curves["tau_conflict"] = tau_rows
 
-    # ── γ / τ_T / θ_dom: 검출(Eq.9)에는 영향 없고 신뢰도·전략에 영향 ──
-    # 대표 부분집합으로 실제 CMAEEvaluator 를 돌려 전략 분포를 관측한다.
+    # ── γ / τ_T / θ_dom: no effect on detection (Eq.9), but affect trust and strategy ──
+    # Run the actual CMAEEvaluator on a representative subset to observe the strategy distribution.
     subset = rows[:150]
     triples = []
     for r in subset:
@@ -162,14 +162,14 @@ async def sweep_cmae(rows: list[dict], sims: np.ndarray, out_dir: Path) -> dict:
     return curves
 
 
-# ── HMMR 측 스윕 ─────────────────────────────────────────────────────────────
+# ── HMMR-side sweep ─────────────────────────────────────────────────────────────
 
 async def reseed(project_id: str, n_units: int) -> dict:
-    """컬렉션의 해당 project 데이터를 지우고 현재 파라미터로 다시 적재한다.
+    """Delete this project's data from the collection and reload it with the current parameters.
 
-    λ(Eq.13) 과 θ_imp(Eq.16) 은 **쓰기 시점** 파라미터다. 이미 저장된 메모리에
-    대해 검색만 반복하면 값을 바꿔도 아무 변화가 없다(중요도·승격은 저장 때
-    확정되므로). 따라서 이 두 파라미터는 값마다 재적재해야 실제 곡선이 나온다.
+    λ (Eq.13) and θ_imp (Eq.16) are **write-time** parameters. Repeating retrieval over
+    already stored memory shows no change when they vary (importance and promotion are
+    fixed at store time). So these two must be reloaded per value to get a real curve.
     """
     from qdrant_client import AsyncQdrantClient  # noqa: PLC0415
     from qdrant_client.models import (  # noqa: PLC0415
@@ -214,10 +214,10 @@ async def reseed(project_id: str, n_units: int) -> dict:
 
 async def sweep_hmmr(project_id: str, queries: list[str],
                      reseed_units: int = 60) -> dict:
-    """λ / ω / δ / θ_imp 스윕 — 검색 순위·계층 분포 변화.
+    """Sweep λ / ω / δ / θ_imp — changes in retrieval rank and tier distribution.
 
-    δ, ω 는 읽기(검색) 시점 파라미터 → 재적재 불필요.
-    λ, θ_imp 는 쓰기 시점 파라미터 → 값마다 재적재.
+    δ, ω are read-time (retrieval) parameters → no reload needed.
+    λ, θ_imp are write-time parameters → reload per value.
     """
     from algorithms.hmmr import get_hmmr_retriever  # noqa: PLC0415
 
@@ -246,7 +246,7 @@ async def sweep_hmmr(project_id: str, queries: list[str],
             "_ranking": list(rel_all),
         }
 
-    # 기준 설정
+    # baseline settings
     base = {"l1": hmmr._lambda1, "l2": hmmr._lambda2, "l3": hmmr._lambda3,
             "delta": hmmr._delta, "os": hmmr._omega_s, "oe": hmmr._omega_e,
             "ol": hmmr._omega_l, "ti": hmmr._theta_imp}
@@ -265,7 +265,7 @@ async def sweep_hmmr(project_id: str, queries: list[str],
         rank = p.pop("_ranking")
         n = min(len(rank), len(base_rank))
         p["spearman_vs_base"] = spearman(base_rank[:n], rank[:n]) if n >= 2 else float("nan")
-        # 원복
+        # restore
         hmmr._lambda1, hmmr._lambda2, hmmr._lambda3 = base["l1"], base["l2"], base["l3"]
         hmmr._delta = base["delta"]
         hmmr._omega_s, hmmr._omega_e, hmmr._omega_l = base["os"], base["oe"], base["ol"]
@@ -277,16 +277,16 @@ async def sweep_hmmr(project_id: str, queries: list[str],
         return row
 
     async def reseed_baseline() -> None:
-        """그룹 시작 전 기준 파라미터 상태로 메모리를 되돌린다.
+        """Restore memory to the baseline-parameter state before starting a group.
 
-        쓰기 시점 파라미터(λ, θ_imp) 스윕이 남긴 메모리 상태가 이후
-        읽기 시점 파라미터(δ, ω) 스윕의 기준선을 오염시키는 것을 막는다.
+        Prevents memory state left by write-time parameter (λ, θ_imp) sweeps from
+        contaminating the baseline of later read-time parameter (δ, ω) sweeps.
         """
         hmmr._lambda1, hmmr._lambda2, hmmr._lambda3 = base["l1"], base["l2"], base["l3"]
         hmmr._theta_imp = base["ti"]
         await reseed(project_id, reseed_units)
 
-    # δ 스윕 (읽기 시점 파라미터)
+    # δ sweep (read-time parameter)
     await reseed_baseline()
     rows = []
     for d in np.round(np.arange(0.0, 1.01, 0.1), 4):
@@ -294,14 +294,14 @@ async def sweep_hmmr(project_id: str, queries: list[str],
         rows.append(await one("delta", d, ap))
     curves["delta"] = rows
 
-    # θ_imp 스윕 (쓰기 시점 — 값마다 재적재)
+    # θ_imp sweep (write-time — reload per value)
     rows = []
     for ti in np.round(np.arange(0.30, 0.951, 0.10), 4):
         def ap(ti=ti): hmmr._theta_imp = float(ti)
         rows.append(await one("theta_imp", ti, ap, do_reseed=True))
     curves["theta_imp"] = rows
 
-    # λ 단순 스윕: λ₁ 을 움직이고 λ₂,λ₃ 은 비율 유지하며 정규화
+    # simple λ sweep: vary λ₁ and normalize λ₂, λ₃ keeping their ratio
     rows = []
     for l1 in np.round(np.arange(0.2, 0.81, 0.1), 4):
         rest = 1.0 - float(l1)
@@ -313,7 +313,7 @@ async def sweep_hmmr(project_id: str, queries: list[str],
         rows.append(await one("lambda1", l1, ap, do_reseed=True))
     curves["lambda1"] = rows
 
-    # ω 스윕 (읽기 시점 파라미터) — 앞선 재적재 스윕의 상태를 되돌리고 시작
+    # ω sweep (read-time parameter) — start after restoring state left by the preceding reload sweeps
     await reseed_baseline()
     rows = []
     for os_ in np.round(np.arange(0.2, 0.81, 0.1), 4):
@@ -329,7 +329,7 @@ async def sweep_hmmr(project_id: str, queries: list[str],
     return {"baseline": base_prof, "baseline_params": base, "curves": curves}
 
 
-# ── 메인 ─────────────────────────────────────────────────────────────────────
+# ── main ─────────────────────────────────────────────────────────────────────
 
 async def main() -> None:
     ap = argparse.ArgumentParser()
@@ -348,18 +348,18 @@ async def main() -> None:
 
     out = Path(args.out)
     payload: dict = {
-        "experiment": "Exp F — 하이퍼파라미터 민감도 스윕",
+        "experiment": "Exp F — hyperparameter sensitivity sweep",
         "provenance": provenance(),
         "settings": settings_snapshot(),
         "theta_imp_note": {
             "code_value": settings_snapshot()["hmmr_theta_imp"],
             "source": "gateway/core/config.py :: Settings.hmmr_theta_imp",
-            "consumed_at": "gateway/algorithms/hmmr.py:88 -> self._theta_imp (Eq.16 승격 판정)",
+            "consumed_at": "gateway/algorithms/hmmr.py:88 -> self._theta_imp (Eq.16 promotion decision)",
         },
         "datasets": {},
     }
 
-    # ── 데이터셋별 CMAE 스윕
+    # ── per-dataset CMAE sweep
     all_curve_rows: list[dict] = []
     dataset_specs = [] if args.skip_cmae else [("synconflict_v2", Path(args.v2))] + [
         (f"external_{p.stem.replace('_pairs','')}", p)
@@ -371,9 +371,9 @@ async def main() -> None:
         rows = load_jsonl(path)
         if len(rows) > 2000:
             rows = rows[:2000]
-        # 외부 데이터셋은 neutral 제외
+        # exclude neutral from external datasets
         rows = [r for r in rows if r.get("group") != "neutral"]
-        print(f"[..] CMAE 스윕: {name} (n={len(rows)})")
+        print(f"[..] CMAE sweep: {name} (n={len(rows)})")
         sims, _ = await encode_pairs(rows)
         curves = await sweep_cmae(rows, sims, out)
         payload["datasets"][name] = {"n": len(rows), "curves": curves}
@@ -385,13 +385,13 @@ async def main() -> None:
         prev = out / "results.json"
         if prev.exists():
             payload["datasets"] = json.loads(prev.read_text(encoding="utf-8")).get("datasets", {})
-            print("[i] --skip-cmae: 기존 results.json 의 CMAE 결과를 재사용")
+            print("[i] --skip-cmae: reusing CMAE results from the existing results.json")
     else:
         write_csv(out / "cmae_sensitivity.csv", all_curve_rows)
 
-    # ── HMMR 스윕
+    # ── HMMR sweep
     if not args.skip_hmmr:
-        print("[..] HMMR 스윕")
+        print("[..] HMMR sweep")
         try:
             qs = ["추론 서버의 정확도 추이", "응답 지연이 기준을 넘는지",
                   "성능 지표 점검 결과 요약", "최근 세션의 주요 수치"]
@@ -403,12 +403,12 @@ async def main() -> None:
         except Exception as e:
             payload["hmmr"] = {"status": "failed",
                                "error": f"{type(e).__name__}: {str(e)[:200]}"}
-            print(f"  HMMR 스윕 실패: {payload['hmmr']['error']}")
+            print(f"  HMMR sweep failed: {payload['hmmr']['error']}")
 
     write_json(out / "results.json", payload)
 
-    # ── 요약 출력
-    print("\n=== τ_conflict 민감도 (F1) ===")
+    # ── summary output
+    print("\n=== τ_conflict sensitivity (F1) ===")
     print(f"{'dataset':22s} {'F1@0.65':>8s} {'bestτ':>6s} {'bestF1':>7s} {'ΔF1':>7s}")
     for name, d in payload["datasets"].items():
         tc = d["curves"]["tau_conflict"]
@@ -419,7 +419,7 @@ async def main() -> None:
 
     d0 = payload["datasets"].get("synconflict_v2")
     if d0:
-        print("\n=== γ / τ_T / θ_dom → 전략 분포 (SynConflict v2, n=150) ===")
+        print("\n=== γ / τ_T / θ_dom → strategy distribution (SynConflict v2, n=150) ===")
         for pname in ("gamma", "tau_T", "theta_dom"):
             print(f"  {pname}:")
             for r in d0["curves"][pname]:
@@ -429,12 +429,12 @@ async def main() -> None:
 
     h = payload.get("hmmr")
     if h and h.get("curves"):
-        print("\n=== HMMR δ / θ_imp / λ₁ / ω_S 민감도 ===")
+        print("\n=== HMMR δ / θ_imp / λ₁ / ω_S sensitivity ===")
         for pname, crows in h["curves"].items():
             vals = [r["relevance_mean"] for r in crows]
             sp = [r["spearman_vs_base"] for r in crows]
             print(f"  {pname:10s} relevance {min(vals):.4f}~{max(vals):.4f} "
-                  f"(변동 {max(vals)-min(vals):.4f})  ρ_min={np.nanmin(sp):.3f}")
+                  f"(range {max(vals)-min(vals):.4f})  ρ_min={np.nanmin(sp):.3f}")
 
     print(f"\n[✓] {out/'results.json'}")
 

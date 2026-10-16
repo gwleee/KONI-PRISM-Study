@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this package, please cite the article and the archived package."
+title: "KONI-PRISM-Study: audit artifact package"
+version: 1.1.1
+doi: 10.5281/zenodo.23029708
+repository-code: "https://github.com/gwleee/KONI-PRISM-Study"
+license: MIT
+type: software
+authors:
+  - family-names: Lee
+    given-names: Gunwoo
+    affiliation: "Korea Institute of Science and Technology Information (KISTI)"
+  - family-names: Gwak
+    given-names: Sang-Hwan
+    affiliation: "Korea Institute of Science and Technology Information (KISTI)"
+  - family-names: Choi
+    given-names: Jiyoung
+    affiliation: "Korea Institute of Science and Technology Information (KISTI)"
+  - family-names: Lee
+    given-names: Kyong-Ha
+    affiliation: "Korea Institute of Science and Technology Information (KISTI)"
+  - family-names: Kim
+    given-names: InA
+    affiliation: "Korea Institute of Science and Technology Information (KISTI)"
+    email: inah.kim@kisti.re.kr
+preferred-citation:
+  type: article
+  title: "Engineering and auditing an on-premise multimodal RAG system: performance, failure modes, and lessons learned"
+  journal: "PeerJ Computer Science"
+  status: submitted
+  year: 2026
+  authors:
+    - family-names: Lee
+      given-names: Gunwoo
+    - family-names: Gwak
+      given-names: Sang-Hwan
+    - family-names: Choi
+      given-names: Jiyoung
+    - family-names: Lee
+      given-names: Kyong-Ha
+    - family-names: Kim
+      given-names: InA

@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """
-SynConflict 데이터셋 빌더 v2 — CMAE 충돌 감지 실험용.
+SynConflict dataset builder v2 — for the CMAE conflict-detection experiment.
 
-BGE-M3 코사인 보정 결과 (실측):
-  conflict 쌍 (공식 보고서 + 구어체 불만, 수치 모순): cos ~0.60~0.64
-  clean-boundary 쌍 (같은 도메인, 다른 지표, 일관 정보): cos ~0.66~0.73
-  clean-para 쌍 (동일 사실 패러프레이즈): cos ~0.86~0.97
+BGE-M3 cosine calibration (measured):
+  conflict pairs (formal report + colloquial complaint, numerical contradiction): cos ~0.60~0.64
+  clean-boundary pairs (same domain, different metric, consistent information): cos ~0.66~0.73
+  clean-para pairs (paraphrase of the same fact): cos ~0.86~0.97
 
-τ=0.65 최적 F1 설계:
-  - conflict 50쌍: cos < 0.65 집중  → τ=0.65에서 TP 극대화
-  - clean-boundary 15쌍: cos 0.66~0.73  → τ>0.65에서 FP 증가 → 정밀도 저하
-  - clean-para 35쌍: cos > 0.85  → 모든 τ에서 TN
+Design for optimal F1 at τ=0.65:
+  - 50 conflict pairs: concentrated at cos < 0.65  → maximizes TP at τ=0.65
+  - 15 clean-boundary pairs: cos 0.66~0.73  → FP rise at τ>0.65 → lower precision
+  - 35 clean-para pairs: cos > 0.85  → TN at every τ
 
-설계 원칙:
-  모든 conflict 쌍: 공식 기술 보고 + 현장/구어체 피드백, 수치 모순
-  clean 쌍: 동일 사실 표현 변화(para) 또는 동일 시스템의 다른 일관 지표(boundary)
+Design principles:
+  all conflict pairs: formal technical report + field/colloquial feedback, numerical contradiction
+  clean pairs: rewording of the same fact (para) or a different consistent metric of the same system (boundary)
 
-출력:
+Output:
   experiments/datasets/syn_conflict_v1/instances.jsonl
   experiments/datasets/syn_conflict_v1/metadata.json
 
-사용법:
+Usage:
   python scripts/build_conflict_set.py --n 100 --seed 42
 """
 import argparse
@@ -35,21 +35,21 @@ OUTPUT_DIR = Path("experiments/datasets/syn_conflict_v1")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 충돌 쌍 (conflict) — 공식 보고 + 구어체 불만, 수치 모순
-# BGE-M3 목표 cos: 0.58~0.65
+# Conflict pairs — formal report + colloquial complaint, numerical contradiction
+# BGE-M3 target cos: 0.58~0.65
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _make_conflict_pair(rng: random.Random, idx: int) -> tuple[str, str]:
-    """공식 기술 보고 + 구어체 현장 피드백 (수치 모순)."""
+    """Formal technical report + colloquial field feedback (numerical contradiction)."""
 
-    # 공통 값 생성 헬퍼
+    # Shared value-generation helpers
     def val_high() -> float:
         return round(rng.uniform(88.0, 97.0), 1)
 
     def val_low() -> float:
         return round(rng.uniform(42.0, 65.0), 1)
 
-    kind = idx % 10  # 10가지 템플릿 순환
+    kind = idx % 10  # cycle through 10 templates
 
     if kind == 0:
         vh, vl = val_high(), val_low()
@@ -148,12 +148,12 @@ def _make_conflict_pair(rng: random.Random, idx: int) -> tuple[str, str]:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 비충돌 쌍 A: 명확한 패러프레이즈 (ground_truth=False)
-# BGE-M3 목표 cos: ≥0.85
+# Non-conflict pairs A: clear paraphrase (ground_truth=False)
+# BGE-M3 target cos: ≥0.85
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _make_clean_para(rng: random.Random, idx: int) -> tuple[str, str]:
-    """동일 사실을 다른 문체로 표현."""
+    """Express the same fact in a different style."""
     kind = idx % 8
 
     if kind == 0:
@@ -217,16 +217,16 @@ def _make_clean_para(rng: random.Random, idx: int) -> tuple[str, str]:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 비충돌 쌍 B: 경계 clean (같은 시스템, 다른 일관 지표)
-# BGE-M3 목표 cos: 0.66~0.73
+# Non-conflict pairs B: boundary clean (same system, different consistent metric)
+# BGE-M3 target cos: 0.66~0.73
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _make_clean_boundary(rng: random.Random, idx: int) -> tuple[str, str]:
     """
-    같은 시스템·같은 기간에 대한 서로 다른 성능 지표 보고.
-    BGE-M3 cos 0.67~0.73 목표.
-    설계: "동일 기간 + 동일 시스템명 + 인접 지표(정확도↔처리속도, 가동률↔처리량)" 패턴
-    → 어휘 중복 충분히 유지하되 지표가 달라 cos이 적당히 낮아짐 (0.67~0.72 실측 확인).
+    Reports of different performance metrics for the same system and period.
+    Target BGE-M3 cos 0.67~0.73.
+    Design: "same period + same system name + adjacent metric (accuracy↔throughput, uptime↔capacity)" pattern
+    → keeps enough lexical overlap while the differing metric lowers cos moderately (measured 0.67~0.72).
     """
     periods = ["이번 분기", "이번 달", "2분기", "상반기"]
     systems = [
@@ -237,7 +237,7 @@ def _make_clean_boundary(rng: random.Random, idx: int) -> tuple[str, str]:
     kind = idx % 5
 
     if kind == 0:
-        # 정확도 + 처리 속도 (실측 0.6825 확인된 패턴)
+        # accuracy + throughput (pattern measured at 0.6825)
         acc = round(rng.uniform(88, 96), 1)
         tps = rng.randint(900, 2000)
         improvement_acc = round(rng.uniform(1.5, 4.5), 1)
@@ -245,28 +245,28 @@ def _make_clean_boundary(rng: random.Random, idx: int) -> tuple[str, str]:
         b = f"{period} {sys_name}의 처리 속도는 초당 {tps}건으로 목표치를 달성하였다."
 
     elif kind == 1:
-        # 가동률 + 처리량 (SAME PERIOD — 이전 버전은 "연간" 달라서 FP65 유발)
+        # uptime + throughput (SAME PERIOD — the previous version used a different "annual" period, causing FP65)
         upt = round(rng.uniform(97.5, 99.8), 2)
         tps = rng.randint(800, 1800)
         a = f"{period} {sys_name}의 가동률은 {upt}%로 목표치를 달성하였다."
         b = f"{period} {sys_name}의 최대 처리량은 초당 {tps}건으로 목표치를 달성하였다."
 
     elif kind == 2:
-        # 정밀도 + 재현율 — 가장 유사한 지표 쌍 → cos > 0.70 안정
+        # precision + recall — most similar metric pair → stable cos > 0.70
         prec = round(rng.uniform(87, 96), 1)
         rec = round(rng.uniform(85, 94), 1)
         a = f"{period} {sys_name}의 정밀도는 {prec}%로 평가 기준을 충족하였다."
         b = f"{period} {sys_name}의 재현율은 {rec}%로 평가 기준을 충족하였다."
 
     elif kind == 3:
-        # F1점수 + 정확도 — 유사 성능 지표, 같은 기간·시스템 강조
+        # F1 score + accuracy — similar performance metrics, emphasizing same period/system
         f1 = round(rng.uniform(0.86, 0.96), 3)
         acc = round(rng.uniform(87, 96), 1)
         a = f"{period} {sys_name}의 F1 점수는 {f1:.3f}로 벤치마크 기준을 상회하였다."
         b = f"{period} {sys_name}의 처리 정확도는 {acc}%로 벤치마크 기준을 상회하였다."
 
     else:
-        # 처리 속도(정규) + 응답 지연(P95) — 같은 성능 카테고리
+        # throughput (regular) + response latency (P95) — same performance category
         tps = rng.randint(900, 2000)
         lat = round(rng.uniform(0.5, 2.0), 2)
         a = f"{period} {sys_name}의 처리 속도는 초당 {tps}건으로 전기 대비 향상되었다."
@@ -276,15 +276,15 @@ def _make_clean_boundary(rng: random.Random, idx: int) -> tuple[str, str]:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 데이터셋 생성
+# Dataset generation
 # ─────────────────────────────────────────────────────────────────────────────
 
 def build_dataset(n: int, rng: random.Random) -> list[dict]:
     """
-    n = 100 기본값:
-      50 conflict (공식 보고 + 구어체 불만, 수치 모순)
-      35 clean-para (패러프레이즈)
-      15 clean-boundary (같은 시스템, 다른 일관 지표)
+    With the default n = 100:
+      50 conflict (formal report + colloquial complaint, numerical contradiction)
+      35 clean-para (paraphrase)
+      15 clean-boundary (same system, different consistent metric)
     """
     n_conflict = n // 2
     n_clean_para = max(10, int((n - n_conflict) * 0.20))   # ~20% para (cos≥0.85)
@@ -330,7 +330,7 @@ def build_dataset(n: int, rng: random.Random) -> list[dict]:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 저장
+# Save
 # ─────────────────────────────────────────────────────────────────────────────
 
 def save_dataset(instances: list[dict], output_dir: Path, seed: int) -> None:
@@ -352,10 +352,10 @@ def save_dataset(instances: list[dict], output_dir: Path, seed: int) -> None:
         "n_clean": n_clean,
         "conflict_type": "report_vs_field_feedback_numerical_contradiction",
         "design_note": (
-            "충돌: 공식 보고서(수치 높음) + 구어체 현장 피드백(수치 낮음, 부정적). "
-            "비충돌: 패러프레이즈(cos≥0.85) + 같은시스템다른지표(cos 0.66~0.73). "
-            "BGE-M3 실측: conflict cos ~0.58~0.65, clean-para ~0.85~0.97, "
-            "clean-boundary ~0.66~0.73. τ=0.65 근방 최적 F1 설계."
+            "Conflict: formal report (high figures) + colloquial field feedback (low figures, negative). "
+            "Non-conflict: paraphrase (cos≥0.85) + same system, different metric (cos 0.66~0.73). "
+            "BGE-M3 measured: conflict cos ~0.58~0.65, clean-para ~0.85~0.97, "
+            "clean-boundary ~0.66~0.73. Designed for optimal F1 near τ=0.65."
         ),
         "random_seed": seed,
         "created_at": datetime.now(UTC).isoformat(),
@@ -364,16 +364,16 @@ def save_dataset(instances: list[dict], output_dir: Path, seed: int) -> None:
         json.dumps(meta, indent=2, ensure_ascii=False)
     )
 
-    print(f"[✓] {inst_path} ({len(instances)}건: conflict={n_conf}, clean={n_clean})")
-    print(f"    clean 구성: para≈{int(n_clean*0.7)}건 (cos≥0.85), boundary≈{int(n_clean*0.3)}건 (cos 0.66~0.73)")
+    print(f"[✓] {inst_path} ({len(instances)} instances: conflict={n_conf}, clean={n_clean})")
+    print(f"    clean composition: para≈{int(n_clean*0.7)} (cos≥0.85), boundary≈{int(n_clean*0.3)} (cos 0.66~0.73)")
 
-    print("\n[샘플 충돌 쌍]")
+    print("\n[Sample conflict pair]")
     for inst in instances:
         if inst["ground_truth_conflict"]:
-            print(f"  A(보고): {inst['text_a'][:90]}...")
-            print(f"  B(현장): {inst['text_b'][:90]}...")
+            print(f"  A(report): {inst['text_a'][:90]}...")
+            print(f"  B(field): {inst['text_b'][:90]}...")
             break
-    print("[샘플 비충돌 쌍(para)]")
+    print("[Sample non-conflict pair (para)]")
     for inst in instances:
         if inst["pair_type"] == "paraphrase":
             print(f"  A: {inst['text_a'][:90]}")
@@ -382,19 +382,19 @@ def save_dataset(instances: list[dict], output_dir: Path, seed: int) -> None:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 메인
+# Main
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="SynConflict v2 — 보고서/현장피드백 수치 모순 쌍 생성")
-    parser.add_argument("--n", type=int, default=100, help="총 인스턴스 수 (기본 100)")
+    parser = argparse.ArgumentParser(description="SynConflict v2 — generate report/field-feedback numerical-contradiction pairs")
+    parser.add_argument("--n", type=int, default=100, help="total number of instances (default 100)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output", type=str, default=str(OUTPUT_DIR))
     args = parser.parse_args()
 
     rng = random.Random(args.seed)
-    print(f"SynConflict v2 빌드: n={args.n}, seed={args.seed}")
-    print("충돌: 공식보고+구어체불만 | 비충돌: 패러프레이즈+동일시스템다른지표")
+    print(f"SynConflict v2 build: n={args.n}, seed={args.seed}")
+    print("Conflict: formal report + colloquial complaint | Non-conflict: paraphrase + same system, different metric")
     print("BGE-M3 cos: conflict ~0.60~0.64 / clean-para ≥0.85 / clean-boundary 0.66~0.73")
 
     instances = build_dataset(args.n, rng)

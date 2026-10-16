@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 """
-Exp-Ablation v2 — 실제 파이프라인 호출 기반 ablation 재측정.
+Exp-Ablation v2 — ablation re-measurement based on real pipeline calls.
 
-기존 `scripts/run_real_experiments.py::run_ablation_experiment()` 는 알고리즘을
-한 번도 호출하지 않고 하드코딩 구간에서 rng.uniform 을 뽑아 가중합했다.
-본 스크립트는 그 방식을 전면 배제한다:
+The original `scripts/run_real_experiments.py::run_ablation_experiment()` never called
+the algorithms; it drew rng.uniform from hard-coded ranges and took a weighted sum.
+This script rules that approach out entirely:
 
-  - 하드코딩된 품질 구간 없음
-  - 난수 가중합 없음
-  - "기대 순서"(예: no_trust_flow 가 최저여야 함) 검사 코드 없음
-  - super-additive 재현 여부와 무관하게 실측값을 그대로 기록
+  - no hard-coded quality ranges
+  - no weighted sums of random numbers
+  - no code checking an "expected ordering" (e.g. no_trust_flow must be lowest)
+  - measured values are recorded as-is, whether or not super-additivity reproduces
 
-구성 4종 (원 논문 ABLATION_CONFIGS 중 대응 항목):
-  full           DMAR → CMAE → HMMR → LLM → MARS (전체)
-  no_trust_flow  CMAE trust 를 균등(1/k)으로 대체해 HMMR·MARS 로의 전파를 차단
-  no_hmmr        HMMR 검색 생략 (메모리 컨텍스트 없음)
-  no_mars        MARS 생략 (인용 없음)
+Four configurations (matching entries of ABLATION_CONFIGS in the original paper):
+  full           DMAR → CMAE → HMMR → LLM → MARS (full)
+  no_trust_flow  replace CMAE trust with uniform (1/k), cutting propagation to HMMR/MARS
+  no_hmmr        skip HMMR retrieval (no memory context)
+  no_mars        skip MARS (no citations)
 
-파이프라인 단계는 gateway/algorithms/pipeline.py::run_pipeline 의 구조를 그대로
-따르며, 프롬프트 구성은 제품 코드의 _build_system_prompt/_build_user_message 를
-**직접 import 해 사용**한다(재구현하지 않음).
+Pipeline stages follow the structure of gateway/algorithms/pipeline.py::run_pipeline
+exactly, and prompts are built by **directly importing** the product code's
+_build_system_prompt/_build_user_message (not re-implemented).
 
-faithfulness 정의는 common/faithfulness.py 참조.
+See common/faithfulness.py for the faithfulness definition.
 """
 from __future__ import annotations
 
@@ -45,9 +45,9 @@ from common.harness import (  # noqa: E402
 
 CONFIGS = [
     ("full",          "Full KONI-Prism (DMAR+CMAE+HMMR+MARS)"),
-    ("no_trust_flow", "w/o CMAE→HMMR/MARS trust flow (trust 균등화)"),
-    ("no_hmmr",       "w/o HMMR (메모리 검색 없음)"),
-    ("no_mars",       "w/o MARS (귀속·인용 없음)"),
+    ("no_trust_flow", "w/o CMAE→HMMR/MARS trust flow (uniform trust)"),
+    ("no_hmmr",       "w/o HMMR (no memory retrieval)"),
+    ("no_mars",       "w/o MARS (no attribution/citations)"),
 ]
 
 
@@ -56,16 +56,16 @@ class SpecialistCallFailed(RuntimeError):
 
 
 class MemoryRetrievalSilentlyEmpty(RuntimeError):
-    """HMMR 이 예외 없이 빈 결과만 돌려주는 상태."""
+    """HMMR returns only empty results without raising."""
 
 
 async def assert_qdrant_healthy() -> None:
-    """Qdrant 가 살아 있고 컬렉션이 정상인지 확인한다.
+    """Check that Qdrant is up and the collection is healthy.
 
-    HMMRRetriever.retrieve() 는 tier 별 예외를 삼키고 빈 결과를 반환하므로,
-    Qdrant 가 죽어도 실험은 조용히 진행된다. 그러면 메모리를 쓰는 구성이
-    no_hmmr 과 동일한 값을 내면서 ablation 이 통째로 무의미해진다
-    (실제로 Qdrant 가 'Too many open files' 로 죽은 채 한 번 측정됐다).
+    HMMRRetriever.retrieve() swallows per-tier exceptions and returns empty results,
+    so the experiment silently continues even if Qdrant is down. Memory-using configs
+    then produce the same values as no_hmmr and the whole ablation becomes meaningless
+    (one run was actually measured with Qdrant dead from 'Too many open files').
     """
     import os as _os  # noqa: PLC0415
 
@@ -80,9 +80,9 @@ async def assert_qdrant_healthy() -> None:
         c = AsyncQdrantClient(url=url)
         names = {x.name for x in (await c.get_collections()).collections}
         if COLLECTION_NAME not in names:
-            # 없으면 만든다. 제품 _get_client() 는 self._client 를 대입한 뒤
-            # _ensure_collection() 을 await 하므로, 생성이 한 번 실패하면
-            # 싱글톤이 영구히 '컬렉션 없음' 상태로 굳는다. 여기서 선제 보장한다.
+            # Create it if missing. The product _get_client() assigns self._client and then
+            # awaits _ensure_collection(), so a single creation failure leaves the
+            # singleton permanently stuck without a collection. Ensure it here up front.
             await c.create_collection(
                 collection_name=COLLECTION_NAME,
                 vectors_config=VectorParams(size=EMBED_DIM, distance=Distance.COSINE))
@@ -91,18 +91,18 @@ async def assert_qdrant_healthy() -> None:
         await c.close()
     except Exception as e:  # noqa: BLE001
         raise MemoryRetrievalSilentlyEmpty(
-            f"Qdrant 상태 확인 실패 ({url}): {type(e).__name__}: {str(e)[:150]}") from e
+            f"Qdrant health check failed ({url}): {type(e).__name__}: {str(e)[:150]}") from e
     if "green" not in st.lower():
         raise MemoryRetrievalSilentlyEmpty(f"Qdrant collection status={st}")
 
 
 def _check_llm(res: object) -> str:
-    """llm_client.generate() 는 예외를 삼키고 '[LLM error: ...]' 를 반환한다.
-    실패 응답을 정상 결과로 집계하지 않도록 검사한다."""
+    """llm_client.generate() swallows exceptions and returns '[LLM error: ...]'.
+    Check so that failed responses are not aggregated as valid results."""
     text = res if isinstance(res, str) else (
         res.get("text", "") if isinstance(res, dict) else "")
     if not isinstance(text, str) or not text.strip():
-        raise SpecialistCallFailed(f"빈 응답: {res!r:.120}")
+        raise SpecialistCallFailed(f"empty response: {res!r:.120}")
     if text.startswith("[LLM error:") or text.startswith("[STT error:"):
         raise SpecialistCallFailed(text[:200])
     return text
@@ -110,7 +110,7 @@ def _check_llm(res: object) -> str:
 
 async def run_one(cfg: str, inst: dict, project_id: str, conv_id: str,
                   turn_idx: int, total_turns: int, seed_memory: bool) -> dict:
-    """단일 질의를 지정된 ablation 구성으로 실행하고 답변·중간산출을 반환."""
+    """Run a single query under the given ablation config; return the answer and intermediate outputs."""
     from algorithms.cmae import ModalityResponse, get_cmae_evaluator  # noqa: PLC0415
     from algorithms.dmar import ModalityInput, get_dmar_solver  # noqa: PLC0415
     from algorithms.hmmr import get_hmmr_retriever  # noqa: PLC0415
@@ -122,7 +122,7 @@ async def run_one(cfg: str, inst: dict, project_id: str, conv_id: str,
     s = get_settings()
     t0 = time.perf_counter()
 
-    # ── 1. DMAR: 출처 청크를 모달리티 입력으로 라우팅 (text → llm_7b 패스스루)
+    # ── 1. DMAR: route source chunks as modality inputs (text → llm_7b pass-through)
     inputs = [ModalityInput(modality="text", content=c) for c in inst["source_chunks"]]
     dmar = get_dmar_solver()
     routing = await dmar.route_and_execute(inputs, s.hardware_profile)
@@ -137,7 +137,7 @@ async def run_one(cfg: str, inst: dict, project_id: str, conv_id: str,
 
     trust = cmae_out.trust_weights
     if cfg == "no_trust_flow":
-        # trust 신호 차단: 균등 가중으로 대체 (CMAE 컨텍스트·HMMR·MARS 모두)
+        # block the trust signal: replace with uniform weights (CMAE context, HMMR and MARS)
         trust = np.full(len(responses), 1.0 / len(responses), dtype=float)
         cmae_out.trust_weights = trust
 
@@ -153,12 +153,12 @@ async def run_one(cfg: str, inst: dict, project_id: str, conv_id: str,
         memory_context = hres.context_text
         n_retrieved = len(hres.retrieved_units)
 
-    # ── 4. LLM 생성 (제품 프롬프트 빌더 사용)
+    # ── 4. LLM generation (using the product prompt builders)
     system_prompt = _build_system_prompt(cmae_out.conflict_strategy)
     user_msg = _build_user_message(inst["query"], cmae_context, memory_context)
     llm = LLMClient()
-    # temperature=0.0 → llm/app.py 에서 do_sample=False (greedy).
-    # 샘플링 노이즈를 제거해야 구성 간 차이가 디코딩 난수에 묻히지 않는다.
+    # temperature=0.0 → do_sample=False in llm/app.py (greedy).
+    # Sampling noise must be removed so config differences are not buried in decoding randomness.
     res = await llm.generate(
         [{"role": "system", "content": system_prompt},
          {"role": "user", "content": user_msg}],
@@ -183,8 +183,8 @@ async def run_one(cfg: str, inst: dict, project_id: str, conv_id: str,
 
     answer_final = answer_raw + citations
 
-    # ── 6. 메모리 갱신 (다음 턴이 HMMR 로 활용) — no_hmmr 구성에서도 동일하게
-    #        적재해 구성 간 메모리 상태를 동일하게 유지한다.
+    # ── 6. memory update (used by HMMR on later turns) — done identically for no_hmmr
+    #        too, keeping the memory state identical across configs.
     if seed_memory:
         try:
             hmmr = get_hmmr_retriever()
@@ -219,7 +219,7 @@ async def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--evalset", default=str(HERE / "data" / "evalset.jsonl"))
     ap.add_argument("--runs", type=int, default=3)
-    ap.add_argument("--n", type=int, default=0, help="0 = 전체")
+    ap.add_argument("--n", type=int, default=0, help="0 = all")
     ap.add_argument("--profile", default="a100_1")
     ap.add_argument("--ent-threshold", type=float, default=0.5)
     ap.add_argument("--out", default=str(HERE / "results"))
@@ -228,8 +228,8 @@ async def main() -> None:
     set_profile(args.profile)
     bootstrap_gateway()
 
-    # 전문 컨테이너 URL 정합: 설정 기본값은 docker 호스트명(http://llm:8004)이라
-    # 호스트에서 실행하면 DNS 해석에 실패한다. localhost 매핑이 살아 있으면 그것을 쓴다.
+    # Specialist container URL fix-up: the settings default is a docker hostname (http://llm:8004),
+    # which fails DNS resolution when run on the host. Use the localhost mapping if it is up.
     import httpx  # noqa: PLC0415
     from core.config import get_settings  # noqa: PLC0415
     for env_key, url in (("LLM_URL", "http://localhost:8004"),):
@@ -248,34 +248,34 @@ async def main() -> None:
     if args.n:
         insts = insts[:args.n]
     await assert_qdrant_healthy()
-    print(f"평가셋 {len(insts)}건 × 구성 {len(CONFIGS)}종 × {args.runs} runs "
-          f"= {len(insts)*len(CONFIGS)*args.runs} 회 생성\n")
+    print(f"evalset {len(insts)} items × {len(CONFIGS)} configs × {args.runs} runs "
+          f"= {len(insts)*len(CONFIGS)*args.runs} generations\n")
 
-    # 채점은 생성이 모두 끝난 뒤 한 번에 수행한다.
-    # 생성 루프 안에서 NLI 를 돌리면 LLM 과 같은 GPU 를 점유해 생성이 느려지고,
-    # 측정 조건도 실행마다 달라진다.
+    # Scoring is done in one pass after all generation finishes.
+    # Running NLI inside the generation loop occupies the same GPU as the LLM, slowing generation,
+    # and makes measurement conditions differ between runs.
     all_records: list[dict] = []
     per_run: dict[str, list[dict]] = {c: [] for c, _ in CONFIGS}
 
     import random as _random  # noqa: PLC0415
     for run in range(args.runs):
-        # run 마다 project_id 를 분리해 메모리 상태를 독립시킨다.
-        # 질의 순서를 run 마다 섞어, greedy 디코딩에서도 run 간 변동이 생기도록 한다
-        # (변동의 원천 = HMMR 메모리 축적 상태. 디코딩 난수가 아님).
-        # 메모리 격리 단위 주의:
-        #   HMMRRetriever.retrieve() 는 **project_id 로만** 필터링하고
-        #   conversation_id 는 쓰지 않는다(hmmr.py:242). 따라서 구성을
-        #   conversation_id 로만 분리하면 네 구성이 같은 메모리 풀을 공유해
-        #   실행 순서대로 서로를 오염시킨다(실제로 처음에 그렇게 측정됐고,
-        #   프롬프트가 동일한 full 과 no_mars 가 다른 값을 내면서 드러났다).
-        #   구성마다 project_id 를 분리해야 한다.
+        # Separate project_id per run so memory states are independent.
+        # Shuffle query order per run so that runs vary even under greedy decoding
+        # (source of variation = accumulated HMMR memory state, not decoding randomness).
+        # Note on the memory isolation unit:
+        #   HMMRRetriever.retrieve() filters **only by project_id** and
+        #   does not use conversation_id (hmmr.py:242). So separating configs
+        #   only by conversation_id makes the four configs share one memory pool and
+        #   contaminate each other in execution order (the first measurement did this;
+        #   it surfaced when full and no_mars, with identical prompts, gave different values).
+        #   project_id must be separated per config.
         order = list(range(len(insts)))
         _random.Random(1000 + run).shuffle(order)
         run_insts = [insts[i] for i in order]
-        print(f"── run {run+1}/{args.runs} (질의순서 seed={1000+run})")
+        print(f"── run {run+1}/{args.runs} (query order seed={1000+run})")
         run_scores: dict[str, list[float]] = {c: [] for c, _ in CONFIGS}
         for cfg, _desc in CONFIGS:
-            pid = f"ablv2_run{run}_{cfg}"        # 구성별 메모리 격리
+            pid = f"ablv2_run{run}_{cfg}"        # per-config memory isolation
             cid = f"{pid}_conv"
             t_cfg = time.perf_counter()
             fails = 0
@@ -295,17 +295,17 @@ async def main() -> None:
             with_mem = sum(1 for r in mem_users if r.get("n_memory_retrieved", 0) > 0)
             if cfg != "no_hmmr" and mem_users and with_mem == 0:
                 raise MemoryRetrievalSilentlyEmpty(
-                    f"[{cfg}] run{run}: 메모리를 쓰는 구성인데 전 질의에서 검색 결과가 0건이다. "
-                    f"Qdrant 장애이거나 HMMR 싱글톤이 오염됐을 가능성이 높다. "
-                    f"이 상태의 수치는 no_hmmr 과 구분되지 않으므로 측정을 중단한다.")
+                    f"[{cfg}] run{run}: a memory-using config retrieved 0 results on every query. "
+                    f"Most likely a Qdrant failure or a corrupted HMMR singleton. "
+                    f"Values in this state are indistinguishable from no_hmmr, so the measurement is aborted.")
             per_run[cfg].append({"run": run, "n": len(run_scores[cfg]),
                                  "failures": fails,
                                  "queries_with_memory": with_mem})
-            print(f"   {cfg:15s} 생성 {len(run_scores[cfg])}건 fail={fails} "
+            print(f"   {cfg:15s} generated {len(run_scores[cfg])} fail={fails} "
                   f"({time.perf_counter()-t_cfg:.0f}s)")
 
-    # ── 일괄 채점 (생성 완료 후)
-    print("\n채점 중 (NLI)...")
+    # ── batch scoring (after generation completes)
+    print("\nScoring (NLI)...")
     scorer = FaithfulnessScorer(ent_threshold=args.ent_threshold)
     t_score = time.perf_counter()
     scored = 0
@@ -315,9 +315,9 @@ async def main() -> None:
         f = scorer.score(rec["answer_raw"], rec["source_chunks"])
         rec.update({f"faith_{k}": v for k, v in f.items()})
         scored += 1
-    print(f"  {scored}건 채점 완료 ({time.perf_counter()-t_score:.0f}s)")
+    print(f"  {scored} scored ({time.perf_counter()-t_score:.0f}s)")
 
-    # run×config 별 평균 재구성
+    # rebuild per run×config means
     for cfg, _ in CONFIGS:
         for entry in per_run[cfg]:
             vals = [r["faith_faithfulness"] for r in all_records
@@ -325,7 +325,7 @@ async def main() -> None:
                     and "faith_faithfulness" in r]
             entry["mean"] = float(np.mean(vals)) if vals else float("nan")
 
-    # ── 집계
+    # ── aggregation
     out = Path(args.out)
     write_jsonl(out / "raw_records.jsonl", all_records)
 
@@ -367,7 +367,7 @@ async def main() -> None:
         }
 
     write_json(out / "results.json", {
-        "experiment": "Ablation v2 — 실제 파이프라인 호출 기반 재측정",
+        "experiment": "Ablation v2 — re-measurement based on real pipeline calls",
         "provenance": provenance(),
         "settings": settings_snapshot(),
         "faithfulness_definition": scorer.definition(),
@@ -375,17 +375,17 @@ async def main() -> None:
         "runs": args.runs,
         "decoding": {"temperature": 0.0, "mode": "greedy (do_sample=False)",
                      "max_new_tokens": 512,
-                     "note": ("greedy 이므로 동일 프롬프트는 동일 답변을 낸다. "
-                              "full 과 no_mars 는 프롬프트가 같으므로 답변 본문이 "
-                              "일치해야 하며, 이는 MARS 가 사후 단계라는 구조적 사실의 "
-                              "검증이기도 하다.")},
-        "run_variance_source": ("run 마다 질의 순서를 섞어 HMMR 메모리 축적 상태를 "
-                                "다르게 했다. 디코딩 난수는 제거돼 있으므로 run 간 "
-                                "변동은 메모리 상태에서만 온다."),
-        "memory_isolation": ("project_id 를 run×config 단위로 분리한다. "
-                             "HMMR retrieve 는 project_id 로만 필터링하므로 "
-                             "(conversation_id 미사용) 구성별 분리에는 project_id 가 "
-                             "필요하다."),
+                     "note": ("Greedy decoding, so identical prompts yield identical answers. "
+                              "full and no_mars share the same prompt, so their answer bodies "
+                              "must match; this also verifies the structural fact that MARS "
+                              "is a post-hoc stage.")},
+        "run_variance_source": ("Query order is shuffled per run so the accumulated HMMR memory "
+                                "state differs. Decoding randomness is removed, so variation "
+                                "across runs comes only from the memory state."),
+        "memory_isolation": ("project_id is separated per run×config. "
+                             "HMMR retrieve filters only by project_id "
+                             "(conversation_id unused), so separating configs requires "
+                             "project_id."),
         "configs": {c: d for c, d in CONFIGS},
         "aggregated": agg,
         "per_run": per_run,
@@ -403,8 +403,8 @@ async def main() -> None:
     for c, _ in CONFIGS:
         a = agg[c]
         if a["mean"] is None:
-            print(f"{c:16s} {'FAILED':>8s} — 전 실행 실패 "
-                  f"({a['total_failures']}건)")
+            print(f"{c:16s} {'FAILED':>8s} — all runs failed "
+                  f"({a['total_failures']} failures)")
             continue
         d = "---" if a["delta_vs_full"] is None else f"{a['delta_vs_full']:+.4f}"
         print(f"{c:16s} {a['mean']:8.4f} {a['std']:8.4f} {d:>10s}  "

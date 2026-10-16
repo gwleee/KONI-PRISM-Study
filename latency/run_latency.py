@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-Exp C — 단계별 end-to-end latency + cold-start / warm-start 실측.
+Exp C — per-stage end-to-end latency + measured cold-start / warm-start.
 
-계측 단계 (논문 파이프라인 순서):
-  1. dmar_route          라우팅 결정 (ILP solve) — 전문 모델 호출 제외
-  2. specialist_infer    전문 모델 추론 (모달리티별 LLM/VLM/STT/DOC)
-  3. cmae_encode         CMAE — BGE-M3 인코딩 + 정렬/신뢰도 (Eq.7~12)
-  4. hmmr_retrieve       HMMR — Qdrant 3계층 검색 (Eq.13~17)
-  5. llm_generate        최종 답변 생성
-  6. mars_score          MARS — 출처 기여도/신뢰도 (Eq.18~22)
-  7. total               질의 전체 wall-clock
+Measured stages (paper pipeline order):
+  1. dmar_route          routing decision (ILP solve) — excludes the specialist model call
+  2. specialist_infer    specialist model inference (per-modality LLM/VLM/STT/DOC)
+  3. cmae_encode         CMAE — BGE-M3 encoding + alignment/trust (Eq.7~12)
+  4. hmmr_retrieve       HMMR — Qdrant 3-tier retrieval (Eq.13~17)
+  5. llm_generate        final answer generation
+  6. mars_score          MARS — source attribution/reliability (Eq.18~22)
+  7. total               whole-query wall-clock
 
-원칙:
-  - 워밍업 반복은 통계에서 제외한다 (기본 5회).
-  - 실제로 호출하지 못한 단계는 절대 추정치로 채우지 않고 status="unavailable"
-    로 남기고 이유를 기록한다.
-  - VRAM 은 nvidia-smi 로 단계 전후 실측한다.
+Principles:
+  - Warmup iterations are excluded from the statistics (5 by default).
+  - A stage that could not actually be called is never filled with an estimate; it is
+    left as status="unavailable" with the reason recorded.
+  - VRAM is measured with nvidia-smi before and after each stage.
 """
 from __future__ import annotations
 
@@ -43,28 +43,28 @@ STAGES = ["dmar_route", "specialist_infer", "cmae_encode", "hmmr_retrieve",
 
 
 class SpecialistCallFailed(RuntimeError):
-    """전문 모델 호출이 실패했는데 예외가 나지 않은 경우."""
+    """The specialist model call failed but no exception was raised."""
 
 
 def _check_llm_response(res: object) -> str:
-    """LLMClient.generate() 결과가 진짜 생성 결과인지 검증한다.
+    """Verify that the LLMClient.generate() result is a genuine generation.
 
-    제품 코드 gateway/services/specialist/llm_client.py 의 generate() 는
-    모든 예외를 삼키고 f"[LLM error: {e}]" 문자열을 돌려준다. 따라서
-    "예외가 안 났다"는 것은 호출 성공의 근거가 되지 못한다. 실패 응답을
-    정상 측정값으로 기록하면 DNS 실패 시간(~7ms)이 추론 지연으로 둔갑한다
-    (실제로 한 번 그렇게 기록됐다).
+    generate() in the product code gateway/services/specialist/llm_client.py
+    swallows every exception and returns the string f"[LLM error: {e}]". So
+    "no exception was raised" is no evidence that the call succeeded. Recording a
+    failure response as a valid measurement disguises the DNS failure time (~7ms)
+    as inference latency (this was in fact recorded once).
     """
     text = res if isinstance(res, str) else (
         res.get("text", "") if isinstance(res, dict) else "")
     if not isinstance(text, str) or not text.strip():
-        raise SpecialistCallFailed(f"빈 응답: {res!r:.120}")
+        raise SpecialistCallFailed(f"empty response: {res!r:.120}")
     if text.startswith("[LLM error:") or text.startswith("[STT error:"):
         raise SpecialistCallFailed(text[:200])
     return text
 
 
-# ── VRAM 계측 ────────────────────────────────────────────────────────────────
+# ── VRAM measurement ──────────────────────────────────────────────────────────
 
 def vram_used_mib() -> dict[int, int]:
     try:
@@ -81,12 +81,12 @@ def vram_used_mib() -> dict[int, int]:
         return {}
 
 
-# ── 서비스 가용성 확인 ────────────────────────────────────────────────────────
+# ── Service availability check ────────────────────────────────────────────────────
 
 async def probe_services() -> dict[str, dict]:
-    """전문 컨테이너 / 인프라 가용성을 확인한다.
+    """Check availability of the specialist containers / infrastructure.
 
-    사용 불가 서비스는 그 사실을 기록해 결과에서 status=unavailable 로 남긴다.
+    Unavailable services are recorded as such and left as status=unavailable in the results.
     """
     import httpx  # noqa: PLC0415
     from core.config import get_settings  # noqa: PLC0415
@@ -96,7 +96,7 @@ async def probe_services() -> dict[str, dict]:
         "llm": s.llm_url, "vlm": s.vlm_url, "stt": s.stt_url,
         "doc": s.doc_url, "ffmpeg": s.ffmpeg_url,
     }
-    # 컨테이너 내부 호스트명은 로컬 실행 시 localhost 포트로 매핑된다
+    # In-container hostnames are mapped to localhost ports for local runs
     localmap = {
         "llm": "http://localhost:8004", "vlm": "http://localhost:8001",
         "stt": "http://localhost:8002", "doc": "http://localhost:8003",
@@ -125,16 +125,16 @@ async def probe_services() -> dict[str, dict]:
     return out
 
 
-# ── 메모리 시딩 (HMMR 검색이 빈 컬렉션이면 의미 없음) ────────────────────────
+# ── Memory seeding (HMMR retrieval is meaningless on an empty collection) ──────────────────────
 
 async def ensure_collection_ready(retries: int = 5) -> dict:
-    """HMMR 컬렉션을 사전에 확실히 생성한다.
+    """Make sure the HMMR collection exists beforehand.
 
-    제품 코드 HMMRRetriever._get_client() 는 self._client 를 대입한 **뒤**
-    _ensure_collection() 을 await 한다. 컬렉션 생성이 일시적으로 실패하면
-    이후 호출은 `self._client is not None` 으로 단축되어 생성을 재시도하지
-    않으므로, 싱글톤이 영구적으로 '컬렉션 없음' 상태에 머문다.
-    실측 왜곡(빈 컬렉션 검색 지연)을 막기 위해 여기서 직접 보장한다.
+    The product code HMMRRetriever._get_client() awaits _ensure_collection()
+    **after** assigning self._client. If collection creation fails transiently,
+    later calls short-circuit on `self._client is not None` and never retry the
+    creation, so the singleton stays in the 'no collection' state permanently.
+    We guarantee it here to avoid skew (empty-collection retrieval latency).
     """
     from qdrant_client import AsyncQdrantClient  # noqa: PLC0415
     from qdrant_client.models import Distance, VectorParams  # noqa: PLC0415
@@ -165,7 +165,7 @@ async def ensure_collection_ready(retries: int = 5) -> dict:
 
 
 async def seed_memory(project_id: str, n_units: int) -> dict:
-    """HMMR 3계층에 메모리 유닛을 적재한다. 검색 지연의 현실성 확보용."""
+    """Load memory units into the 3 HMMR tiers, so retrieval latency is realistic."""
     from algorithms.hmmr import get_hmmr_retriever  # noqa: PLC0415
 
     hmmr = get_hmmr_retriever()
@@ -195,11 +195,11 @@ async def seed_memory(project_id: str, n_units: int) -> dict:
             "errors": errors[:3]}
 
 
-# ── 단일 질의 계측 ───────────────────────────────────────────────────────────
+# ── Single-query measurement ─────────────────────────────────────────────────────────
 
 async def timed_query(project_id: str, services: dict, q_text: str,
                       nonce: str = "") -> dict:
-    """파이프라인 각 단계를 개별 계측한다. 실패 단계는 None 으로 남긴다."""
+    """Measure each pipeline stage separately. Failed stages are left as None."""
     from algorithms.cmae import ModalityResponse, get_cmae_evaluator  # noqa: PLC0415
     from algorithms.dmar import get_dmar_solver  # noqa: PLC0415
     from algorithms.hmmr import get_hmmr_retriever  # noqa: PLC0415
@@ -212,9 +212,9 @@ async def timed_query(project_id: str, services: dict, q_text: str,
     errors: dict[str, str] = {}
     t_total = time.perf_counter()
 
-    # 1. DMAR — ILP 라우팅만 계측 (전문 모델 호출은 2단계로 분리)
-    #    route_and_execute() 는 라우팅 + 전문모델 실행이 합쳐져 있으므로
-    #    Eq.(1)~(5) 순수 라우팅 비용을 재려면 _solve_ilp 를 직접 호출한다.
+    # 1. DMAR — measure ILP routing only (the specialist call is split into stage 2)
+    #    route_and_execute() combines routing + specialist execution, so to measure
+    #    the pure routing cost of Eq.(1)~(5) we call _solve_ilp directly.
     solver = get_dmar_solver()
     modalities = ["text", "image", "audio"]
     try:
@@ -223,11 +223,11 @@ async def timed_query(project_id: str, services: dict, q_text: str,
         decisions = solver._solve_ilp(modalities, alpha, hw["vram_gb"])
         marks["dmar_route"] = (time.perf_counter() - t) * 1000
         if decisions is None:
-            errors["dmar_route_note"] = "ILP 실패 → greedy fallback 경로"
+            errors["dmar_route_note"] = "ILP failed → greedy fallback path"
     except Exception as e:
         errors["dmar_route"] = f"{type(e).__name__}: {str(e)[:150]}"
 
-    # 2. 전문 모델 추론 (LLM 텍스트 경로)
+    # 2. Specialist model inference (LLM text path)
     if services.get("llm", {}).get("available"):
         try:
             from services.specialist.llm_client import LLMClient  # noqa: PLC0415
@@ -236,7 +236,7 @@ async def timed_query(project_id: str, services: dict, q_text: str,
             res = await cl.generate(
                 [{"role": "user", "content": q_text}], max_new_tokens=64)
             await cl.aclose()
-            _check_llm_response(res)          # 실패 응답을 측정값으로 기록하지 않는다
+            _check_llm_response(res)          # do not record failure responses as measurements
             marks["specialist_infer"] = (time.perf_counter() - t) * 1000
         except Exception as e:
             errors["specialist_infer"] = f"{type(e).__name__}: {str(e)[:150]}"
@@ -244,9 +244,9 @@ async def timed_query(project_id: str, services: dict, q_text: str,
         errors["specialist_infer"] = "llm service unavailable"
 
     # 3. CMAE
-    # nonce 로 매 반복 고유 텍스트를 만들어 EmbeddingService 내부 캐시를
-    # 우회한다. 캐시 히트 상태를 재면 BGE-M3 인코딩 비용이 0에 가깝게 나와
-    # CMAE/MARS 단계 지연이 실제보다 100배 이상 낮게 측정된다.
+    # The nonce makes the text unique per iteration to bypass the internal
+    # EmbeddingService cache. Measuring cache hits makes the BGE-M3 encoding cost
+    # near zero and underestimates CMAE/MARS stage latency by more than 100x.
     responses = [
         ModalityResponse(modality="text", model_id="llm_7b",
                          content=f"[{nonce}] {q_text} 에 대한 응답: 정확도는 93.2%로 확인된다."),
@@ -279,7 +279,7 @@ async def timed_query(project_id: str, services: dict, q_text: str,
     else:
         errors["hmmr_retrieve"] = "qdrant unavailable"
 
-    # 5. 최종 답변 생성
+    # 5. Final answer generation
     answer = (f"[{nonce}] 정확도는 93.2%로 측정되었으며 세 모달리티가 "
               f"대체로 일치한다. 응답 지연은 기준 범위 안에 있다.")
     if services.get("llm", {}).get("available"):
@@ -290,7 +290,7 @@ async def timed_query(project_id: str, services: dict, q_text: str,
             res = await cl.generate(
                 [{"role": "user", "content": q_text}], max_new_tokens=256)
             await cl.aclose()
-            text = _check_llm_response(res)   # 실패 응답을 측정값으로 기록하지 않는다
+            text = _check_llm_response(res)   # do not record failure responses as measurements
             marks["llm_generate"] = (time.perf_counter() - t) * 1000
             answer = text
         except Exception as e:
@@ -321,10 +321,10 @@ async def timed_query(project_id: str, services: dict, q_text: str,
 # ── cold-start / warm-start ──────────────────────────────────────────────────
 
 async def measure_cold_start() -> dict:
-    """모델 로드 시간 + 첫 추론 vs 상주 상태 추론.
+    """Model load time + first inference vs resident-state inference.
 
-    BGE-M3 (게이트웨이 상주 인코더) 는 프로세스 내에서 직접 계측 가능하다.
-    전문 컨테이너의 로드 시간은 컨테이너 기동 로그로 별도 계측한다
+    BGE-M3 (the gateway-resident encoder) can be measured directly in-process.
+    Specialist container load time is measured separately from container startup
     (measure_container_cold_start).
     """
     from services.embedding_service import EmbeddingService  # noqa: PLC0415
@@ -332,17 +332,17 @@ async def measure_cold_start() -> dict:
     texts = ["추론 서버의 정확도는 93.2%로 측정되었다."] * 4
 
     v0 = vram_used_mib()
-    svc = EmbeddingService()          # 새 인스턴스 — 미로드 상태
+    svc = EmbeddingService()          # new instance — not yet loaded
     t = time.perf_counter()
-    await svc.encode(texts[:1])       # 로드 + 첫 인코딩
+    await svc.encode(texts[:1])       # load + first encoding
     load_plus_first = (time.perf_counter() - t) * 1000
     v1 = vram_used_mib()
 
     impl = type(svc._model).__name__
     if impl == "_FallbackEncoder":
-        return {"status": "invalid", "reason": "BGE-M3 로드 실패(폴백 인코더)"}
+        return {"status": "invalid", "reason": "BGE-M3 load failed (fallback encoder)"}
 
-    # 캐시를 우회하기 위해 매번 다른 텍스트로 상주 상태 인코딩
+    # resident-state encoding with different text each time to bypass the cache
     warm = []
     for i in range(10):
         t = time.perf_counter()
@@ -362,7 +362,7 @@ async def measure_cold_start() -> dict:
 
 
 def measure_container_cold_start(service: str, container: str) -> dict:
-    """컨테이너 재기동 → /health 200 까지의 시간을 실측한다."""
+    """Measure the time from container restart until /health returns 200."""
     import urllib.request  # noqa: PLC0415
 
     port = {"llm": 8004, "vlm": 8001, "stt": 8002, "doc": 8003}[service]
@@ -376,7 +376,7 @@ def measure_container_cold_start(service: str, container: str) -> dict:
 
     if not up():
         return {"status": "unavailable",
-                "reason": f"{service} 컨테이너가 기동되지 않아 cold-start 측정 불가"}
+                "reason": f"{service} container is not running; cold-start cannot be measured"}
 
     r = subprocess.run(["docker", "restart", container],
                        capture_output=True, text=True, timeout=120)
@@ -393,7 +393,7 @@ def measure_container_cold_start(service: str, container: str) -> dict:
     return {"status": "timeout", "waited_s": time.perf_counter() - t}
 
 
-# ── 메인 ─────────────────────────────────────────────────────────────────────
+# ── Main ───────────────────────────────────────────────────────────────────
 
 async def main() -> None:
     ap = argparse.ArgumentParser()
@@ -411,14 +411,14 @@ async def main() -> None:
     from core.config import get_settings  # noqa: PLC0415
 
     services = await probe_services()
-    # probe 가 localhost 로 접속에 성공했다면 클라이언트도 같은 URL 을 쓰게 한다.
-    # (컨테이너 호스트명은 호스트에서 해석되지 않으므로 설정값과 어긋난다)
+    # If the probe connected via localhost, make the clients use the same URL.
+    # (Container hostnames do not resolve on the host, so the configured values mismatch)
     for _svc, _key in (("llm", "llm_url"), ("stt", "stt_url")):
         info = services.get(_svc, {})
         if info.get("available") and info.get("url"):
             os.environ[_key.upper()] = info["url"]
     get_settings.cache_clear()  # type: ignore[attr-defined]
-    print("=== 서비스 가용성 ===")
+    print("=== Service availability ===")
     for k, v in services.items():
         print(f"  {k:8s} {'OK' if v.get('available') else 'UNAVAILABLE'}"
               f"  {v.get('error', v.get('body',''))[:70]}")
@@ -426,20 +426,20 @@ async def main() -> None:
     cold = await measure_cold_start()
     print(f"\n=== cold-start (BGE-M3) === {cold.get('status')}")
     if cold.get("status") == "measured":
-        print(f"  로드+첫추론 {cold['load_plus_first_infer_ms']:.0f}ms  "
-              f"상주추론 {cold['warm_infer_ms']['mean']:.1f}±"
+        print(f"  load+first infer {cold['load_plus_first_infer_ms']:.0f}ms  "
+              f"resident infer {cold['warm_infer_ms']['mean']:.1f}±"
               f"{cold['warm_infer_ms']['std']:.1f}ms  "
-              f"비율 {cold['cold_warm_ratio']:.0f}×")
+              f"ratio {cold['cold_warm_ratio']:.0f}×")
 
     coll = {}
     if services.get("qdrant", {}).get("available"):
         coll = await ensure_collection_ready()
-        print(f"\nQdrant 컬렉션: {coll}")
+        print(f"\nQdrant collection: {coll}")
 
     seed = {}
     if coll.get("status") == "ready" and args.seed_memory > 0:
         seed = await seed_memory(args.project_id, args.seed_memory)
-        print(f"\n메모리 시딩: {seed['stored']}/{seed['requested']} "
+        print(f"\nMemory seeding: {seed['stored']}/{seed['requested']} "
               f"({seed['elapsed_s']:.1f}s) errors={seed['errors']}")
 
     queries = [
@@ -448,7 +448,7 @@ async def main() -> None:
         "배송 라우터의 정시율 추이를 요약해 주세요.",
     ]
 
-    print(f"\n=== 반복 계측 (warmup={args.warmup}, reps={args.reps}) ===")
+    print(f"\n=== Repeated measurement (warmup={args.warmup}, reps={args.reps}) ===")
     rows: list[dict] = []
     all_errors: dict[str, int] = {}
     for i in range(args.warmup + args.reps):
@@ -462,7 +462,7 @@ async def main() -> None:
         for k in r["errors"]:
             all_errors[k] = all_errors.get(k, 0) + 1
         if i == 0 and r["errors"]:
-            print("  [첫 반복 오류]", json.dumps(r["errors"], ensure_ascii=False)[:400])
+            print("  [first-iteration errors]", json.dumps(r["errors"], ensure_ascii=False)[:400])
 
     measured = [r for r in rows if r["phase"] == "measure"]
     stats = {}
@@ -470,12 +470,12 @@ async def main() -> None:
         vals = [float(r[st]) for r in measured if r[st] != ""]
         if not vals:
             stats[st] = {"status": "unavailable",
-                         "reason": f"모든 반복에서 계측 실패 ({all_errors.get(st,0)}회)"}
+                         "reason": f"measurement failed in every iteration ({all_errors.get(st,0)} times)"}
             continue
         a = np.asarray(vals)
         p50 = float(np.percentile(a, 50))
-        # p50 의 5배를 넘는 표본은 클라이언트 재시도/타임아웃으로 간주하고
-        # 별도 보고한다 (버리지 않고 개수와 값을 남긴다).
+        # Samples above 5x p50 are treated as client retries/timeouts and
+        # reported separately (not discarded; their count and values are kept).
         out_mask = a > max(5.0 * p50, p50 + 1000.0)
         stats[st] = {
             "status": "measured",
@@ -483,7 +483,7 @@ async def main() -> None:
             "outliers_excluded": {
                 "n": int(out_mask.sum()),
                 "values_ms": [round(x, 1) for x in a[out_mask].tolist()],
-                "note": "p50 의 5배 초과 — 클라이언트 재시도/타임아웃으로 분류",
+                "note": "above 5x p50 — classified as client retry/timeout",
             },
             "all_samples_summary": summarize(vals),
         }
@@ -493,7 +493,7 @@ async def main() -> None:
         cname = {"llm": "koni_llm", "vlm": "koni_vlm",
                  "stt": "koni_stt", "doc": "koni_doc"}.get(svc)
         if cname:
-            print(f"\n[..] {svc} 컨테이너 cold-start 측정")
+            print(f"\n[..] {svc} container cold-start measurement")
             container_cold[svc] = measure_container_cold_start(svc, cname)
             print(f"     {container_cold[svc]}")
 

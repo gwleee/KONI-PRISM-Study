@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 """
-Exp-Ablation v2 — 근거 기반(grounded) 평가 질의셋 구성.
+Exp-Ablation v2 — building the grounded evaluation query set.
 
-왜 새로 만드는가:
-  요구된 두 후보가 모두 사용 불가였다.
-  - `tests/e2e_live/QA/` : 저장소에 존재하지 않는다.
-  - `experiments/datasets/mm_openbench_v1` : ground_truth 480건이 **전부**
-    `"[검증 필요] ...에 대한 예상 답변"` 플레이스홀더이고, source_ids 는
-    해소되지 않는 UUID(233/480 은 아예 비어 있음)라 '출처 청크'가 존재하지 않는다.
-    faithfulness 를 "출처 청크 지지 여부"로 정의하는 한 이 데이터로는 측정 자체가 불가능하다.
+Why build a new one:
+  Both requested candidates were unusable.
+  - `tests/e2e_live/QA/` : does not exist in the repository.
+  - `experiments/datasets/mm_openbench_v1` : **all** 480 ground_truth entries are
+    `"[verification needed] expected answer for ..."` placeholders, and source_ids are
+    unresolvable UUIDs (233/480 are empty altogether), so no 'source chunks' exist.
+    As long as faithfulness is defined as "supported by the source chunks", it cannot be measured on this data at all.
 
-무엇을 쓰는가:
-  `experiments/datasets/raw/text/` 의 실제 한국어 문서 50건(KLUE 뉴스/위키).
-  이를 청크로 자르고, 각 질의에 **실제 청크**를 출처로 붙인다.
+What is used:
+  `experiments/datasets/raw/text/` : 50 real Korean documents (KLUE news/wiki).
+  They are split into chunks, and each query is given **real chunks** as sources.
 
-faithfulness 측정에 gold answer 는 필요하지 않다:
-  정의가 (생성 답변, 제공된 출처 청크) 만을 요구하기 때문이다. 따라서
-  '예상 답변'을 지어내지 않는다.
+Measuring faithfulness does not need a gold answer:
+  the definition requires only (generated answer, provided source chunks). Hence
+  no 'expected answers' are fabricated.
 
-출력: data/evalset.jsonl  (query, source_chunks, doc_id, ...)
+Output: data/evalset.jsonl  (query, source_chunks, doc_id, ...)
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ RAW = HERE.parents[1] / "experiments" / "datasets" / "raw" / "text"
 
 
 def chunk_document(text: str, target_chars: int = 420) -> list[str]:
-    """문단 경계를 존중하며 청크로 분할."""
+    """Split into chunks while respecting paragraph boundaries."""
     paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
     chunks, cur = [], ""
     for p in paras:
@@ -44,7 +44,7 @@ def chunk_document(text: str, target_chars: int = 420) -> list[str]:
             cur = p
     if cur:
         chunks.append(cur)
-    # 너무 짧은 청크는 앞 청크에 병합
+    # merge chunks that are too short into the previous chunk
     merged: list[str] = []
     for c in chunks:
         if merged and len(c) < 120:
@@ -54,7 +54,7 @@ def chunk_document(text: str, target_chars: int = 420) -> list[str]:
     return merged
 
 
-# 질의 템플릿 — 문서 내용에 근거해 답할 수 있는 형태만 사용한다.
+# Query templates — only forms answerable from the document content are used.
 QUERY_TEMPLATES = [
     "{title}에 대해 핵심 내용을 요약해 주세요.",
     "{title}와 관련해 제시된 구체적인 수치나 사실을 정리해 주세요.",
@@ -76,7 +76,7 @@ def extract_title(text: str, fallback: str) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--n", type=int, default=60, help="질의 수")
+    ap.add_argument("--n", type=int, default=60, help="number of queries")
     ap.add_argument("--chunks-per-query", type=int, default=3)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", default=str(HERE / "data" / "evalset.jsonl"))
@@ -85,7 +85,7 @@ def main() -> None:
     rng = random.Random(args.seed)
     files = sorted(RAW.glob("*.txt"))
     if not files:
-        raise SystemExit(f"원문 없음: {RAW}")
+        raise SystemExit(f"source texts not found: {RAW}")
 
     docs = []
     for f in files:
@@ -101,7 +101,7 @@ def main() -> None:
         d = docs[i % len(docs)]
         tmpl = QUERY_TEMPLATES[(i // len(docs)) % len(QUERY_TEMPLATES)]
         k = min(args.chunks_per_query, len(d["chunks"]))
-        # 결정론적 선택 (시드 고정)
+        # deterministic selection (fixed seed)
         idxs = sorted(rng.sample(range(len(d["chunks"])), k))
         instances.append({
             "id": f"abl_{len(instances):04d}",
@@ -124,15 +124,15 @@ def main() -> None:
         "dataset": "AblationEval-Grounded",
         "version": "v1",
         "n_instances": len(instances),
-        "source_corpus": "experiments/datasets/raw/text (KLUE 한국어 문서)",
+        "source_corpus": "experiments/datasets/raw/text (KLUE Korean documents)",
         "n_source_documents": len(docs),
         "chunks_per_query": args.chunks_per_query,
         "seed": args.seed,
         "builder": "paper_experiments/ablation_v2/build_evalset.py",
         "note": (
-            "gold answer 없음 — faithfulness 정의가 (답변, 출처 청크) 만 요구하므로 "
-            "'예상 답변'을 생성하지 않는다. MM-OpenBench v1 은 ground_truth 가 전부 "
-            "플레이스홀더이고 source_ids 가 해소되지 않아 사용하지 않았다."
+            "No gold answer — the faithfulness definition requires only (answer, source chunks), "
+            "so no 'expected answers' are generated. MM-OpenBench v1 was not used because all its "
+            "ground_truth entries are placeholders and its source_ids do not resolve."
         ),
     }
     (out.parent / "metadata.json").write_text(
@@ -140,10 +140,10 @@ def main() -> None:
 
     avg = sum(len(c) for r in instances for c in r["source_chunks"]) / \
         sum(r["n_chunks"] for r in instances)
-    print(f"[✓] {out}  n={len(instances)}  문서={len(docs)}  "
-          f"평균 청크 길이={avg:.0f}자")
-    print(f"    예시 질의: {instances[0]['query']}")
-    print(f"    예시 청크: {instances[0]['source_chunks'][0][:100]}...")
+    print(f"[✓] {out}  n={len(instances)}  docs={len(docs)}  "
+          f"mean chunk length={avg:.0f} chars")
+    print(f"    example query: {instances[0]['query']}")
+    print(f"    example chunk: {instances[0]['source_chunks'][0][:100]}...")
 
 
 if __name__ == "__main__":

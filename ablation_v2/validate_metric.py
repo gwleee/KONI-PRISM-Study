@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-faithfulness 지표 타당성 검사 — 구성 비교에 쓰기 전에 지표가 작동하는지 확인한다.
+faithfulness metric validity check — verify the metric works before using it to compare configs.
 
-통제 조건 3종의 기대 방향:
-  copy       출처를 그대로 답변으로  → 1.0 근처
-  unrelated  무관한 문서를 답변으로  → 0.0 근처
-  negated    출처를 부정한 답변으로  → 낮고, contradicted_rate 높음
+Expected direction for the three control conditions:
+  copy       source copied verbatim as the answer  → near 1.0
+  unrelated  an unrelated document as the answer  → near 0.0
+  negated    the negated source as the answer     → low, with high contradicted_rate
 
-이 검사는 형식적 절차가 아니다. 초기 설정(mDeBERTa-base + 청크 전체를 전제로 사용)은
-copy 0.385 / unrelated 0.314 로 **분리도 0.071** 이었다. 즉 근거 있는 답변과 무관한
-답변을 구분하지 못했고, 그 상태로 ablation 을 돌렸다면 결과가 전부 무의미했다.
-전제를 문장 단위로 바꾸고 모델을 xlm-roberta-large-xnli 로 교체해 분리도 0.904 를
-확보한 뒤에야 본 측정에 사용했다.
+This check is not a formality. The initial setup (mDeBERTa-base + whole chunk as the premise)
+gave copy 0.385 / unrelated 0.314, a **separation of 0.071**. It could not tell grounded answers
+from unrelated ones, and an ablation run in that state would have been entirely meaningless.
+Only after switching to sentence-level premises and to the xlm-roberta-large-xnli model, reaching
+a separation of 0.904, was the metric used for the main measurement.
 
-사용법: python validate_metric.py [--n 15]
+Usage: python validate_metric.py [--n 15]
 """
 from __future__ import annotations
 
@@ -85,17 +85,17 @@ def main() -> None:
         "history": {
             "mDeBERTa-base + chunk premise": {"copy": 0.385, "unrelated": 0.314, "separation": 0.071},
             "mDeBERTa-base + sentence premise": {"copy": 0.642, "unrelated": 0.209, "separation": 0.433},
-            "xlm-roberta-large + sentence premise": "채택",
+            "xlm-roberta-large + sentence premise": "adopted",
         },
     })
 
-    print(f"모델: {NLI_MODEL}  (전제 = 문장 단위)")
-    print(f"{'조건':10s} {'faithfulness':>14s} {'contradicted':>14s}")
+    print(f"model: {NLI_MODEL}  (premise = sentence level)")
+    print(f"{'condition':10s} {'faithfulness':>14s} {'contradicted':>14s}")
     for k in ("copy", "unrelated", "negated"):
         print(f"{k:10s} {summary[k]['faithfulness_mean']:14.3f} "
               f"{summary[k]['contradicted_rate_mean']:14.3f}")
-    print(f"\n분리도 (copy − unrelated): {separation:.3f}")
-    print(f"판정: {'PASS' if passed else 'FAIL — 이 지표로 ablation 을 해석하면 안 된다'}")
+    print(f"\nseparation (copy − unrelated): {separation:.3f}")
+    print(f"verdict: {'PASS' if passed else 'FAIL — the ablation must not be interpreted with this metric'}")
     if not passed:
         sys.exit(1)
 
