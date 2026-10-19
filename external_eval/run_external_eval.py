@@ -5,7 +5,7 @@ Exp D — CMAE conflict-detection evaluation on external contradiction datasets.
 Purpose: verify that performance on the in-house SynConflict generalizes to external, general
 human-annotated datasets (external generalization check).
 
-Three datasets (meets the requirement of at least two):
+Three datasets (at least two external corpora):
   - SNLI       (stanfordnlp/snli)      contradiction ↔ entailment
   - MultiNLI   (nyu-mll/multi_nli)     contradiction ↔ entailment (diverse genres)
   - VitaminC   (tals/vitaminc)         REFUTES ↔ SUPPORTS
