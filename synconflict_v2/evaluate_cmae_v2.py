@@ -6,8 +6,8 @@ Measurements:
   1. CMAE conflict-detection performance at the production threshold τ=0.65 (P/R/F1/MCC)
   2. Sweep over the full τ range → gap between the optimal τ and the production value
   3. Threshold-independent separability (ROC-AUC)
-  4. Label distribution per similarity bin + overlap (R4 bias diagnosis)
-  5. Recall per conflict type (R1 — per-type difficulty)
+  4. Label distribution per similarity bin + overlap (bias diagnosis)
+  5. Recall per conflict type (per-type difficulty)
   6. Register confound effect (same register vs cross register)
   7. Re-evaluation of the v1 dataset with the same procedure → quantify v1's artificial separation
 """
